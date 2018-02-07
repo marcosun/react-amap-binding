@@ -1,0 +1,13 @@
+{
+  "presets": [
+    [
+      "env", {
+        "modules": "umd", // Convert to ES2015 modules
+      },
+    ],
+    "stage-0",
+  ],
+  "plugins": [
+    "transform-es2015-modules-commonjs", // Convert ES2015 modules to CommonJs because Node6 does not support ES2015 features
+  ],
+}

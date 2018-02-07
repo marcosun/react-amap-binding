@@ -1,0 +1,35 @@
+{
+  "name": "smooth-fetch",
+  "version": "0.0.1",
+  "description": "Fetch polyfill",
+  "main": "lib/index.js",
+  "scripts": {
+    "build:dev": "webpack --config ./config/webpack.dev.js",
+    "build:prod": "webpack --config ./config/webpack.prod.js",
+    "analyse": "webpack --config ./config/webpack.analyse.js",
+    "test": "jest",
+    "test:watch": "npm test -- --watch",
+    "doc": "jsdoc src -r"
+  },
+  "repository": "git@github.com:marcosun/smooth-fetch.git",
+  "author": "marcosun <marcoinbristol@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.1",
+    "babel-jest": "^22.1.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "clean-webpack-plugin": "^0.1.18",
+    "eslint": "^4.17.0",
+    "eslint-config-google": "^0.9.1",
+    "jest": "^22.1.4",
+    "jsdoc": "^3.5.5",
+    "uglifyjs-webpack-plugin": "^1.1.8",
+    "webpack": "^3.10.0",
+    "webpack-bundle-analyzer": "^2.10.0",
+    "webpack-merge": "^4.1.1"
+  }
+}
