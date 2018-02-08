@@ -11,7 +11,7 @@
     "test:watch": "npm test -- --watch",
     "doc": "jsdoc src -r"
   },
-  "repository": "git@github.com:marcosun/smooth-fetch.git",
+  "repository": "git@github.com:marcosun/js-component-seed.git",
   "author": "marcosun <marcoinbristol@gmail.com>",
   "license": "MIT",
   "devDependencies": {
