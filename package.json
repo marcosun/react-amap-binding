@@ -1,7 +1,7 @@
 {
-  "name": "smooth-fetch",
+  "name": "js-component-seed",
   "version": "0.0.1",
-  "description": "Fetch polyfill",
+  "description": "A seed for writing javascript component",
   "main": "lib/index.js",
   "scripts": {
     "build:dev": "webpack --config ./config/webpack.dev.js",
