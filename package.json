@@ -2,10 +2,10 @@
   "name": "js-component-seed",
   "version": "0.0.1",
   "description": "A seed for writing javascript component",
-  "main": "lib/index.js",
+  "main": "index.js",
+  "module": "es/index.js",
   "scripts": {
-    "build:dev": "webpack --config ./config/webpack.dev.js",
-    "build:prod": "webpack --config ./config/webpack.prod.js",
+    "build": "node ./config/build.js",
     "analyse": "webpack --config ./config/webpack.analyse.js",
     "test": "jest",
     "test:watch": "npm test -- --watch",
@@ -15,6 +15,7 @@
   "author": "marcosun <marcoinbristol@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.1",
     "babel-jest": "^22.1.0",
@@ -31,5 +32,10 @@
     "webpack": "^3.10.0",
     "webpack-bundle-analyzer": "^2.10.0",
     "webpack-merge": "^4.1.1"
-  }
+  },
+  "files": [
+    "index.js",
+    "umd",
+    "es"
+  ]
 }
