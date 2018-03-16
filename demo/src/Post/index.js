@@ -2,7 +2,7 @@
  * @module Demo/Post
  */
 import React from 'react';
-import fetch from 'Library';
+import test from 'Library';
 
 /**
  * Export a form call api with post method
@@ -14,7 +14,7 @@ export default class Component extends React.Component {
    */
   constructor(props) {
     super(props);
-    console.log(fetch);
+    alert(test());
   }
 
   /**
@@ -22,15 +22,6 @@ export default class Component extends React.Component {
    * @return {Component}
    */
   render() {
-    return (
-      <form>
-        <div>
-          url: <input />
-        </div>
-        <div>
-          data: <input />
-        </div>
-      </form>
-    );
+    return null;
   }
 }
