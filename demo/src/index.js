@@ -9,6 +9,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
+import {CssBaseline} from 'material-ui';
 
 // Separate local imports from dependencies
 import Root from './router';
@@ -25,7 +26,9 @@ import Root from './router';
 const render = (Component) => {
   ReactDom.render(
     <AppContainer>
-      <Component />
+      <CssBaseline>
+        <Component />
+      </CssBaseline>
     </AppContainer>,
     document.getElementById('app')
   );
