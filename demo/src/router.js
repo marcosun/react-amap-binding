@@ -12,7 +12,7 @@ import {
 } from 'react-router-dom';
 
 // Require Pages
-import Post from './Post';
+import Amap from './Amap';
 
 /**
  * @return {Router}
@@ -21,7 +21,7 @@ export default function Router() {
   return (
     <BrowserRouter>
       <div>
-        <Route exact path="/" component={Post} />
+        <Route exact path="/" component={Amap} />
       </div>
     </BrowserRouter>
   );
