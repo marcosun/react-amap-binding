@@ -90,7 +90,7 @@ module.exports = {
 
   resolve: {
     alias: {
-      testComponent: paths.testComponent,
+      Library: paths.libraryComponent,
     },
   },
 };

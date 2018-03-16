@@ -2,7 +2,7 @@
  * @module Demo/Post
  */
 import React from 'react';
-import fetch from 'testComponent';
+import fetch from 'Library';
 
 /**
  * Export a form call api with post method

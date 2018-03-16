@@ -14,5 +14,5 @@ module.exports = {
   appConfig: resolveApp('config'),
   appIndexJs: resolveApp('src/index.js'),
   appPackageJson: resolveApp('package.json'),
-  testComponent: resolveApp('../umd/smooth-fetch.js'),
+  libraryComponent: resolveApp('../lib/index.js'),
 };
