@@ -1,3 +1,6 @@
 {
-  "presets": ["./config/babel-preset"]
+  "presets": ["./config/babel-preset"],
+  "plugins": [
+    "transform-decorators-legacy"
+  ]
 }

@@ -9,21 +9,7 @@ const exec = (command, extraEnv) => {
 
 console.log('Building CommonJS modules ...');
 
-exec('babel lib -d . --ignore test.js', {
+exec('babel lib -d cjs --ignore test.js', {
   BABEL_ENV: 'cjs',
-  NODE_ENV: 'production',
-});
-
-console.log('\nBuilding ES modules ...');
-
-exec('babel lib -d es --ignore test.js', {
-  BABEL_ENV: 'es',
-  NODE_ENV: 'production',
-});
-
-console.log('\nBuilding js-component-seed.js ...')
-
-exec('webpack --config ./config/webpack.prod.js', {
-  BABEL_ENV: 'umd',
   NODE_ENV: 'production',
 });
