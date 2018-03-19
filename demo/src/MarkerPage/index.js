@@ -19,7 +19,7 @@ const styles = (theme) => ({
 /**
  * AMap demo page
  */
-export default class AMapPage extends React.Component {
+export default class MarkerPage extends React.Component {
   static propTypes = {
     classes: object,
   };
