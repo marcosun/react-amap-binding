@@ -12,7 +12,7 @@ import {
 } from 'react-router-dom';
 
 // Require Pages
-import Amap from './Amap';
+import Amap from './AMapPage';
 
 /**
  * @return {Router}
