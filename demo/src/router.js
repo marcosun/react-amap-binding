@@ -13,6 +13,7 @@ import {
 
 // Require Pages
 import Amap from './AMapPage';
+import Marker from './MarkerPage';
 
 /**
  * @return {Router}
@@ -22,6 +23,7 @@ export default function Router() {
     <BrowserRouter>
       <div>
         <Route exact path="/" component={Amap} />
+        <Route exact path="/marker" component={Marker} />
       </div>
     </BrowserRouter>
   );
