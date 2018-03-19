@@ -29,7 +29,7 @@ module.exports = {
 
       { // Javascript
         test: /\.(js|jsx)$/,
-        include: paths.appSrc,
+        include: [paths.appSrc, paths.libraryComponent],
         loader: 'babel-loader',
       },
 
