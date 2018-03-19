@@ -2,7 +2,10 @@
  * @module Demo/Post
  */
 import React from 'react';
-import {object} from 'prop-types';
+import {
+  object,
+  node,
+} from 'prop-types';
 import {withStyles} from 'material-ui';
 import {AMap} from 'react-amap-binding';
 
@@ -20,6 +23,7 @@ const styles = (theme) => ({
 export default class AMapPage extends React.Component {
   static propTypes = {
     classes: object,
+    children: node,
   };
 
   /**
@@ -29,13 +33,16 @@ export default class AMapPage extends React.Component {
   render() {
     const {
       classes,
+      children,
     } = this.props;
 
     return (
       <div className={classes.mapContainer}>
         <AMap
           appKey='1c6d063dfdc5b14d79150a156b625664'
-        />
+        >
+          {children}
+        </AMap>
       </div>
     );
   }
