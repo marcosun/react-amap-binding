@@ -9,7 +9,7 @@
     "analyse": "webpack --config ./config/webpack.analyse.js",
     "test": "jest",
     "test:watch": "npm test -- --watch",
-    "doc": "jsdoc src -r"
+    "doc": "jsdoc lib -r"
   },
   "repository": "git@github.com:marcosun/react-amap-binding.git",
   "author": "marcosun <marcoinbristol@gmail.com>",
