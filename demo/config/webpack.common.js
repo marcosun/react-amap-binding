@@ -90,7 +90,7 @@ module.exports = {
 
   resolve: {
     alias: {
-      'amap-plugin-canvas-polyline': paths.libraryComponent,
+      'react-amap-binding': paths.libraryComponent,
     },
   },
 };

@@ -4,7 +4,7 @@
 import React from 'react';
 import {object} from 'prop-types';
 import {withStyles} from 'material-ui';
-import AMap from 'amap-plugin-canvas-polyline';
+import {AMap} from 'react-amap-binding';
 
 const styles = (theme) => ({
   mapContainer: {
