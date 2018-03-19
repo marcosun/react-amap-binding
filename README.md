@@ -1,2 +1,2 @@
-# js-component-seed
-This is a seed for creating javascript components. Enjoy writing test-coveraged code.
+# react-amap-binding
+A React binding for AMap

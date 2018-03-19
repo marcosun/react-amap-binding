@@ -1,7 +1,7 @@
 {
-  "name": "js-component-seed",
+  "name": "react-amap-binding",
   "version": "0.0.1",
-  "description": "A seed for writing javascript component",
+  "description": "A React binding for AMap",
   "main": "index.js",
   "module": "cjs/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "test:watch": "npm test -- --watch",
     "doc": "jsdoc src -r"
   },
-  "repository": "git@github.com:marcosun/js-component-seed.git",
+  "repository": "git@github.com:marcosun/react-amap-binding.git",
   "author": "marcosun <marcoinbristol@gmail.com>",
   "license": "MIT",
   "devDependencies": {
