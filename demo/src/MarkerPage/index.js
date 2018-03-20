@@ -25,6 +25,14 @@ export default class MarkerPage extends React.Component {
   };
 
   /**
+   * Click handler.
+   * @param {Object} e - Event
+   */
+  handleClick(e) {
+    alert('You have clicked a marker icon');
+  }
+
+  /**
    * Show AMap with full screen width and height
    * @return {Component} - Page
    */
@@ -36,7 +44,8 @@ export default class MarkerPage extends React.Component {
     return (
       <div className={classes.mapContainer}>
         <AMap>
-          <Marker position={[120.162692, 30.253647]}/>
+          <Marker position={[120.162692, 30.253647]} onClick={this.handleClick.bind(this)} />
+          <Marker position={[120.163071, 30.254444]} />
         </AMap>
       </div>
     );
