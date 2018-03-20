@@ -36,7 +36,7 @@ export default class MarkerPage extends React.Component {
     return (
       <div className={classes.mapContainer}>
         <AMap>
-          <Marker />
+          <Marker position={[120.162692, 30.253647]}/>
         </AMap>
       </div>
     );
