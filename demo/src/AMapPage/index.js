@@ -1,5 +1,5 @@
 /**
- * @module Demo/Post
+ * @module Demo/AMapPage
  */
 import React from 'react';
 import {
@@ -18,7 +18,7 @@ const styles = (theme) => ({
 
 @withStyles(styles)
 /**
- * AMap demo page
+ * AMap page
  */
 export default class AMapPage extends React.Component {
   static propTypes = {

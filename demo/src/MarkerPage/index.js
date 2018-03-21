@@ -1,5 +1,5 @@
 /**
- * @module Demo/Post
+ * @module Demo/MarkerPage
  */
 import React from 'react';
 import {object} from 'prop-types';
@@ -17,7 +17,7 @@ const styles = (theme) => ({
 
 @withStyles(styles)
 /**
- * AMap demo page
+ * Marker page
  */
 export default class MarkerPage extends React.Component {
   static propTypes = {
@@ -33,7 +33,7 @@ export default class MarkerPage extends React.Component {
   }
 
   /**
-   * Show AMap with full screen width and height
+   * Show MarkerPage with full screen width and height
    * @return {Component} - Page
    */
   render() {
