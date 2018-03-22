@@ -14,6 +14,7 @@ import {
 // Require Pages
 import Amap from './AMapPage';
 import Marker from './MarkerPage';
+import PathSimplifier from './PathSimplifier';
 
 /**
  * @return {Router}
@@ -24,6 +25,7 @@ export default function Router() {
       <div>
         <Route exact path="/" component={Amap} />
         <Route exact path="/marker" component={Marker} />
+        <Route exact path="/pathSimplifier" component={PathSimplifier} />
       </div>
     </BrowserRouter>
   );
