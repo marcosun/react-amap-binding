@@ -53,9 +53,6 @@ export default class PathSimplifierPage extends React.Component {
             }}
             autoSetFitView={false}
             clickToSelectPath={false}
-            onPathClick={(e) => {
-              console.log(e);
-            }}
           />
         </AMap>
       </div>

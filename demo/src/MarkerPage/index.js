@@ -25,10 +25,43 @@ export default class MarkerPage extends React.Component {
   };
 
   /**
+   * Constructor
+   * @param {Object} props
+   */
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      markers: [{
+        position: [120.162692, 30.253647],
+      }, {
+        position: [120.163071, 30.254444],
+      }],
+    };
+  }
+
+  /**
+   * Test Marker component update functionalities
+   */
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({
+        ...this.state,
+        markers: [
+          {
+            position: [120.161955, 30.253519],
+          },
+          ...this.state.markers[1],
+        ],
+      });
+    }, 5000);
+  }
+
+  /**
    * Click handler.
    * @param {Object} e - Event
    */
-  handleClick(e) {
+  handleClick = (e) => {
     alert('You have clicked a marker icon');
   }
 
@@ -41,11 +74,22 @@ export default class MarkerPage extends React.Component {
       classes,
     } = this.props;
 
+    const {
+      markers,
+    } = this.state;
+
     return (
       <div className={classes.mapContainer}>
         <AMap>
-          <Marker position={[120.162692, 30.253647]} onClick={this.handleClick.bind(this)} />
-          <Marker position={[120.163071, 30.254444]} />
+          {
+            markers.map((marker, index) => {
+              return <Marker
+                key={index}
+                {...marker}
+                onClick={this.handleClick}
+              />;
+            })
+          }
         </AMap>
       </div>
     );
