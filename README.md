@@ -22,9 +22,9 @@ Have fun!
 Completed List:
  - AMap
  - Marker
+ - MassMarks
 
 Todo list:
- - MassMarks
  - Polygon
  - TileLayer.Traffic
  - InfoWindow
