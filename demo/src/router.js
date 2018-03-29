@@ -15,6 +15,7 @@ import {
 import Amap from './AMapPage';
 import Marker from './MarkerPage';
 import PathSimplifier from './PathSimplifier';
+import MassMarks from './MassMarks';
 
 /**
  * @return {Router}
@@ -26,6 +27,7 @@ export default function Router() {
         <Route exact path="/" component={Amap} />
         <Route exact path="/marker" component={Marker} />
         <Route exact path="/pathSimplifier" component={PathSimplifier} />
+        <Route exact path="/massMarks" component={MassMarks} />
       </div>
     </BrowserRouter>
   );
