@@ -59,9 +59,11 @@ export default class MarkerPage extends React.Component {
 
   /**
    * Click handler.
+   * @param {Object} map - AMap.Map instance
+   * @param {Object} target - Marker component instance
    * @param {Object} e - Event
    */
-  handleClick = (e) => {
+  handleClick = (map, target, e) => {
     alert('You have clicked a marker icon');
   }
 
