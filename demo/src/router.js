@@ -16,6 +16,7 @@ import Amap from './AMapPage';
 import Marker from './MarkerPage';
 import PathSimplifier from './PathSimplifier';
 import MassMarks from './MassMarks';
+import Polygon from './Polygon';
 
 /**
  * @return {Router}
@@ -28,6 +29,7 @@ export default function Router() {
         <Route exact path="/marker" component={Marker} />
         <Route exact path="/pathSimplifier" component={PathSimplifier} />
         <Route exact path="/massMarks" component={MassMarks} />
+        <Route exact path="/polygon" component={Polygon} />
       </div>
     </BrowserRouter>
   );
