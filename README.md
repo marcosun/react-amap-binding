@@ -24,8 +24,8 @@ Completed List:
  - Marker
  - MassMarks
  - Polygon
+ - TileLayer.Traffic
 
 Todo list:
- - TileLayer.Traffic
  - InfoWindow
  - PathSimplifier
