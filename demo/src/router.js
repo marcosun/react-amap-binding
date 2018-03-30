@@ -17,6 +17,7 @@ import Marker from './MarkerPage';
 import PathSimplifier from './PathSimplifier';
 import MassMarks from './MassMarks';
 import Polygon from './Polygon';
+import TileLayerTraffic from './TileLayerTraffic';
 
 /**
  * @return {Router}
@@ -30,6 +31,7 @@ export default function Router() {
         <Route exact path="/pathSimplifier" component={PathSimplifier} />
         <Route exact path="/massMarks" component={MassMarks} />
         <Route exact path="/polygon" component={Polygon} />
+        <Route exact path="/traffic" component={TileLayerTraffic} />
       </div>
     </BrowserRouter>
   );
