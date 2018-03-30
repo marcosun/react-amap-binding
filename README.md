@@ -23,9 +23,9 @@ Completed List:
  - AMap
  - Marker
  - MassMarks
+ - Polygon
 
 Todo list:
- - Polygon
  - TileLayer.Traffic
  - InfoWindow
  - PathSimplifier
