@@ -61,7 +61,7 @@ export default class PolygonPage extends React.Component {
    * Test polygon component update functionalities
    */
   componentDidMount() {
-    // To hide a polygon and beautify style
+    // Delay 5s to hide a polygon and beautify style
     setTimeout(() => {
       this.setState({
         ...this.state,
@@ -86,7 +86,7 @@ export default class PolygonPage extends React.Component {
       });
     }, 5000);
 
-    // To show that polygon
+    // Delay 10s to show that polygon
     setTimeout(() => {
       this.setState({
         ...this.state,
@@ -111,7 +111,7 @@ export default class PolygonPage extends React.Component {
   }
 
   /**
-   * Run this function after visible update to hide
+   * Hide polygon callback
    * @param {Object} map - AMap.Map instance
    * @param {Object} target - Polygon component instance
    * @param {Object} e - Event
