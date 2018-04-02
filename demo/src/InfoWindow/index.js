@@ -63,7 +63,6 @@ export default class InfoWindowPage extends React.Component {
     const {
       infoWindow,
     } = this.state;
-    console.log(...infoWindow);
     return (
       <div className={classes.mapContainer}>
         <AMap>
