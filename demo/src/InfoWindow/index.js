@@ -39,6 +39,7 @@ export default class InfoWindowPage extends React.Component {
         autoMove: true,
         offset: [0, 0],
         visible: true,
+        size: [500, 100],
       },
     };
   }
