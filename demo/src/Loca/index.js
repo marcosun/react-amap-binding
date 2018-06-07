@@ -88,7 +88,6 @@ export default class LocaPage extends React.Component {
           {'name': '台湾省', 'center': '121.509062,25.044332'},
           {'name': '香港特别行政区', 'center': '114.171203,22.277468'},
           {'name': '澳门特别行政区', 'center': '113.543028,22.186835'},
-          {'name': '北京市', 'center': '116.407394,39.904211'},
         ],
       });
     }, 5000);
