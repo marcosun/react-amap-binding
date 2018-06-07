@@ -20,6 +20,7 @@ import Polygon from './Polygon';
 import TileLayerTraffic from './TileLayerTraffic';
 import InfoWindow from './InfoWindow';
 import Polyline from './Polyline';
+import Loca from './Loca';
 
 /**
  * @return {Router}
@@ -36,6 +37,7 @@ export default function Router() {
         <Route exact path="/traffic" component={TileLayerTraffic} />
         <Route exact path="/infoWindow" component={InfoWindow} />
         <Route exact path="/polyline" component={Polyline} />
+        <Route exact path="/loca" component={Loca} />
       </div>
     </BrowserRouter>
   );
