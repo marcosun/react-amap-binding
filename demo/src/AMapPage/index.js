@@ -3,8 +3,9 @@
  */
 import React from 'react';
 import {
-  object,
   node,
+  object,
+  string,
 } from 'prop-types';
 import {withStyles} from 'material-ui';
 import {AMap} from 'react-amap-binding';
@@ -22,8 +23,14 @@ const styles = (theme) => ({
  */
 export default class AMapPage extends React.Component {
   static propTypes = {
+    appKey: string,
     classes: object,
     children: node,
+
+  };
+
+  static defaultProps = {
+    appKey: '1c6d063dfdc5b14d79150a156b625664',
   };
 
   /**
@@ -34,12 +41,13 @@ export default class AMapPage extends React.Component {
     const {
       classes,
       children,
+      ...others
     } = this.props;
 
     return (
       <div className={classes.mapContainer}>
         <AMap
-          appKey='1c6d063dfdc5b14d79150a156b625664'
+          {...others}
         >
           {children}
         </AMap>
