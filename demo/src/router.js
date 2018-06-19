@@ -14,6 +14,7 @@ import {
 // Require Pages
 import Amap from './AMapPage';
 import Marker from './MarkerPage';
+import PathNavigator from './PathNavigator';
 import PathSimplifier from './PathSimplifier';
 import MassMarks from './MassMarks';
 import Polygon from './Polygon';
@@ -34,6 +35,7 @@ export default function Router() {
         <Route exact path="/pathSimplifier" component={PathSimplifier} />
         <Route exact path="/massMarks" component={MassMarks} />
         <Route exact path="/polygon" component={Polygon} />
+        <Route exact path="/pathNavigator" component={PathNavigator}/>
         <Route exact path="/traffic" component={TileLayerTraffic} />
         <Route exact path="/infoWindow" component={InfoWindow} />
         <Route exact path="/polyline" component={Polyline} />
