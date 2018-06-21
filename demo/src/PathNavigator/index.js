@@ -1,9 +1,10 @@
 import React from 'react';
 import {object} from 'prop-types';
 import {withStyles} from 'material-ui';
-import {PathNavigator, PathSimplifier} from 'react-amap-binding';
+import {PathNavigator} from 'react-amap-binding';
 
 import AMap from '../AMapPage';
+import PathSimplifier from '../PathSimplifier';
 
 const styles = (theme) => ({
   mapContainer: {
@@ -28,6 +29,10 @@ class PathNavigatorPage extends React.Component {
     super(props);
     this.props = props;
 
+    this.state = {
+      pathIndex: 1,
+    };
+
     this.pathSimplifier = [{
       name: '轨迹0',
       path: [
@@ -43,6 +48,17 @@ class PathNavigatorPage extends React.Component {
         [120.207117, 30.276618],
       ],
     }];
+  }
+
+  /**
+   * Test PathNavigator
+   */
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({
+        pathIndex: 0,
+      });
+    }, 5000);
   }
 
   /**
@@ -64,25 +80,13 @@ class PathNavigatorPage extends React.Component {
 
     return (
       <div className={classes.mapContainer}>
-        <AMap>
-          <PathSimplifier
-            data={this.pathSimplifier}
-            getPath={(pathData, pathIndex) => {
-              return pathData.path;
-            }}
-            getHoverTitle={() => {
-              return null;
-            }}
-            autoSetFitView={true}
-            clickToSelectPath={false}
-          >
-            <PathNavigator
-              loop={true}
-              onComplete={this.handleComplete.bind(this)}
-              pathIndex={0}
-            />
-          </PathSimplifier>
-        </AMap>
+        <PathSimplifier>
+          <PathNavigator
+            loop={true}
+            onComplete={this.handleComplete.bind(this)}
+            pathIndex={this.state.pathIndex}
+          />
+        </PathSimplifier>
       </div>
     );
   }

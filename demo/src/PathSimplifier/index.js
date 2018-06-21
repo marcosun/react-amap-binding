@@ -2,7 +2,7 @@
  * @module Demo/PathSimplifierPage
  */
 import React from 'react';
-import {object} from 'prop-types';
+import {node, object} from 'prop-types';
 import {withStyles} from 'material-ui';
 import {PathSimplifier} from 'react-amap-binding';
 
@@ -21,6 +21,7 @@ const styles = (theme) => ({
  */
 export default class PathSimplifierPage extends React.Component {
   static propTypes = {
+    children: node,
     classes: object,
   };
 
@@ -74,6 +75,7 @@ export default class PathSimplifierPage extends React.Component {
    */
   render() {
     const {
+      children,
       classes,
     } = this.props;
 
@@ -90,7 +92,9 @@ export default class PathSimplifierPage extends React.Component {
             }}
             autoSetFitView={true}
             clickToSelectPath={false}
-          />
+          >
+            {children}
+          </PathSimplifier>
         </AMap>
       </div>
     );
