@@ -1,6 +1,6 @@
 {
   "name": "react-amap-binding",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "A React binding for AMap",
   "main": "index.js",
   "module": "cjs/index.js",
