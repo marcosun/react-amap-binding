@@ -87,10 +87,4 @@ module.exports = {
       chunksSortMode: 'manual',
     }),
   ],
-
-  resolve: {
-    alias: {
-      'react-amap-binding': paths.libraryComponent,
-    },
-  },
 };
