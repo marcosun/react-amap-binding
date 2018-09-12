@@ -6,6 +6,7 @@ import {
 } from 'prop-types';
 
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
+import cloneDeep from '../Util/cloneDeep';
 import isShallowEqual from '../Util/isShallowEqual';
 import createEventCallback from '../Util/createEventCallback';
 
@@ -116,7 +117,7 @@ class Polyline extends React.Component {
    * @return {Object}
    */
   initPolyline(polylineOptions) {
-    const polyline = new window.AMap.Polyline(polylineOptions);
+    const polyline = new window.AMap.Polyline(cloneDeep(polylineOptions, ['path']));
 
     if (this.visible === false) polyline.hide();
 
@@ -203,7 +204,7 @@ class Polyline extends React.Component {
    */
   updatePolylineWithApi(apiName, currentProp, nextProp) {
     if (!isShallowEqual(currentProp, nextProp)) {
-      this.polyline[apiName](nextProp);
+      this.polyline[apiName](cloneDeep(nextProp, ['path']));
     }
   }
 
