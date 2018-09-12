@@ -50,3 +50,14 @@ test('Copy path field', () => {
   expect(cloneDeep(data, ['path']).path).not.toBe(data.path);
   expect(cloneDeep(data, ['path']).center).toBe(data.center);
 });
+
+
+test('Shallow copy if the key does not exist', () => {
+  const data = {
+    path: [[120.216339,30.196152],[120.21656,30.196159]],
+    center: [120.216339,30.196152],
+    zoom: 12,
+  };
+  expect(cloneDeep(data, ['others'])).toEqual(data);
+  expect(cloneDeep(data, ['others'])).not.toBe(data);
+});
