@@ -7,8 +7,10 @@ import {
 
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
-import isShallowEqual from '../Util/isShallowEqual';
 import createEventCallback from '../Util/createEventCallback';
+import isShallowEqual from '../Util/isShallowEqual';
+
+const NEED_DEEP_COPY_FIELDS = ['path'];
 
 /**
  * Polyline binding
@@ -89,7 +91,9 @@ class Polyline extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     const nextPolylineOptions = this.parsePolylineOptions(nextProps);
 
-    this.updatePolylineWithApi('setOptions', this.polylineOptions, nextPolylineOptions);
+    const newPolylineOptions = cloneDeep(nextPolylineOptions, NEED_DEEP_COPY_FIELDS);
+
+    this.updatePolylineWithApi('setOptions', this.polylineOptions, nextPolylineOptions, newPolylineOptions);
 
     this.toggleVisible(this.polylineOptions.visible, nextPolylineOptions.visible);
 
@@ -117,7 +121,7 @@ class Polyline extends React.Component {
    * @return {Object}
    */
   initPolyline(polylineOptions) {
-    const polyline = new window.AMap.Polyline(cloneDeep(polylineOptions, ['path']));
+    const polyline = new window.AMap.Polyline(cloneDeep(polylineOptions, NEED_DEEP_COPY_FIELDS));
 
     if (this.visible === false) polyline.hide();
 
@@ -199,12 +203,13 @@ class Polyline extends React.Component {
    * Update AMap.Polyline instance with named api and given value.
    * Won't call api if the given value does not change
    * @param  {string} apiName - AMap.Polyline instance update method name
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
+   * @param  {*} currentProp - Current value
+   * @param  {*} nextProp - Next value
+   * @param  {*} newProp - New value
    */
-  updatePolylineWithApi(apiName, currentProp, nextProp) {
+  updatePolylineWithApi(apiName, currentProp, nextProp, newProp) {
     if (!isShallowEqual(currentProp, nextProp)) {
-      this.polyline[apiName](cloneDeep(nextProp, ['path']));
+      this.polyline[apiName](newProp);
     }
   }
 

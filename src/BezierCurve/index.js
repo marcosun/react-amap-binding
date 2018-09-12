@@ -6,8 +6,11 @@ import {
 } from 'prop-types';
 
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
-import isShallowEqual from '../Util/isShallowEqual';
+import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
+import isShallowEqual from '../Util/isShallowEqual';
+
+const NEED_DEEP_COPY_FIELDS = ['path'];
 
 /**
  * BezierCurve binding
@@ -87,9 +90,11 @@ class BezierCurve extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     const nextBezierCurveOptions = this.parseBezierCurveOptions(nextProps);
 
+    const newBezierCurveOptions = cloneDeep(nextBezierCurveOptions, NEED_DEEP_COPY_FIELDS);
+
     this.toggleVisible(this.bezierCurveOptions.visible, nextBezierCurveOptions.visible);
 
-    this.updateBezierCurveWithApi('setPath', this.bezierCurveOptions.path, nextBezierCurveOptions.path);
+    this.updateBezierCurveWithApi('setPath', this.bezierCurveOptions.path, nextBezierCurveOptions.path, newBezierCurveOptions.path);
 
     this.updateOptions(this.bezierCurveOptions, nextBezierCurveOptions);
 
@@ -122,7 +127,7 @@ class BezierCurve extends React.Component {
       visible,
     } = this.props;
 
-    const bezierCurve = new window.AMap.BezierCurve(bezierCurveOptions);
+    const bezierCurve = new window.AMap.BezierCurve(cloneDeep(bezierCurveOptions, NEED_DEEP_COPY_FIELDS));
 
     bezierCurve.setMap(map);
 
@@ -190,12 +195,13 @@ class BezierCurve extends React.Component {
    * Update AMap.BezierCurve instance with named api and given value.
    * Won't call api if the given value does not change
    * @param  {string} apiName - AMap.BezierCurve instance update method name
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
+   * @param  {*} currentProp - Current value
+   * @param  {*} nextProp - Next value
+   * @param  {*} newProp - New value
    */
-  updateBezierCurveWithApi(apiName, currentProp, nextProp) {
+  updateBezierCurveWithApi(apiName, currentProp, nextProp, newProp) {
     if (!isShallowEqual(currentProp, nextProp)) {
-      this.bezierCurve[apiName](nextProp);
+      this.bezierCurve[apiName](newProp);
     }
   }
 

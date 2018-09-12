@@ -6,8 +6,11 @@ import {
 } from 'prop-types';
 
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
-import isShallowEqual from '../Util/isShallowEqual';
+import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
+import isShallowEqual from '../Util/isShallowEqual';
+
+const NEED_DEEP_COPY_FIELDS = ['path'];
 
 /**
  * Polygon binding
@@ -88,7 +91,9 @@ class Polygon extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     const nextPolygonOptions = this.parsePolygonOptions(nextProps);
 
-    this.updatePolygonWithApi('setOptions', this.polygonOptions, nextPolygonOptions);
+    const newPolygonOptions = cloneDeep(nextPolygonOptions, NEED_DEEP_COPY_FIELDS);
+
+    this.updatePolygonWithApi('setOptions', this.polygonOptions, nextPolygonOptions, newPolygonOptions);
 
     this.toggleVisible(this.polygonOptions.visible, nextPolygonOptions.visible);
 
@@ -116,7 +121,7 @@ class Polygon extends React.Component {
    * @return {Polygon}
    */
   initPolygon(polygonOptions) {
-    const polygon = new window.AMap.Polygon(polygonOptions);
+    const polygon = new window.AMap.Polygon(cloneDeep(polygonOptions, NEED_DEEP_COPY_FIELDS));
 
     if (this.props.visible === false) polygon.hide();
 
@@ -198,12 +203,13 @@ class Polygon extends React.Component {
    * Update AMap.Polygon instance with named api and given value.
    * Won't call api if the given value does not change
    * @param  {string} apiName - AMap.Polygon instance update method name
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
+   * @param  {*} currentProp - Current value
+   * @param  {*} nextProp - Next value
+   * @param  {*} newProp - New value
    */
-  updatePolygonWithApi(apiName, currentProp, nextProp) {
+  updatePolygonWithApi(apiName, currentProp, nextProp, newProp) {
     if (!isShallowEqual(currentProp, nextProp)) {
-      this.polygon[apiName](nextProp);
+      this.polygon[apiName](newProp);
     }
   }
 

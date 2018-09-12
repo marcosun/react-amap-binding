@@ -11,8 +11,11 @@ import {
 } from 'prop-types';
 
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
-import isShallowEqual from '../Util/isShallowEqual';
+import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
+import isShallowEqual from '../Util/isShallowEqual';
+
+const NEED_DEEP_COPY_FIELDS = ['data', 'style'];
 
 /**
  * MassMarks binding
@@ -99,9 +102,11 @@ class MassMarks extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     const nextMassMarksOptions = this.parseMassMarksOptions(nextProps);
 
-    this.updateMassMarksWithApi('setStyle', this.massMarksOptions.style, nextMassMarksOptions.style);
+    const newMassMarksOptions = cloneDeep(nextMassMarksOptions, NEED_DEEP_COPY_FIELDS);
 
-    this.updateMassMarksWithApi('setData', this.massMarksOptions.data, nextMassMarksOptions.data);
+    this.updateMassMarksWithApi('setStyle', this.massMarksOptions.style, nextMassMarksOptions.style, newMassMarksOptions.style);
+
+    this.updateMassMarksWithApi('setData', this.massMarksOptions.data, nextMassMarksOptions.data, newMassMarksOptions.data);
 
     this.toggleVisible(this.massMarksOptions.visible, nextMassMarksOptions.visible);
 
@@ -185,7 +190,10 @@ class MassMarks extends React.Component {
       visible,
     } = this.props;
 
-    const massMarks = new window.AMap.MassMarks(data, massMarksOptions);
+    const massMarks = new window.AMap.MassMarks(
+      cloneDeep(data),
+      cloneDeep(massMarksOptions, NEED_DEEP_COPY_FIELDS),
+    );
 
     massMarks.setMap(map);
 
@@ -236,12 +244,13 @@ class MassMarks extends React.Component {
    * Update AMap.MassMarks instance with named api and given value.
    * Won't call api if the given value does not change
    * @param  {string} apiName - AMap.MassMarks instance update method name
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
+   * @param  {*} currentProp - Current value
+   * @param  {*} nextProp - Next value
+   * @param  {*} newProp - New value
    */
-  updateMassMarksWithApi(apiName, currentProp, nextProp) {
+  updateMassMarksWithApi(apiName, currentProp, nextProp, newProp) {
     if (!isShallowEqual(currentProp, nextProp)) {
-      this.massMarks[apiName](nextProp);
+      this.massMarks[apiName](newProp);
     }
   }
 

@@ -5,8 +5,11 @@ import {
 } from 'prop-types';
 
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
-import isShallowEqual from '../Util/isShallowEqual';
+import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
+import isShallowEqual from '../Util/isShallowEqual';
+
+const NEED_DEEP_COPY_FIELDS = ['position'];
 
 /**
  * Marker binding
@@ -77,7 +80,7 @@ class Marker extends React.Component {
 
     this.markerOptions = this.parseMarkerOptions(this.props);
 
-    this.marker = new window.AMap.Marker(this.markerOptions);
+    this.marker = new window.AMap.Marker(cloneDeep(this.markerOptions, NEED_DEEP_COPY_FIELDS));
 
     this.eventCallbacks = this.parseEvents();
 
@@ -95,37 +98,39 @@ class Marker extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     const nextMarkerOptions = this.parseMarkerOptions(nextProps);
 
-    this.updateMarkerWithApi('setOffset', this.markerOptions.offset, nextMarkerOptions.offset);
+    const newMarkerOptions = cloneDeep(nextMarkerOptions, NEED_DEEP_COPY_FIELDS);
 
-    this.updateMarkerWithApi('setAnimation', this.markerOptions.animation, nextMarkerOptions.animation);
+    this.updateMarkerWithApi('setOffset', this.markerOptions.offset, nextMarkerOptions.offset, newMarkerOptions.offset);
 
-    this.updateMarkerWithApi('setClickable', this.markerOptions.clickable, nextMarkerOptions.clickable);
+    this.updateMarkerWithApi('setAnimation', this.markerOptions.animation, nextMarkerOptions.animation, newMarkerOptions.animation);
 
-    this.updateMarkerWithApi('setPosition', this.markerOptions.position, nextMarkerOptions.position);
+    this.updateMarkerWithApi('setClickable', this.markerOptions.clickable, nextMarkerOptions.clickable, newMarkerOptions.clickable);
 
-    this.updateMarkerWithApi('setAngle', this.markerOptions.angle, nextMarkerOptions.angle);
+    this.updateMarkerWithApi('setPosition', this.markerOptions.position, nextMarkerOptions.position, newMarkerOptions.position);
 
-    this.updateMarkerWithApi('setLabel', this.markerOptions.label, nextMarkerOptions.label);
+    this.updateMarkerWithApi('setAngle', this.markerOptions.angle, nextMarkerOptions.angle, newMarkerOptions.angle);
 
-    this.updateMarkerWithApi('setzIndex', this.markerOptions.zIndex, nextMarkerOptions.zIndex);
+    this.updateMarkerWithApi('setLabel', this.markerOptions.label, nextMarkerOptions.label, newMarkerOptions.label);
 
-    this.updateMarkerWithApi('setIcon', this.markerOptions.icon, nextMarkerOptions.icon);
+    this.updateMarkerWithApi('setzIndex', this.markerOptions.zIndex, nextMarkerOptions.zIndex, newMarkerOptions.zIndex);
 
-    this.updateMarkerWithApi('setDraggable', this.markerOptions.draggable, nextMarkerOptions.draggable);
+    this.updateMarkerWithApi('setIcon', this.markerOptions.icon, nextMarkerOptions.icon, newMarkerOptions.icon);
+
+    this.updateMarkerWithApi('setDraggable', this.markerOptions.draggable, nextMarkerOptions.draggable, newMarkerOptions.draggable);
 
     this.toggleVisible(this.markerOptions.visible, nextMarkerOptions.visible);
 
-    this.updateMarkerWithApi('setCursor', this.markerOptions.cursor, nextMarkerOptions.cursor);
+    this.updateMarkerWithApi('setCursor', this.markerOptions.cursor, nextMarkerOptions.cursor, newMarkerOptions.cursor);
 
-    this.updateMarkerWithApi('setContent', this.markerOptions.content, nextMarkerOptions.content);
+    this.updateMarkerWithApi('setContent', this.markerOptions.content, nextMarkerOptions.content, newMarkerOptions.content);
 
-    this.updateMarkerWithApi('setTitle', this.markerOptions.title, nextMarkerOptions.title);
+    this.updateMarkerWithApi('setTitle', this.markerOptions.title, nextMarkerOptions.title, newMarkerOptions.title);
 
-    this.updateMarkerWithApi('setShadow', this.markerOptions.shadow, nextMarkerOptions.shadow);
+    this.updateMarkerWithApi('setShadow', this.markerOptions.shadow, nextMarkerOptions.shadow, newMarkerOptions.shadow);
 
-    this.updateMarkerWithApi('setShape', this.markerOptions.shape, nextMarkerOptions.shape);
+    this.updateMarkerWithApi('setShape', this.markerOptions.shape, nextMarkerOptions.shape, newMarkerOptions.shape);
 
-    this.updateMarkerWithApi('setExtData', this.markerOptions.extData, nextMarkerOptions.extData);
+    this.updateMarkerWithApi('setExtData', this.markerOptions.extData, nextMarkerOptions.extData, newMarkerOptions.extData);
 
     this.markerOptions = nextMarkerOptions;
 
@@ -245,12 +250,13 @@ class Marker extends React.Component {
    * Update AMap.Marker instance with named api and given value.
    * Won't call api if the given value does not change
    * @param  {string} apiName - AMap.Marker instance update method name
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
+   * @param  {*} currentProp - Current value
+   * @param  {*} nextProp - Next value
+   * @param  {*} newProp - New value
    */
-  updateMarkerWithApi(apiName, currentProp, nextProp) {
+  updateMarkerWithApi(apiName, currentProp, nextProp, newProp) {
     if (!isShallowEqual(currentProp, nextProp)) {
-      this.marker[apiName](nextProp);
+      this.marker[apiName](newProp);
     }
   }
 

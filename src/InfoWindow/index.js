@@ -6,8 +6,11 @@ import {
 } from 'prop-types';
 
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
-import isShallowEqual from '../Util/isShallowEqual';
+import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
+import isShallowEqual from '../Util/isShallowEqual';
+
+const NEED_DEEP_COPY_FIELDS = ['position'];
 
 /**
  * InfoWindow binding
@@ -71,13 +74,15 @@ class InfoWindow extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     const nextInfoWindowOptions = this.parseInfoWindowOptions(nextProps);
 
+    const newInfoWindowOptions = cloneDeep(nextInfoWindowOptions, NEED_DEEP_COPY_FIELDS);
+
     this.toggleVisible(this.infoWindowOptions.visible, nextInfoWindowOptions.visible);
 
-    this.updateInfoWindowWithApi('setContent', this.infoWindowOptions.content, nextInfoWindowOptions.content);
+    this.updateInfoWindowWithApi('setContent', this.infoWindowOptions.content, nextInfoWindowOptions.content, newInfoWindowOptions.content);
 
-    this.updateInfoWindowWithApi('setPosition', this.infoWindowOptions.position, nextInfoWindowOptions.position);
+    this.updateInfoWindowWithApi('setPosition', this.infoWindowOptions.position, nextInfoWindowOptions.position, newInfoWindowOptions.position);
 
-    this.updateInfoWindowWithApi('setSize', this.infoWindowOptions.size, nextInfoWindowOptions.size);
+    this.updateInfoWindowWithApi('setSize', this.infoWindowOptions.size, nextInfoWindowOptions.size, newInfoWindowOptions.size);
 
     this.infoWindowOptions = nextInfoWindowOptions;
 
@@ -108,7 +113,7 @@ class InfoWindow extends React.Component {
       visible,
     } = this.props;
 
-    const infoWindow = new window.AMap.InfoWindow(infoWindowOptions);
+    const infoWindow = new window.AMap.InfoWindow(cloneDeep(infoWindowOptions, NEED_DEEP_COPY_FIELDS));
 
     infoWindow.setMap(map);
 
@@ -199,12 +204,13 @@ class InfoWindow extends React.Component {
    * Update AMap.InfoWindow instance with named api and given value.
    * Won't call api if the given value does not change
    * @param  {string} apiName - AMap.InfoWindow instance update method name
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
+   * @param  {*} currentProp - Current value
+   * @param  {*} nextProp - Next value
+   * @param  {*} newProp - New value
    */
-  updateInfoWindowWithApi(apiName, currentProp, nextProp) {
+  updateInfoWindowWithApi(apiName, currentProp, nextProp, newProp) {
     if (!isShallowEqual(currentProp, nextProp)) {
-      this.infoWindow[apiName](nextProp);
+      this.infoWindow[apiName](newProp);
     }
   }
 
