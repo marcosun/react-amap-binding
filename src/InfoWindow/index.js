@@ -56,9 +56,9 @@ class InfoWindow extends React.Component {
 
     this.infoWindowOptions = this.parseInfoWindowOptions(this.props);
 
-    this.eventCallbacks = this.parseEvents();
-
     this.infoWindow = this.initInfoWindow(this.infoWindowOptions);
+
+    this.eventCallbacks = this.parseEvents();
 
     this.bindEvents(this.infoWindow, this.eventCallbacks);
 
