@@ -94,9 +94,7 @@ class BezierCurve extends React.Component {
 
     this.toggleVisible(this.bezierCurveOptions.visible, nextBezierCurveOptions.visible);
 
-    this.updateBezierCurveWithApi('setPath', this.bezierCurveOptions.path, nextBezierCurveOptions.path, newBezierCurveOptions.path);
-
-    this.updateOptions(this.bezierCurveOptions, nextBezierCurveOptions);
+    this.updateBezierCurveWithApi('setOptions', this.bezierCurveOptions, nextBezierCurveOptions, newBezierCurveOptions);
 
     this.bezierCurveOptions = nextBezierCurveOptions;
 
@@ -203,40 +201,6 @@ class BezierCurve extends React.Component {
     if (!isShallowEqual(currentProp, nextProp)) {
       this.bezierCurve[apiName](newProp);
     }
-  }
-
-  /**
-   * Update bezierCurve options
-   * Won't call api if the given value does not change
-   * @param  {Object} currentProp - Current bezierCurve options
-   * @param  {Object} nextProp - Next bezierCurve options
-   */
-  updateOptions(currentProp, nextProp) {
-    const {
-      path,
-      map,
-      visible,
-      onComplete,
-      onClick,
-      onDblClick,
-      onRightClick,
-      onHide,
-      onShow,
-      onMouseDown,
-      onMouseUp,
-      onMouseOver,
-      onMouseOut,
-      onChange,
-      onTouchStart,
-      onTouchEnd,
-      ...currentOtherOptions,
-    } = currentProp;
-
-    Object.entries(currentOtherOptions).forEach(([key, value]) => {
-      if (!isShallowEqual(value, nextProp[key])) {
-        this.bezierCurve.setOptions({[key]: nextProp[key]});
-      }
-    });
   }
 
   /**
