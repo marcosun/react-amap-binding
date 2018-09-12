@@ -72,9 +72,9 @@ class BezierCurve extends React.Component {
 
     this.bezierCurveOptions = this.parseBezierCurveOptions(this.props);
 
-    this.eventCallbacks = this.parseEvents();
-
     this.bezierCurve = this.initBezierCurve(this.bezierCurveOptions);
+
+    this.eventCallbacks = this.parseEvents();
 
     this.bindEvents(this.bezierCurve, this.eventCallbacks);
 
