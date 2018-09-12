@@ -32,6 +32,10 @@ export default function(options, needCloneKeys) {
     return {
       ...options,
       ...needCloneKeys.reduce((result, key) => {
+        if (!Object.keys(options).includes(key)) {
+          return result;
+        }
+
         return {
           ...result,
           [key]: cloneDeep(options[key]),
