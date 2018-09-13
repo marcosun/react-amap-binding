@@ -23,7 +23,7 @@ const styles = (theme) => ({
  */
 @hot(module)
 @withStyles(styles)
-export default class AMapPage extends React.Component {
+class AMapPage extends React.Component {
   static propTypes = {
     appKey: string,
     classes: object,
@@ -57,3 +57,5 @@ export default class AMapPage extends React.Component {
     );
   }
 }
+
+export default AMapPage;

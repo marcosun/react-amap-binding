@@ -9,7 +9,7 @@ import AMap from '../AMapPage';
  * Loca page
  */
 @hot(module)
-export default class LocaPage extends React.Component {
+class LocaPage extends React.Component {
   /**
    * Constructor
    * @param {Object} props
@@ -107,3 +107,6 @@ export default class LocaPage extends React.Component {
     );
   }
 }
+
+export default LocaPage;
+

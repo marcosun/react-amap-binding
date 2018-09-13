@@ -12,7 +12,7 @@ import AMap from '../AMapPage';
  * Marker page
  */
 @hot(module)
-export default class MarkerPage extends React.Component {
+class MarkerPage extends React.Component {
   /**
    * Constructor
    * @param {Object} props
@@ -80,3 +80,6 @@ export default class MarkerPage extends React.Component {
     );
   }
 }
+
+export default MarkerPage;
+

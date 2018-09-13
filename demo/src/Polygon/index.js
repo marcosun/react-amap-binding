@@ -12,7 +12,7 @@ import AMap from '../AMapPage';
  * Polygon page
  */
 @hot(module)
-export default class PolygonPage extends React.Component {
+class PolygonPage extends React.Component {
   /**
    * Constructor
    * @param {Object} props
@@ -136,3 +136,5 @@ export default class PolygonPage extends React.Component {
     );
   }
 }
+
+export default PolygonPage;

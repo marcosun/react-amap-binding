@@ -12,7 +12,7 @@ import AMap from '../AMapPage';
  * Traffic page
  */
 @hot(module)
-export default class Traffic extends React.Component {
+class Traffic extends React.Component {
   /**
    * Constructor
    * @param {Object} props
@@ -35,3 +35,5 @@ export default class Traffic extends React.Component {
     );
   }
 }
+
+export default Traffic;

@@ -12,7 +12,7 @@ import AMap from '../AMapPage';
  * InfoWindowPage page
  */
 @hot(module)
-export default class InfoWindowPage extends React.Component {
+class InfoWindowPage extends React.Component {
   /**
    * Constructor
    * @param {Object} props
@@ -61,3 +61,4 @@ export default class InfoWindowPage extends React.Component {
   }
 }
 
+export default InfoWindowPage;

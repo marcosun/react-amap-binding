@@ -12,7 +12,7 @@ import AMap from '../AMapPage';
  * Polyline page
  */
 @hot(module)
-export default class PolylinePage extends React.Component {
+class PolylinePage extends React.Component {
   /**
    * Constructor
    * @param {Object} props
@@ -82,3 +82,5 @@ export default class PolylinePage extends React.Component {
     );
   }
 }
+
+export default PolylinePage;

@@ -12,7 +12,7 @@ import AMap from '../AMapPage';
  * MassMarks page
  */
 @hot(module)
-export default class MassMarksPage extends React.Component {
+class MassMarksPage extends React.Component {
   /**
    * Contstructor function
    * @param {Object} props
@@ -83,3 +83,6 @@ export default class MassMarksPage extends React.Component {
     );
   }
 }
+
+export default MassMarksPage;
+

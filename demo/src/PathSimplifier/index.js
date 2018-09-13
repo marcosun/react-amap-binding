@@ -12,7 +12,7 @@ import AMap from '../AMapPage';
  * PathSimplifier page
  */
 @hot(module)
-export default class PathSimplifierPage extends React.Component {
+class PathSimplifierPage extends React.Component {
   static propTypes = {
     children: node,
   };
@@ -89,3 +89,5 @@ export default class PathSimplifierPage extends React.Component {
     );
   }
 }
+
+export default PathSimplifierPage;

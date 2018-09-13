@@ -9,7 +9,7 @@ import AMap from '../AMapPage';
  * BezierCurve page
  */
 @hot(module)
-export default class BezierCurvePage extends React.Component {
+class BezierCurvePage extends React.Component {
   static propTypes = {};
 
   /**
@@ -67,3 +67,6 @@ export default class BezierCurvePage extends React.Component {
     );
   }
 }
+
+export default BezierCurvePage;
+
