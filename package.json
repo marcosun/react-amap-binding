@@ -44,13 +44,16 @@
     "fs-extra": "^7.0.0",
     "jest": "^23.4.1",
     "nodemon": "^1.18.3",
-    "rimraf": "^2.6.2",
     "prop-types": "^15.6.1",
-    "react": "^16.2.0"
+    "react": "^16.2.0",
+    "rimraf": "^2.6.2"
   },
   "jest": {
     "roots": [
       "<rootDir>/src/"
     ]
+  },
+  "peerDependencies": {
+    "react": "^16.3.0"
   }
 }
