@@ -15,7 +15,7 @@ import isShallowEqual from '../Util/isShallowEqual';
  * AMap component accepts the following config properties to initialise AMap.
  * @param  {MapOptions} props - Properties defined in AMap.Map
  * {@link http://lbs.amap.com/api/javascript-api/reference/map}
- * @param  {Array|Bounds} props.bounds - An 2D array of two numbers or AMap.Bounds
+ * @param  {Array|Bounds} props.bounds - A 2D array of two numbers or AMap.Bounds
  * @param  {string} props.locaVersion - Loca library version
  * @param  {string} props.protocol - Protocol, whether it is http or https
  * @param  {string} props.version - AMap javascript library version
