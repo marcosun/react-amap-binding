@@ -7,6 +7,13 @@
   "plugins": [
     "transform-decorators-legacy",
     "react-hot-loader/babel", // Enable react hot loader
-    "syntax-dynamic-import"
+    "syntax-dynamic-import",
+    [
+      "import", [{
+        "libraryName": "@material-ui/core",
+        "libraryDirectory": "",
+        "camel2DashComponentName": false,
+      }],
+    ],
   ]
 }

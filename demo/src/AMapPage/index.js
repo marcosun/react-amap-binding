@@ -8,7 +8,7 @@ import {
   string,
 } from 'prop-types';
 import {hot} from 'react-hot-loader';
-import {withStyles} from 'material-ui';
+import {withStyles} from '@material-ui/core/styles';
 import {AMap} from 'react-amap-binding';
 
 const styles = (theme) => ({

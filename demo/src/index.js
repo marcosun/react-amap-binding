@@ -9,7 +9,7 @@
 import 'babel-polyfill';
 import React from 'react';
 import ReactDom from 'react-dom';
-import {CssBaseline} from 'material-ui';
+import {CssBaseline} from '@material-ui/core';
 
 // Separate local imports from dependencies
 import Root from './router';
@@ -25,9 +25,10 @@ import Root from './router';
  */
 const render = (Component) => {
   ReactDom.render(
-    <CssBaseline>
+    <React.Fragment>
+      <CssBaseline />
       <Component />
-    </CssBaseline>,
+    </React.Fragment>,
     document.getElementById('app')
   );
 };
