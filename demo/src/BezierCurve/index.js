@@ -1,5 +1,6 @@
 import React from 'react';
 import {} from 'prop-types';
+import {hot} from 'react-hot-loader';
 import {BezierCurve} from 'react-amap-binding';
 
 import AMap from '../AMapPage';
@@ -7,6 +8,7 @@ import AMap from '../AMapPage';
 /**
  * BezierCurve page
  */
+@hot(module)
 export default class BezierCurvePage extends React.Component {
   static propTypes = {};
 

@@ -2,28 +2,17 @@
  * @module Demo/PolylinePage
  */
 import React from 'react';
-import {object} from 'prop-types';
-import {withStyles} from 'material-ui';
+import {} from 'prop-types';
+import {hot} from 'react-hot-loader';
 import {Polyline} from 'react-amap-binding';
 
 import AMap from '../AMapPage';
 
-const styles = (theme) => ({
-  mapContainer: {
-    width: '100vw',
-    height: '100vh',
-  },
-});
-
-@withStyles(styles)
 /**
  * Polyline page
  */
+@hot(module)
 export default class PolylinePage extends React.Component {
-  static propTypes = {
-    classes: object,
-  };
-
   /**
    * Constructor
    * @param {Object} props
@@ -82,20 +71,14 @@ export default class PolylinePage extends React.Component {
    * @return {Component} - Page
    */
   render() {
-    const {
-      classes,
-    } = this.props;
-
     return (
-      <div className={classes.mapContainer}>
-        <AMap>
-          <Polyline
-            {...this.state}
-            onMouseOver={this.handleMouseOver}
-            onMouseOut={this.handleMouseOut}
-          />
-        </AMap>
-      </div>
+      <AMap>
+        <Polyline
+          {...this.state}
+          onMouseOver={this.handleMouseOver}
+          onMouseOut={this.handleMouseOut}
+        />
+      </AMap>
     );
   }
 }

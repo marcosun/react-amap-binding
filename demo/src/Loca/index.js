@@ -1,26 +1,15 @@
 import React from 'react';
-import {object} from 'prop-types';
-import {withStyles} from 'material-ui';
+import {} from 'prop-types';
+import {hot} from 'react-hot-loader';
 import {Loca} from 'react-amap-binding';
 
 import AMap from '../AMapPage';
 
-const styles = (theme) => ({
-  mapContainer: {
-    width: '100vw',
-    height: '100vh',
-  },
-});
-
-@withStyles(styles)
 /**
  * Loca page
  */
+@hot(module)
 export default class LocaPage extends React.Component {
-  static propTypes = {
-    classes: object,
-  };
-
   /**
    * Constructor
    * @param {Object} props
@@ -99,28 +88,22 @@ export default class LocaPage extends React.Component {
    */
   render() {
     const {
-      classes,
-    } = this.props;
-
-    const {
       data,
       layerOptions,
       visualOptions,
     } = this.state;
 
     return (
-      <div className={classes.mapContainer}>
-        <AMap
-          mapStyle='amap://styles/47cf2cc474c7ad6c92072f0b267adff0?isPublic=true'
-        >
-          <Loca
-            data={data}
-            dataSetOptions={{lnglat: 'center'}}
-            layerOptions={layerOptions}
-            visualOptions={visualOptions}
-          />
-        </AMap>
-      </div>
+      <AMap
+        mapStyle='amap://styles/47cf2cc474c7ad6c92072f0b267adff0?isPublic=true'
+      >
+        <Loca
+          data={data}
+          dataSetOptions={{lnglat: 'center'}}
+          layerOptions={layerOptions}
+          visualOptions={visualOptions}
+        />
+      </AMap>
     );
   }
 }

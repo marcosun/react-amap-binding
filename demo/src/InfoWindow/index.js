@@ -2,28 +2,17 @@
  * @module Demo/InfoWindowPage
  */
 import React from 'react';
-import {object} from 'prop-types';
-import {withStyles} from 'material-ui';
+import {} from 'prop-types';
+import {hot} from 'react-hot-loader';
 import {InfoWindow} from 'react-amap-binding';
 
 import AMap from '../AMapPage';
 
-const styles = (theme) => ({
-  mapContainer: {
-    width: '100vw',
-    height: '100vh',
-  },
-});
-
-@withStyles(styles)
 /**
  * InfoWindowPage page
  */
+@hot(module)
 export default class InfoWindowPage extends React.Component {
-  static propTypes = {
-    classes: object,
-  };
-
   /**
    * Constructor
    * @param {Object} props
@@ -58,21 +47,16 @@ export default class InfoWindowPage extends React.Component {
    */
   render() {
     const {
-      classes,
-    } = this.props;
-
-    const {
       infoWindow,
     } = this.state;
+
     return (
-      <div className={classes.mapContainer}>
-        <AMap>
-          <InfoWindow
-            {...infoWindow}
-            onClose={this.handleClick}
-          />
-        </AMap>
-      </div>
+      <AMap>
+        <InfoWindow
+          {...infoWindow}
+          onClose={this.handleClick}
+        />
+      </AMap>
     );
   }
 }

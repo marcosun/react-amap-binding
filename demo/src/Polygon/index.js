@@ -2,28 +2,17 @@
  * @module Demo/PolygonPage
  */
 import React from 'react';
-import {object} from 'prop-types';
-import {withStyles} from 'material-ui';
+import {} from 'prop-types';
+import {hot} from 'react-hot-loader';
 import {Polygon} from 'react-amap-binding';
 
 import AMap from '../AMapPage';
 
-const styles = (theme) => ({
-  mapContainer: {
-    width: '100vw',
-    height: '100vh',
-  },
-});
-
-@withStyles(styles)
 /**
  * Polygon page
  */
+@hot(module)
 export default class PolygonPage extends React.Component {
-  static propTypes = {
-    classes: object,
-  };
-
   /**
    * Constructor
    * @param {Object} props
@@ -130,22 +119,20 @@ export default class PolygonPage extends React.Component {
     } = this.props;
 
     return (
-      <div className={classes.mapContainer}>
-        <AMap>
-          {
-            this.state.polygons.map((polygon, index) => {
-              return (
-                <Polygon
-                  key={index}
-                  {...polygon}
-                  onHide={this.handleHide}
-                  onClick={this.handleClick}
-                />
-              );
-            })
-          }
-        </AMap>
-      </div>
+      <AMap>
+        {
+          this.state.polygons.map((polygon, index) => {
+            return (
+              <Polygon
+                key={index}
+                {...polygon}
+                onHide={this.handleHide}
+                onClick={this.handleClick}
+              />
+            );
+          })
+        }
+      </AMap>
     );
   }
 }

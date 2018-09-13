@@ -2,34 +2,17 @@
  * @module Demo/MassMarksPage
  */
 import React from 'react';
-import {object} from 'prop-types';
-import {withStyles} from 'material-ui/styles';
+import {} from 'prop-types';
+import {hot} from 'react-hot-loader';
 import {MassMarks} from 'react-amap-binding';
 
 import AMap from '../AMapPage';
 
-const styles = (theme) => ({
-  mapContainer: {
-    width: '100vw',
-    height: '100vh',
-  },
-});
-
-@withStyles(styles)
 /**
  * MassMarks page
  */
+@hot(module)
 export default class MassMarksPage extends React.Component {
-  /**
-   * Props validation
-   * Declares props validation as high as possible,
-   * since they serve as documentation.
-   * We’re able to do this because of JavaScript function hoisting.
-   */
-  static propTypes = {
-    classes: object.isRequired,
-  };
-
   /**
    * Contstructor function
    * @param {Object} props
@@ -90,19 +73,13 @@ export default class MassMarksPage extends React.Component {
    * @return {Component}
    */
   render() {
-    const {
-      classes,
-    } = this.props;
-
     return (
-      <div className={classes.mapContainer}>
-        <AMap>
-          <MassMarks
-            {...this.state}
-            onClick={this.handleClick}
-          />
-        </AMap>
-      </div>
+      <AMap>
+        <MassMarks
+          {...this.state}
+          onClick={this.handleClick}
+        />
+      </AMap>
     );
   }
 }

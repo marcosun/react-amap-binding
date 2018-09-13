@@ -2,27 +2,19 @@
  * @module Demo/PathSimplifierPage
  */
 import React from 'react';
-import {node, object} from 'prop-types';
-import {withStyles} from 'material-ui';
+import {node} from 'prop-types';
+import {hot} from 'react-hot-loader';
 import {PathSimplifier} from 'react-amap-binding';
 
 import AMap from '../AMapPage';
 
-const styles = (theme) => ({
-  mapContainer: {
-    width: '100vw',
-    height: '100vh',
-  },
-});
-
-@withStyles(styles)
 /**
  * PathSimplifier page
  */
+@hot(module)
 export default class PathSimplifierPage extends React.Component {
   static propTypes = {
     children: node,
-    classes: object,
   };
 
   /**
@@ -76,27 +68,24 @@ export default class PathSimplifierPage extends React.Component {
   render() {
     const {
       children,
-      classes,
     } = this.props;
 
     return (
-      <div className={classes.mapContainer}>
-        <AMap>
-          <PathSimplifier
-            data={this.state.pathSimplifier}
-            getPath={(pathData, pathIndex) => {
-              return pathData.path;
-            }}
-            getHoverTitle={() => {
-              return null;
-            }}
-            autoSetFitView={true}
-            clickToSelectPath={false}
-          >
-            {children}
-          </PathSimplifier>
-        </AMap>
-      </div>
+      <AMap>
+        <PathSimplifier
+          data={this.state.pathSimplifier}
+          getPath={(pathData, pathIndex) => {
+            return pathData.path;
+          }}
+          getHoverTitle={() => {
+            return null;
+          }}
+          autoSetFitView={true}
+          clickToSelectPath={false}
+        >
+          {children}
+        </PathSimplifier>
+      </AMap>
     );
   }
 }

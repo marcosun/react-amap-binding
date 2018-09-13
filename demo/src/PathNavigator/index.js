@@ -1,27 +1,16 @@
 import React from 'react';
-import {object} from 'prop-types';
-import {withStyles} from 'material-ui';
+import {} from 'prop-types';
+import {hot} from 'react-hot-loader';
 import {PathNavigator} from 'react-amap-binding';
 
 import AMap from '../AMapPage';
 import PathSimplifier from '../PathSimplifier';
 
-const styles = (theme) => ({
-  mapContainer: {
-    width: '100vw',
-    height: '100vh',
-  },
-});
-
 /**
  * PathNavigatorPage
  */
-@withStyles(styles)
+@hot(module)
 class PathNavigatorPage extends React.Component {
-  static propTypes = {
-    classes: object.isRequired,
-  };
-
   /**
    * @param {Object} props
    */
@@ -32,22 +21,6 @@ class PathNavigatorPage extends React.Component {
     this.state = {
       pathIndex: 1,
     };
-
-    this.pathSimplifier = [{
-      name: '轨迹0',
-      path: [
-        [120.432955, 30.234711],
-        [120.183016, 30.243906],
-        [120.163431, 30.254176],
-      ],
-    }, {
-      name: '轨迹1',
-      path: [
-        [120.177591, 30.217746],
-        [120.215529, 30.250078],
-        [120.207117, 30.276618],
-      ],
-    }];
   }
 
   /**
@@ -74,20 +47,14 @@ class PathNavigatorPage extends React.Component {
    * @return {Element}
    */
   render() {
-    const {
-      classes,
-    } = this.props;
-
     return (
-      <div className={classes.mapContainer}>
-        <PathSimplifier>
-          <PathNavigator
-            loop={true}
-            onComplete={this.handleComplete.bind(this)}
-            pathIndex={this.state.pathIndex}
-          />
-        </PathSimplifier>
-      </div>
+      <PathSimplifier>
+        <PathNavigator
+          loop={true}
+          onComplete={this.handleComplete.bind(this)}
+          pathIndex={this.state.pathIndex}
+        />
+      </PathSimplifier>
     );
   }
 }

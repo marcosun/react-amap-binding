@@ -7,6 +7,7 @@ import {
   object,
   string,
 } from 'prop-types';
+import {hot} from 'react-hot-loader';
 import {withStyles} from 'material-ui';
 import {AMap} from 'react-amap-binding';
 
@@ -17,10 +18,11 @@ const styles = (theme) => ({
   },
 });
 
-@withStyles(styles)
 /**
  * AMap page
  */
+@hot(module)
+@withStyles(styles)
 export default class AMapPage extends React.Component {
   static propTypes = {
     appKey: string,

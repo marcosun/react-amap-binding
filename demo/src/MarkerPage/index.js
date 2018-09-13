@@ -2,28 +2,17 @@
  * @module Demo/MarkerPage
  */
 import React from 'react';
-import {object} from 'prop-types';
-import {withStyles} from 'material-ui';
+import {} from 'prop-types';
+import {hot} from 'react-hot-loader';
 import {Marker} from 'react-amap-binding';
 
 import AMap from '../AMapPage';
 
-const styles = (theme) => ({
-  mapContainer: {
-    width: '100vw',
-    height: '100vh',
-  },
-});
-
-@withStyles(styles)
 /**
  * Marker page
  */
+@hot(module)
 export default class MarkerPage extends React.Component {
-  static propTypes = {
-    classes: object,
-  };
-
   /**
    * Constructor
    * @param {Object} props
@@ -73,27 +62,21 @@ export default class MarkerPage extends React.Component {
    */
   render() {
     const {
-      classes,
-    } = this.props;
-
-    const {
       markers,
     } = this.state;
 
     return (
-      <div className={classes.mapContainer}>
-        <AMap>
-          {
-            markers.map((marker, index) => {
-              return <Marker
-                key={index}
-                {...marker}
-                onClick={this.handleClick}
-              />;
-            })
-          }
-        </AMap>
-      </div>
+      <AMap>
+        {
+          markers.map((marker, index) => {
+            return <Marker
+              key={index}
+              {...marker}
+              onClick={this.handleClick}
+            />;
+          })
+        }
+      </AMap>
     );
   }
 }

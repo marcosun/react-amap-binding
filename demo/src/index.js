@@ -9,7 +9,6 @@
 import 'babel-polyfill';
 import React from 'react';
 import ReactDom from 'react-dom';
-import {AppContainer} from 'react-hot-loader';
 import {CssBaseline} from 'material-ui';
 
 // Separate local imports from dependencies
@@ -26,25 +25,11 @@ import Root from './router';
  */
 const render = (Component) => {
   ReactDom.render(
-    <AppContainer>
-      <CssBaseline>
-        <Component />
-      </CssBaseline>
-    </AppContainer>,
+    <CssBaseline>
+      <Component />
+    </CssBaseline>,
     document.getElementById('app')
   );
 };
 
 render(Root);
-
-/**
- * Watching for HMR
- */
-if (module.hot) {
-  /**
-   * Any changes detected from React App would cause HMR
-   */
-  module.hot.accept('./router', () => {
-    render(Root);
-  });
-}
