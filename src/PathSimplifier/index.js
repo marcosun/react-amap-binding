@@ -48,6 +48,24 @@ class PathSimplifier extends React.Component {
     onPointMouseout: func,
   };
 
+  // Update state to rebuild pathNavigator once nextProps.data is changed
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (!isShallowEqual(nextProps.data, prevState.data)) {
+      return {
+        data: nextProps.data,
+        isShouldDestoryPathNavigator: true,
+      };
+    }
+
+    return null;
+  }
+
+  state = {
+    data: [],
+    isShouldDestoryPathNavigator: false,
+    pathSimplifier: void 0,
+  };
+
   /**
    * Define event name mapping relations of react binding PathSimplifier
    * and AMapUI.PathSimplifier.
@@ -61,12 +79,6 @@ class PathSimplifier extends React.Component {
     } = props;
 
     breakIfNotChildOfAMap('PathSimplifier', map);
-
-    this.state = {
-      data: [],
-      isShouldDestoryPathNavigator: false,
-      pathSimplifier: void 0,
-    };
   }
 
   /**
@@ -98,32 +110,21 @@ class PathSimplifier extends React.Component {
   }
 
   /**
-   * Update state to rebuild pathNavigator once nextProps.data is changed
-   * @param  {Object} nextProps - Next props
-   */
-  componentWillReceiveProps(nextProps) {
-    if (!isShallowEqual(nextProps.data, this.state.data)) {
-      this.setState({
-        ...this.state,
-        data: nextProps.data,
-        isShouldDestoryPathNavigator: true,
-      });
-
-      setTimeout(() => {
-        this.setState({
-          ...this.state,
-          isShouldDestoryPathNavigator: false,
-        });
-      });
-    }
-  }
-
-  /**
    * Update this.pathSimplifier by calling AMapUI.PathSimplifier methods
+   * @param {Object} prevProps
+   * @param {Object} prevState
    */
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     if (this.pathSimplifier === void 0) {
       return;
+    }
+
+    // Recreate pathNavigator
+    if (prevState.isShouldDestoryPathNavigator === true) {
+      this.setState({
+        ...prevState,
+        isShouldDestoryPathNavigator: false,
+      });
     }
 
     const nextPathSimplifierOptions = this.parsePathSimplifierOptions(this.props);
@@ -248,13 +249,6 @@ class PathSimplifier extends React.Component {
       pathSimplifier,
     } = this.state;
 
-    if (pathSimplifier === void 0
-      || children === void 0
-      || typeof children === 'boolean'
-    ) {
-      return null;
-    }
-
     const childrenElement = () => {
       if (React.isValidElement(children)) { // Single element
         return React.cloneElement(children, {
@@ -283,7 +277,9 @@ class PathSimplifier extends React.Component {
       return null;
     }
 
-    return childrenElement();
+    return pathSimplifier !== void 0
+      && children !== void 0
+      && childrenElement();
   }
 }
 
