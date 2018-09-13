@@ -20,6 +20,7 @@ const NEED_DEEP_COPY_FIELDS = ['position'];
  * Besides, it can transform an array of two numbers into AMap.Pixel instance.
  * @param {Object} props.map - AMap map instance
  * @param {Array|Pixel} props.offset - An array of two numbers or AMap.Pixel
+ * @param {Array|Pixel} props.label.offset - An array of two numbers or AMap.Pixel
  * @param {Function} props.onComplete - Complete callback
  * @param {Function} props.onClick - Click callback
  * @param {Function} props.onDblClick - Double click callback
@@ -206,11 +207,26 @@ class Marker extends React.Component {
     } = props;
 
     const {
+      label: {offset: labelOffset} = {},
       offset,
     } = markerOptions;
 
     return {
       ...markerOptions,
+      label: {
+        ...markerOptions.label,
+        offset: (() => {
+          if (labelOffset instanceof window.AMap.Pixel) {
+            return labelOffset;
+          }
+
+          if (labelOffset instanceof Array) {
+            return new window.AMap.Pixel(...labelOffset);
+          }
+
+          return new window.AMap.Pixel(0, 0);
+        })(),
+      },
       // Will transform an array of two numbers into a Pixel instance
       offset: (() => {
         if (offset instanceof window.AMap.Pixel) {
