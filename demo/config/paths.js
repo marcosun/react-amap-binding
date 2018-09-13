@@ -11,8 +11,4 @@ module.exports = {
   appPath: resolveApp('.'),
   appDist: resolveApp('dist'),
   appSrc: resolveApp('src'),
-  appConfig: resolveApp('config'),
-  appIndexJs: resolveApp('src/index.js'),
-  appPackageJson: resolveApp('package.json'),
-  libraryComponent: resolveApp('../lib'),
 };
