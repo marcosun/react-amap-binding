@@ -6,6 +6,7 @@
  * @requires react-hot-loader
  * @requires {@link module:Demo/Router}
  */
+import 'babel-polyfill';
 import React from 'react';
 import ReactDom from 'react-dom';
 import {AppContainer} from 'react-hot-loader';
