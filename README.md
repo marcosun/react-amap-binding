@@ -21,11 +21,13 @@ Have fun!
 
 Completed List:
  - AMap
+ - BezierCurve
+ - InfoWindow
+ - Loca
  - Marker
  - MassMarks
- - Polygon
- - TileLayer.Traffic
-
-Todo list:
- - InfoWindow
+ - PathNavigator
  - PathSimplifier
+ - Polygon
+ - Polyline
+ - TileLayer.Traffic
