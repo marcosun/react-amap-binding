@@ -5,7 +5,6 @@ import {
   node,
   oneOf,
 } from 'prop-types';
-
 import createEventCallback from '../Util/createEventCallback';
 import isShallowEqual from '../Util/isShallowEqual';
 
@@ -195,9 +194,9 @@ class AMap extends React.PureComponent {
     } = this.props;
 
     if (window.AMap === void 0) {
-      await this.requireAMap({protocol, version, appKey});
-      await this.requireAMapUI({protocol, version: uiVersion});
-      await this.requireLoca({protocol, appKey, version: locaVersion});
+      await this.requireAMap({ protocol, version, appKey });
+      await this.requireAMapUI({ protocol, version: uiVersion });
+      await this.requireLoca({ protocol, appKey, version: locaVersion });
     }
 
     this.map = new window.AMap.Map(this.mapContainer, {
@@ -286,7 +285,7 @@ class AMap extends React.PureComponent {
    * @param  {string} options.appKey   - AMap JS App key
    * @return {Promise}                 - Promise created by AMap script tag
    */
-  requireAMap({protocol, version, appKey}) {
+  requireAMap({ protocol, version, appKey }) {
     return new Promise((resolve) => {
       window.onJsapiLoad = () => {
         resolve();
@@ -307,7 +306,7 @@ class AMap extends React.PureComponent {
    * @param  {string} options.version  - AMap UI javascript library version
    * @return {Promise}                 - Promise created by AMap UI script tag
    */
-  requireAMapUI({protocol, version}) {
+  requireAMapUI({ protocol, version }) {
     const amapUi = document.createElement('script');
     amapUi.type = 'text/javascript';
     amapUi.src = `${protocol}://webapi.amap.com/ui/${version}/main-async.js`;
@@ -329,7 +328,7 @@ class AMap extends React.PureComponent {
    * @param  {string} options.version  - Loca library version.
    * @return {Promise}                 - Promise created by Loca script tag.
    */
-  requireLoca({protocol, appKey, version}) {
+  requireLoca({ protocol, appKey, version }) {
     const loca = document.createElement('script');
     loca.type = 'text/javascript';
     loca.src = `${protocol}://webapi.amap.com/loca?key=${appKey}&v=${version}`;
@@ -393,7 +392,7 @@ class AMap extends React.PureComponent {
       const handler = eventCallbacks[key];
 
       this.AMapEventListeners.push(
-        window.AMap.event.addListener(map, eventName, handler)
+        window.AMap.event.addListener(map, eventName, handler),
       );
     });
   }
@@ -427,13 +426,13 @@ class AMap extends React.PureComponent {
 
     const childrenElement = () => {
       if (React.isValidElement(children)) { // Single element
-        return React.cloneElement(children, {map: map});
+        return React.cloneElement(children, { map });
       }
 
       if (children.length !== void 0) { // An array of elements
         return React.Children.map(children, (child) => {
           if (React.isValidElement(child)) {
-            return React.cloneElement(child, {map: map});
+            return React.cloneElement(child, { map });
           }
           return void 0;
         });
@@ -441,7 +440,8 @@ class AMap extends React.PureComponent {
     };
 
     return (
-      <div style={{width: '100%', height: '100%'}}
+      <div
+style={{ width: '100%', height: '100%' }}
         ref={(self) => {
           this.mapContainer = self;
         }}>

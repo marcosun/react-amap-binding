@@ -4,7 +4,6 @@ import {
   number,
   object,
 } from 'prop-types';
-
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import isShallowEqual from '../Util/isShallowEqual';
 import createEventCallback from '../Util/createEventCallback';

@@ -6,7 +6,6 @@ import {
   func,
 } from 'prop-types';
 import camelCase from 'lodash/camelCase';
-
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import isShallowEqual from '../Util/isShallowEqual';
 import createEventCallback from '../Util/createEventCallback';

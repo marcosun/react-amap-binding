@@ -11,7 +11,6 @@ import {
   shape,
 } from 'prop-types';
 import cloneDeep from 'lodash/cloneDeep';
-
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 
 /**

@@ -3,7 +3,6 @@ import {
   object,
   func,
 } from 'prop-types';
-
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
@@ -207,7 +206,7 @@ class Marker extends React.Component {
     } = props;
 
     const {
-      label: {offset: labelOffset} = {},
+      label: { offset: labelOffset } = {},
       offset,
     } = markerOptions;
 
@@ -257,7 +256,7 @@ class Marker extends React.Component {
       const handler = eventCallbacks[key];
 
       this.AMapEventListeners.push(
-        window.AMap.event.addListener(marker, eventName, handler)
+        window.AMap.event.addListener(marker, eventName, handler),
       );
     });
   }

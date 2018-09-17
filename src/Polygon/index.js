@@ -4,7 +4,6 @@ import {
   bool,
   func,
 } from 'prop-types';
-
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
@@ -194,7 +193,7 @@ class Polygon extends React.Component {
       const handler = eventCallbacks[key];
 
       this.AMapEventListeners.push(
-        window.AMap.event.addListener(polygon, eventName, handler)
+        window.AMap.event.addListener(polygon, eventName, handler),
       );
     });
   }

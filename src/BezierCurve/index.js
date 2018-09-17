@@ -4,7 +4,6 @@ import {
   func,
   object,
 } from 'prop-types';
-
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
@@ -184,7 +183,7 @@ class BezierCurve extends React.Component {
       const handler = eventCallbacks[key];
 
       this.AMapEventListeners.push(
-        window.AMap.event.addListener(bezierCurve, eventName, handler)
+        window.AMap.event.addListener(bezierCurve, eventName, handler),
       );
     });
   }
@@ -214,6 +213,7 @@ class BezierCurve extends React.Component {
       if (nextProp === false) this.bezierCurve.hide();
     }
   }
+
   /**
    * Render nothing
    * @return {null}

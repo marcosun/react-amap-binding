@@ -4,7 +4,6 @@ import {
   func,
   object,
 } from 'prop-types';
-
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
@@ -121,6 +120,7 @@ class InfoWindow extends React.Component {
 
     return infoWindow;
   }
+
   /**
    * Return an object of all supported event callbacks
    * @return {Object}
@@ -195,7 +195,7 @@ class InfoWindow extends React.Component {
       const handler = eventCallbacks[key];
 
       this.AMapEventListeners.push(
-        window.AMap.event.addListener(infoWindow, eventName, handler)
+        window.AMap.event.addListener(infoWindow, eventName, handler),
       );
     });
   }
@@ -225,6 +225,7 @@ class InfoWindow extends React.Component {
       if (nextProp === false) this.infoWindow.close();
     }
   }
+
   /**
    * Render nothing
    * @return {null}

@@ -9,7 +9,6 @@ import {
   shape,
   arrayOf,
 } from 'prop-types';
-
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
@@ -235,7 +234,7 @@ class MassMarks extends React.Component {
       const handler = eventCallbacks[key];
 
       this.AMapEventListeners.push(
-        window.AMap.event.addListener(massMarks, eventName, handler)
+        window.AMap.event.addListener(massMarks, eventName, handler),
       );
     });
   }

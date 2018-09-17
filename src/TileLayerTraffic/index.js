@@ -4,7 +4,6 @@ import {
   bool,
   func,
 } from 'prop-types';
-
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import isShallowEqual from '../Util/isShallowEqual';
 import createEventCallback from '../Util/createEventCallback';
@@ -138,7 +137,7 @@ class TileLayerTraffic extends React.Component {
       const handler = eventCallbacks[key];
 
       this.AMapEventListeners.push(
-        window.AMap.event.addListener(tileLayerTraffic, eventName, handler)
+        window.AMap.event.addListener(tileLayerTraffic, eventName, handler),
       );
     });
   }
