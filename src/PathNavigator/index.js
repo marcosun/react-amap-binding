@@ -27,9 +27,6 @@ import createEventCallback from '../Util/createEventCallback';
 class PathNavigator extends React.Component {
   static propTypes = {
     map: object,
-    pathIndex: number.isRequired,
-    pathSimplifier: object,
-    PathSimplifierClass: func,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: func,
     onStart: func,
@@ -37,6 +34,9 @@ class PathNavigator extends React.Component {
     onMove: func,
     onStop: func,
     /* eslint-enable */
+    pathIndex: number.isRequired,
+    pathSimplifier: object,
+    PathSimplifierClass: func,
   };
 
   /**

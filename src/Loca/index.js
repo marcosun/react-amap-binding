@@ -26,8 +26,8 @@ class Loca extends React.Component {
   static propTypes = {
     data: array.isRequired,
     dataSetOptions: shape({
-      type: string,
       lnglat: oneOfType([func, string]).isRequired,
+      type: string,
     }),
     layerOptions: shape({
       blendMode: string,

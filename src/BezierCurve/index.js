@@ -36,7 +36,6 @@ const NEED_DEEP_COPY_FIELDS = ['path'];
 class BezierCurve extends React.Component {
   static propTypes = {
     map: object,
-    visible: bool,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: func,
     onClick: func,
@@ -52,6 +51,7 @@ class BezierCurve extends React.Component {
     onTouchStart: func,
     onTouchEnd: func,
     /* eslint-enable */
+    visible: bool,
   };
 
   /**

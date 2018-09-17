@@ -50,12 +50,9 @@ import isShallowEqual from '../Util/isShallowEqual';
  */
 class AMap extends React.PureComponent {
   static propTypes = {
-    locaVersion: string,
-    protocol: oneOf(['http', 'https']),
-    version: string,
     appKey: string.isRequired,
-    uiVersion: string,
     children: node,
+    locaVersion: string,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: func,
     onClick: func,
@@ -84,6 +81,9 @@ class AMap extends React.PureComponent {
     onTouchMove: func,
     onTouchEnd: func,
     /* eslint-enable */
+    protocol: oneOf(['http', 'https']),
+    uiVersion: string,
+    version: string,
   };
 
   static defaultProps = {

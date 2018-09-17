@@ -42,21 +42,8 @@ const NEED_DEEP_COPY_FIELDS = ['data', 'style'];
  */
 class MassMarks extends React.Component {
   static propTypes = {
-    map: object,
     data: array.isRequired,
-    visible: bool,
-    style: oneOfType([
-      arrayOf(shape({
-        anchor: oneOfType([array, object]).isRequired,
-        url: string.isRequired,
-        size: oneOfType([array, object]).isRequired,
-      })),
-      shape({
-        anchor: oneOfType([array, object]).isRequired,
-        url: string.isRequired,
-        size: oneOfType([array, object]).isRequired,
-      }),
-    ]).isRequired,
+    map: object,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: func,
     onClick: func,
@@ -68,6 +55,19 @@ class MassMarks extends React.Component {
     onTouchStart: func,
     onTouchEnd: func,
     /* eslint-enable */
+    style: oneOfType([
+      arrayOf(shape({
+        anchor: oneOfType([array, object]).isRequired,
+        size: oneOfType([array, object]).isRequired,
+        url: string.isRequired,
+      })),
+      shape({
+        anchor: oneOfType([array, object]).isRequired,
+        size: oneOfType([array, object]).isRequired,
+        url: string.isRequired,
+      }),
+    ]).isRequired,
+    visible: bool,
   };
 
   /**
