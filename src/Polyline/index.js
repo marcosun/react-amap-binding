@@ -38,6 +38,7 @@ class Polyline extends React.Component {
   static propTypes = {
     map: object,
     visible: bool,
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: func,
     onClick: func,
     onDblClick: func,
@@ -52,6 +53,7 @@ class Polyline extends React.Component {
     onTouchStart: func,
     onTouchMove: func,
     onTouchEnd: func,
+    /* eslint-enable */
   };
 
   /**

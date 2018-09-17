@@ -57,6 +57,7 @@ class MassMarks extends React.Component {
         size: oneOfType([array, object]).isRequired,
       }),
     ]).isRequired,
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: func,
     onClick: func,
     onDblClick: func,
@@ -66,6 +67,7 @@ class MassMarks extends React.Component {
     onMouseDown: func,
     onTouchStart: func,
     onTouchEnd: func,
+    /* eslint-enable */
   };
 
   /**

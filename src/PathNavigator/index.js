@@ -30,11 +30,13 @@ class PathNavigator extends React.Component {
     pathIndex: number.isRequired,
     pathSimplifier: object,
     PathSimplifierClass: func,
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: func,
     onStart: func,
     onPause: func,
     onMove: func,
     onStop: func,
+    /* eslint-enable */
   };
 
   /**

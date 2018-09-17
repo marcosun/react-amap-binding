@@ -56,6 +56,7 @@ class AMap extends React.PureComponent {
     appKey: string.isRequired,
     uiVersion: string,
     children: node,
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: func,
     onClick: func,
     onDbClick: func,
@@ -82,6 +83,7 @@ class AMap extends React.PureComponent {
     onTouchStart: func,
     onTouchMove: func,
     onTouchEnd: func,
+    /* eslint-enable */
   };
 
   static defaultProps = {

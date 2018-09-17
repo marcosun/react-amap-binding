@@ -31,10 +31,12 @@ class InfoWindow extends React.Component {
   static propTypes = {
     map: object,
     visible: bool,
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: func,
     onChange: func,
     onOpen: func,
     onClose: func,
+    /* eslint-enable */
   };
 
   /**

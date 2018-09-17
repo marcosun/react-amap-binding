@@ -38,6 +38,7 @@ class PathSimplifier extends React.Component {
     children: node,
     map: object,
     visible: bool,
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: func,
     onPathClick: func,
     onPathMouseover: func,
@@ -45,6 +46,7 @@ class PathSimplifier extends React.Component {
     onPointClick: func,
     onPointMouseover: func,
     onPointMouseout: func,
+    /* eslint-enable */
   };
 
   // Update state to rebuild pathNavigator once nextProps.data is changed

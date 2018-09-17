@@ -42,6 +42,7 @@ const NEED_DEEP_COPY_FIELDS = ['position'];
 class Marker extends React.Component {
   static propTypes = {
     map: object,
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: func,
     onClick: func,
     onDblClick: func,
@@ -60,6 +61,7 @@ class Marker extends React.Component {
     onTouchStart: func,
     onTouchMove: func,
     onTouchEnd: func,
+    /* eslint-enable */
   };
 
   /**
