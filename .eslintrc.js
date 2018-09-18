@@ -32,6 +32,7 @@ module.exports = {
     'space-before-function-paren': 'off', // Incompatible with prettier
     'no-confusing-arrow': 'off', // Incompatible with prettier
     'no-mixed-operators': 'off', // Incompatible with prettier
+    'no-unused-expressions': 'off', // Allow unused Expressions 
     'consistent-this': ['error', 'self'],
     'max-len': [
       'error',
