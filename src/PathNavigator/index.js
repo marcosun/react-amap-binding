@@ -15,28 +15,39 @@ import createEventCallback from '../Util/createEventCallback';
  * For pathNavigator events usage please reference to pathNavigator events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference-amap-ui/mass-data/pathsimplifier#PathNavigator}
  * Besides, it can transform image into pathNavigatorStyle content.
- * @param {Object} [props.map] - AMap map instance.
- * @param {number} props.pathIndex - PathSimplifier path index.
- * @param {Object} [props.pathSimplifier] - AMapUI pathSimplifier instance.
- * @param {function} [props.onComplete] - Complete callback.
- * @param {function} [props.onStart] - Start callback.
- * @param {function} [props.onPause] - Pause callback.
- * @param {function} [props.onMove] - Move callback.
- * @param {function} [props.onStop] - Stop callback.
  */
 class PathNavigator extends React.Component {
   static propTypes = {
+    /**
+     * AMap map instance.
+     */
     map: object,
+    /**
+     * PathSimplifier path index.
+     */
+    pathIndex: number.isRequired,
+    /**
+     * AMapUI pathSimplifier instance.
+     */
+    pathSimplifier: object,
+    /**
+     * AMapUI pathSimplifier class function.
+     */
+    PathSimplifierClass: func, // eslint-disable-line react/no-unused-prop-types
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    /**
+     * Event callback.
+     *
+     * @param {AMap.Map} map                  - AMap.Map instance
+     * @param {PathNavigator} PathNavigator   - PathNavigator instance
+     * @param {Object} event                  - PathNavigator event parameters
+     */
     onComplete: func,
     onStart: func,
     onPause: func,
     onMove: func,
     onStop: func,
     /* eslint-enable */
-    pathIndex: number.isRequired,
-    pathSimplifier: object,
-    PathSimplifierClass: func,
   };
 
   /**
@@ -123,10 +134,9 @@ class PathNavigator extends React.Component {
   /**
    * Update this.pathNavigator by calling pathNavigator methods
    * @param  {Object} nextProps
-   * @param  {Object} nextState
    * @return {Boolean} - Prevent calling render function
    */
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const nextPathNavigatorOptions = PathNavigator.parsePathNavigatorOptions(nextProps);
 
     this.updatePathNavigatorWithApi('setSpeed', this.pathNavigatorOptions.speed, nextPathNavigatorOptions.speed);

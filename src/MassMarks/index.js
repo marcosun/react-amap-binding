@@ -21,40 +21,21 @@ const NEED_DEEP_COPY_FIELDS = ['data', 'style'];
  * MassMarks has the same config options as AMap.MassMarks unless highlighted below.
  * For massMarks events usage please reference to AMap.MassMarks events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference/layer/#MassMarks}
- * Shows MassMarks by default, you can toggle show or hide by setting visible.
- * Besides, it can transform an array of two numbers into AMap.Pixel instance and AMap.Size instance.
- * @param {Object} props.map - AMap map instance
- * @param {Array} props.data - Include lnglat attributes of point object
- * @param {Boolean} props.visible - Toggle visibility
- * @param {Array|Object} props.style - Point style
- * @param {Array|Pixel} props.style.anchor - Point position offset
- * @param {String} props.style.url - Point url
- * @param {Array|Size} props.style.size - Point size
- * @param {Function} props.onComplete - Complete callback
- * @param {Function} props.onClick - Click callback
- * @param {Function} props.onDblClick - Double click callback
- * @param {Function} props.onMouseOut - Mouse out callback
- * @param {Function} props.onMouseOver - Mouse over callback
- * @param {Function} props.onMouseUp - Mouse up callback
- * @param {Function} props.onMouseDown - Mouse down callback
- * @param {Function} props.onTouchStart - Touch start callback
- * @param {Function} props.onTouchEnd - Touch end callback
  */
 class MassMarks extends React.Component {
   static propTypes = {
+    /**
+     * Include lnglat attributes of point object.
+     */
     data: array.isRequired,
+    /**
+     * AMap map instance.
+     */
     map: object,
-    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
-    onComplete: func,
-    onClick: func,
-    onDblClick: func,
-    onMouseOut: func,
-    onMouseOver: func,
-    onMouseUp: func,
-    onMouseDown: func,
-    onTouchStart: func,
-    onTouchEnd: func,
-    /* eslint-enable */
+    /**
+     * Point style.
+     * It can transform an array of two numbers into AMap.Pixel instance and AMap.Size instance.
+     */
     style: oneOfType([
       arrayOf(shape({
         anchor: oneOfType([array, object]).isRequired,
@@ -67,7 +48,28 @@ class MassMarks extends React.Component {
         url: string.isRequired,
       }),
     ]).isRequired,
+    /**
+     * Show MassMarks by default, you can toggle show or hide by setting visible.
+     */
     visible: bool,
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    /**
+     * Event callback.
+     *
+     * @param {AMap.Map} map                  - AMap.Map instance
+     * @param {AMap.MassMarks} MassMarks      - AMap.MassMarks
+     * @param {Object} event                  - MassMarks event parameters
+     */
+    onComplete: func,
+    onClick: func,
+    onDblClick: func,
+    onMouseOut: func,
+    onMouseOver: func,
+    onMouseUp: func,
+    onMouseDown: func,
+    onTouchStart: func,
+    onTouchEnd: func,
+    /* eslint-enable */
   };
 
   /**
@@ -147,10 +149,9 @@ class MassMarks extends React.Component {
   /**
    * Update this.massMarks by calling AMap.MassMarks methods
    * @param  {Object} nextProps
-   * @param  {Object} nextState
    * @return {Boolean} - Prevent calling render function
    */
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const nextMassMarksOptions = MassMarks.parseMassMarksOptions(nextProps);
 
     const newMassMarksOptions = cloneDeep(nextMassMarksOptions, NEED_DEEP_COPY_FIELDS);
