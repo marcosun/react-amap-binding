@@ -165,16 +165,14 @@ class PathNavigator extends React.Component {
   }
 
   /**
-   * Return an object of all supported event callbacks
-   * @return {Object}
+   * Update pathNavigator range
+   * @param  {Object} currentProp - Current value
+   * @param  {Object} nextProp - Next value
    */
-  parseEvents() {
-    return {
-      onStart: createEventCallback('onStart', this.pathNavigator).bind(this),
-      onPause: createEventCallback('onPause', this.pathNavigator).bind(this),
-      onMove: createEventCallback('onMove', this.pathNavigator).bind(this),
-      onStop: createEventCallback('onStop', this.pathNavigator).bind(this),
-    };
+  setRange(currentProp, nextProp) {
+    if (!isShallowEqual(currentProp, nextProp)) {
+      this.pathNavigator.setRange(nextProp[0], nextProp[1]);
+    }
   }
 
   /**
@@ -212,6 +210,19 @@ class PathNavigator extends React.Component {
   }
 
   /**
+   * Return an object of all supported event callbacks
+   * @return {Object}
+   */
+  parseEvents() {
+    return {
+      onStart: createEventCallback('onStart', this.pathNavigator).bind(this),
+      onPause: createEventCallback('onPause', this.pathNavigator).bind(this),
+      onMove: createEventCallback('onMove', this.pathNavigator).bind(this),
+      onStop: createEventCallback('onStop', this.pathNavigator).bind(this),
+    };
+  }
+
+  /**
    * Update pathNavigator instance with named api and given value.
    * Won't call api if the given value does not change
    * @param  {string} apiName - PathNavigator instance update method name
@@ -221,17 +232,6 @@ class PathNavigator extends React.Component {
   updatePathNavigatorWithApi(apiName, currentProp, nextProp) {
     if (!isShallowEqual(currentProp, nextProp)) {
       this.pathNavigator[apiName](nextProp);
-    }
-  }
-
-  /**
-   * Update pathNavigator range
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
-   */
-  setRange(currentProp, nextProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      this.pathNavigator.setRange(nextProp[0], nextProp[1]);
     }
   }
 
