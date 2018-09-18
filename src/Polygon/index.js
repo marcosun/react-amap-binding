@@ -16,28 +16,25 @@ const NEED_DEEP_COPY_FIELDS = ['path'];
  * Polygon has the same config options as AMap.Polygon unless highlighted below.
  * For polygon events usage please reference to AMap.Polygon events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference/overlay#polygon}
- * Shows polygon by default, you can toggle show or hide by setting visible.
- * @param {Object} props.map - AMap map instance
- * @param {Boolean} props.visible - Toggle visibility
- * @param {Function} props.onComplete - Initialization complete callback
- * @param {Function} props.onClick - Click callback
- * @param {Function} props.onDblClick - Double click callback
- * @param {Function} props.onRightClick - Right click callback
- * @param {Function} props.onHide - Hide polygon callback
- * @param {Function} props.onShow - Show polygon callback
- * @param {Function} props.onMouseDown - Mouse down callback
- * @param {Function} props.onMouseUp - Mouse up callback
- * @param {Function} props.onMouseOver - Mouse over callback
- * @param {Function} props.onMouseOut - Mouse out callback
- * @param {Function} props.onChange - Change callback
- * @param {Function} props.onTouchStart - Touch start callback
- * @param {Function} props.onTouchMove - Touch move callback
- * @param {Function} props.onTouchEnd - Touch end callback
  */
 class Polygon extends React.Component {
   static propTypes = {
+    /**
+     * AMap map instance.
+     */
     map: object,
+    /**
+     * Shows polygon by default, you can toggle show or hide by setting visible.
+     */
+    visible: bool,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    /**
+     * Event callback.
+     *
+     * @param {AMap.Map} map           - AMap.Map instance
+     * @param {AMap.Polygon} polygon   - AMap.Polygon instance
+     * @param {Object} event           - Polygon event parameters
+     */
     onComplete: func,
     onClick: func,
     onDblClick: func,
@@ -53,7 +50,6 @@ class Polygon extends React.Component {
     onTouchMove: func,
     onTouchEnd: func,
     /* eslint-enable */
-    visible: bool,
   };
 
   /**
@@ -115,10 +111,9 @@ class Polygon extends React.Component {
   /**
    * Update this.polygon by calling AMap.Polygon methods
    * @param  {Object} nextProps
-   * @param  {Object} nextState
    * @return {Boolean} - Prevent calling render function
    */
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const nextPolygonOptions = Polygon.parsePolygonOptions(nextProps);
 
     const newPolygonOptions = cloneDeep(nextPolygonOptions, NEED_DEEP_COPY_FIELDS);

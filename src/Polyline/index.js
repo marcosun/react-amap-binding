@@ -36,8 +36,22 @@ const NEED_DEEP_COPY_FIELDS = ['path'];
  */
 class Polyline extends React.Component {
   static propTypes = {
+    /**
+     * AMap map instance.
+     */
     map: object,
+    /**
+     * Shows Polyline by default, you can toggle show or hide by setting visible.
+     */
+    visible: bool,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    /**
+     * Event callback.
+     *
+     * @param {AMap.Map} map             - AMap.Map instance
+     * @param {AMap.Polyline} polyline   - AMap.Polyline instance
+     * @param {Object} event             - Polyline event parameters
+     */
     onComplete: func,
     onClick: func,
     onDblClick: func,
@@ -53,7 +67,6 @@ class Polyline extends React.Component {
     onTouchMove: func,
     onTouchEnd: func,
     /* eslint-enable */
-    visible: bool,
   };
 
   /**
@@ -115,10 +128,9 @@ class Polyline extends React.Component {
   /**
    * Update this.polyline by calling AMap.Polyline methods
    * @param  {Object} nextProps
-   * @param  {Object} nextState
    * @return {Boolean} - Prevent calling render function
    */
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const nextPolylineOptions = Polyline.parsePolylineOptions(nextProps);
 
     const newPolylineOptions = cloneDeep(nextPolylineOptions, NEED_DEEP_COPY_FIELDS);

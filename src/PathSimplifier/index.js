@@ -12,32 +12,34 @@ import createEventCallback from '../Util/createEventCallback';
 
 /**
  * PathSimplifier binding
- * @param {PathSimplifierOptions} props - Properties defined in
- * AMapUI.PathSimplifier.
- * PathSimplifier has the same config options as AMapUI.PathSimplifier
- * unless highlighted below.
- * For PathSimplifier events usage please reference to AMapUI.PathSimplifier
- * events paragraph.
+ * PathSimplifier has the same config options as AMapUI.PathSimplifier unless highlighted below.
+ * For PathSimplifier events usage please reference to AMapUI.PathSimplifier events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference-amap-ui/mass-data/pathsimplifier}
- * Shows PathSimplifier by default, you can toggle show or hide by setting visible.
  * AMapUI.PathSimplifier opens api for updating zIndex and data only,
  * therefore, only these two props are reactive.
- * PathNavigator is not currently supported yet.
- * @param {Object} props.map - AMap map instance
- * @param {Boolean} props.visible - Toggle visibility
- * @param {function} [props.onComplete] - Initialization complete callback
- * @param {Function} props.onPathClick - Path click callback
- * @param {Function} props.onPathMouseover - Path mouseover callback
- * @param {Function} props.onPathMouseout - Path mouseout callback
- * @param {Function} props.onPointClick - Point click callback
- * @param {Function} props.onPointMouseover - Point mouseover callback
- * @param {Function} props.onPointMouseout - Point mouseout callback
  */
 class PathSimplifier extends React.Component {
   static propTypes = {
+    /**
+     * Child components.
+     */
     children: node,
+    /**
+     * AMap map instance.
+     */
     map: object,
+    /**
+     * Shows PathSimplifier by default, you can toggle show or hide by setting visible.
+     */
+    visible: bool,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    /**
+     * Event callback.
+     *
+     * @param {AMap.Map} map                    - AMap.Map instance
+     * @param {PathSimplifier} PathSimplifier   - PathSimplifier instance
+     * @param {Object} event                    - PathSimplifier event parameters
+     */
     onComplete: func,
     onPathClick: func,
     onPathMouseover: func,
@@ -46,7 +48,6 @@ class PathSimplifier extends React.Component {
     onPointMouseover: func,
     onPointMouseout: func,
     /* eslint-enable */
-    visible: bool,
   };
 
   // Update state to rebuild pathNavigator once nextProps.data is changed

@@ -13,18 +13,27 @@ import createEventCallback from '../Util/createEventCallback';
  * TileLayerTraffic has the same config options as AMap.TileLayer.Traffic unless highlighted below.
  * For tileLayerTraffic events usage please reference to AMap.TileLayet.Traffic events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference/layer#TileLayer.Traffic}
- * Shows TileLayerTraffic by default, you can toggle show or hide by setting config.
- * @param {Object} props.map - AMap map instance
- * @param {Boolean} props.visible - Toggle display
- * @param {Function} props.onComplete - Complete callback
  */
 class TileLayerTraffic extends React.Component {
   static propTypes = {
+    /**
+     * AMap map instance.
+     */
     map: object,
+    /**
+     * Shows TileLayerTraffic by default, you can toggle show or hide by setting config.
+     */
+    visible: bool,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    /**
+     * Event callback.
+     *
+     * @param {AMap.Map} map                        - AMap.Map instance
+     * @param {AMap.TileLayer.Traffic} traffic      - AMap.TileLayer.Traffic instance
+     * @param {Object} event                        - Traffic event parameters
+     */
     onComplete: func,
     /* eslint-enable */
-    visible: bool,
   }
 
   /**
@@ -72,10 +81,9 @@ class TileLayerTraffic extends React.Component {
   /**
    * Update this.tileLayerTraffic by calling AMap.TileLayer.Traffic methods
    * @param  {Object} nextProps
-   * @param  {Object} nextState
    * @return {Boolean} - Prevent calling render function
    */
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const nextTileLayerTrafficOptions = TileLayerTraffic.parseTileLayerTrafficOptions(nextProps);
 
     this.updateTileLayerTrafficWithApi('setOpacity', this.tileLayerTrafficOptions.opacity, nextTileLayerTrafficOptions.opacity);
