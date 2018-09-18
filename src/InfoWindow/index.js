@@ -1,8 +1,10 @@
 import React from 'react';
 import {
+  array,
   bool,
   func,
   object,
+  oneOfType,
 } from 'prop-types';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
@@ -13,30 +15,41 @@ const NEED_DEEP_COPY_FIELDS = ['position'];
 
 /**
  * InfoWindow binding
- * @param  {InfoWindowOptions} props - Properties defined in AMap.InfoWindow.
- * InfoWindow has the same config options as AMap.InfoWindow
- * unless highlighted below.
+ * InfoWindow has the same config options as AMap.InfoWindow unless highlighted below.
  * For InfoWindow events usage please reference to AMap.InfoWindow events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference/infowindow}
- * Besides, it can transform an array of two numbers into AMap.Pixel instance.
- * @param {Object} props.map - AMap map instance
- * @param {Array|Pixel} props.offset - An array of two numbers or AMap.Pixel
- * @param {Boolean} props.visible - Toggle visibility
- * @param {Function} props.onComplete - Initialization complete callback
- * @param {Function} props.onChange - Attribute change callback
- * @param {Function} props.onOpen - InfoWindow open callback
- * @param {Function} props.onClose - InfoWindow close callback
  */
 class InfoWindow extends React.Component {
   static propTypes = {
+    /**
+     * AMap map instance.
+     */
     map: object,
+    /**
+     * An array of two numbers or AMap.Pixel.
+     */
+    offset: oneOfType([array, object]),
+    /**
+     * An array of two numbers, width and height or AMap.Size.
+     */
+    size: oneOfType([array, object]),
+    /**
+     * Show InfoWindow by default, you can toggle show or hide by setting visible.
+     */
+    visible: bool,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    /**
+     * Event callback.
+     *
+     * @param {AMap.Map} map                  - AMap.Map instance
+     * @param {AMap.InfoWindow} InfoWindow    - AMap.InfoWindow
+     * @param {Object} event                  - InfoWindow event parameters
+     */
     onComplete: func,
     onChange: func,
     onOpen: func,
     onClose: func,
     /* eslint-enable */
-    visible: bool,
   };
 
   /**
