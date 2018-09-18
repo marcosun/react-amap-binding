@@ -146,10 +146,7 @@ class PathSimplifier extends React.Component {
 
     // Recreate pathNavigator
     if (prevState.isShouldDestoryPathNavigator === true) {
-      this.setState({
-        ...prevState,
-        isShouldDestoryPathNavigator: false,
-      });
+      this.allowToCreatePathNavigator(prevState);
     }
 
     const nextPathSimplifierOptions = PathSimplifier.parsePathSimplifierOptions(this.props);
@@ -177,6 +174,17 @@ class PathSimplifier extends React.Component {
 
     this.pathSimplifier.setData();
     this.pathSimplifier = null;
+  }
+
+  /**
+   * Allow to create pathNavigator after previous PathNavigator instance is destoryed.
+   * @param  {Object} prevState
+   */
+  allowToCreatePathNavigator(prevState) {
+    this.setState({
+      ...prevState,
+      isShouldDestoryPathNavigator: false,
+    });
   }
 
   /**
