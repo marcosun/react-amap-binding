@@ -145,7 +145,7 @@ class Marker extends React.Component {
 
     breakIfNotChildOfAMap('Marker', map);
 
-    this.markerOptions = this.parseMarkerOptions(this.props);
+    this.markerOptions = Marker.parseMarkerOptions(this.props);
 
     this.marker = new window.AMap.Marker(cloneDeep(this.markerOptions, NEED_DEEP_COPY_FIELDS));
 
@@ -163,7 +163,7 @@ class Marker extends React.Component {
    * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps, nextState) {
-    const nextMarkerOptions = this.parseMarkerOptions(nextProps);
+    const nextMarkerOptions = Marker.parseMarkerOptions(nextProps);
 
     const newMarkerOptions = cloneDeep(nextMarkerOptions, NEED_DEEP_COPY_FIELDS);
 

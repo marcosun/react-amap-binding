@@ -135,7 +135,7 @@ class MassMarks extends React.Component {
 
     breakIfNotChildOfAMap('MassMarks', map);
 
-    this.massMarksOptions = this.parseMassMarksOptions(props);
+    this.massMarksOptions = MassMarks.parseMassMarksOptions(props);
 
     this.massMarks = this.initMassMarks(this.massMarksOptions);
 
@@ -151,7 +151,7 @@ class MassMarks extends React.Component {
    * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps, nextState) {
-    const nextMassMarksOptions = this.parseMassMarksOptions(nextProps);
+    const nextMassMarksOptions = MassMarks.parseMassMarksOptions(nextProps);
 
     const newMassMarksOptions = cloneDeep(nextMassMarksOptions, NEED_DEEP_COPY_FIELDS);
 

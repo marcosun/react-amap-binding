@@ -101,7 +101,7 @@ class Polygon extends React.Component {
 
     breakIfNotChildOfAMap('Polygon', map);
 
-    this.polygonOptions = this.parsePolygonOptions(props);
+    this.polygonOptions = Polygon.parsePolygonOptions(props);
 
     this.polygon = this.initPolygon(this.polygonOptions);
 
@@ -119,7 +119,7 @@ class Polygon extends React.Component {
    * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps, nextState) {
-    const nextPolygonOptions = this.parsePolygonOptions(nextProps);
+    const nextPolygonOptions = Polygon.parsePolygonOptions(nextProps);
 
     const newPolygonOptions = cloneDeep(nextPolygonOptions, NEED_DEEP_COPY_FIELDS);
 

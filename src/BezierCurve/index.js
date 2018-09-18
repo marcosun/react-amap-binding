@@ -85,7 +85,7 @@ class BezierCurve extends React.Component {
 
     breakIfNotChildOfAMap('BezierCurve', map);
 
-    this.bezierCurveOptions = this.parseBezierCurveOptions(this.props);
+    this.bezierCurveOptions = BezierCurve.parseBezierCurveOptions(this.props);
 
     this.bezierCurve = this.initBezierCurve(this.bezierCurveOptions);
 
@@ -103,7 +103,7 @@ class BezierCurve extends React.Component {
    * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps, nextState) {
-    const nextBezierCurveOptions = this.parseBezierCurveOptions(nextProps);
+    const nextBezierCurveOptions = BezierCurve.parseBezierCurveOptions(nextProps);
 
     const newBezierCurveOptions = cloneDeep(nextBezierCurveOptions, NEED_DEEP_COPY_FIELDS);
 

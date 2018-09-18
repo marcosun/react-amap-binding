@@ -109,7 +109,7 @@ class PathNavigator extends React.Component {
 
     breakIfNotChildOfAMap('PathNavigator', pathSimplifier, 'PathSimplifier');
 
-    this.pathNavigatorOptions = this.parsePathNavigatorOptions(props);
+    this.pathNavigatorOptions = PathNavigator.parsePathNavigatorOptions(props);
 
     this.pathNavigator = this.createPathNavigator(this.pathNavigatorOptions);
 
@@ -127,7 +127,7 @@ class PathNavigator extends React.Component {
    * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps, nextState) {
-    const nextPathNavigatorOptions = this.parsePathNavigatorOptions(nextProps);
+    const nextPathNavigatorOptions = PathNavigator.parsePathNavigatorOptions(nextProps);
 
     this.updatePathNavigatorWithApi('setSpeed', this.pathNavigatorOptions.speed, nextPathNavigatorOptions.speed);
 

@@ -230,7 +230,7 @@ class AMap extends React.PureComponent {
       map: void 0,
     };
 
-    this.mapOptions = this.parseMapOptions(this.props);
+    this.mapOptions = AMap.parseMapOptions(this.props);
   }
 
   /**
@@ -248,7 +248,7 @@ class AMap extends React.PureComponent {
     // Hold all updates until map has been created.
     if (this.map === void 0) return;
 
-    const nextMapOptions = this.parseMapOptions(this.props);
+    const nextMapOptions = AMap.parseMapOptions(this.props);
 
     this.updateMapWithApi('setBounds', this.mapOptions.bounds, nextMapOptions.bounds);
     this.updateMapWithApi('setCenter', this.mapOptions.center, nextMapOptions.center);
@@ -295,9 +295,9 @@ class AMap extends React.PureComponent {
     } = this.props;
 
     if (window.AMap === void 0) {
-      await this.requireAMap({ protocol, version, appKey });
-      await this.requireAMapUI({ protocol, version: uiVersion });
-      await this.requireLoca({ protocol, appKey, version: locaVersion });
+      await AMap.requireAMap({ protocol, version, appKey });
+      await AMap.requireAMapUI({ protocol, version: uiVersion });
+      await AMap.requireLoca({ protocol, appKey, version: locaVersion });
     }
 
     this.map = new window.AMap.Map(this.mapContainer, {

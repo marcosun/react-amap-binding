@@ -102,7 +102,7 @@ class InfoWindow extends React.Component {
 
     breakIfNotChildOfAMap('InfoWindow', map);
 
-    this.infoWindowOptions = this.parseInfoWindowOptions(this.props);
+    this.infoWindowOptions = InfoWindow.parseInfoWindowOptions(this.props);
 
     this.infoWindow = this.initInfoWindow(this.infoWindowOptions);
 
@@ -120,7 +120,7 @@ class InfoWindow extends React.Component {
    * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps, nextState) {
-    const nextInfoWindowOptions = this.parseInfoWindowOptions(nextProps);
+    const nextInfoWindowOptions = InfoWindow.parseInfoWindowOptions(nextProps);
 
     const newInfoWindowOptions = cloneDeep(nextInfoWindowOptions, NEED_DEEP_COPY_FIELDS);
 

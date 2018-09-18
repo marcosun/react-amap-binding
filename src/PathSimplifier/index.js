@@ -114,7 +114,7 @@ class PathSimplifier extends React.Component {
     window.AMapUI.loadUI(['misc/PathSimplifier'], (PathSimplifier) => {
       this.PathSimplifierClass = PathSimplifier;
 
-      this.pathSimplifierOptions = this.parsePathSimplifierOptions(this.props);
+      this.pathSimplifierOptions = PathSimplifier.parsePathSimplifierOptions(this.props);
 
       this.pathSimplifier = new PathSimplifier(this.pathSimplifierOptions);
 
@@ -152,7 +152,7 @@ class PathSimplifier extends React.Component {
       });
     }
 
-    const nextPathSimplifierOptions = this.parsePathSimplifierOptions(this.props);
+    const nextPathSimplifierOptions = PathSimplifier.parsePathSimplifierOptions(this.props);
 
     this.updatePathSimplifierWithApi('setZIndexOfPath', this.pathSimplifierOptions.zIndex, nextPathSimplifierOptions.zIndex);
 

@@ -101,7 +101,7 @@ class Polyline extends React.Component {
 
     breakIfNotChildOfAMap('Polyline', map);
 
-    this.polylineOptions = this.parsePolylineOptions(props);
+    this.polylineOptions = Polyline.parsePolylineOptions(props);
 
     this.polyline = this.initPolyline(this.polylineOptions);
 
@@ -119,7 +119,7 @@ class Polyline extends React.Component {
    * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps, nextState) {
-    const nextPolylineOptions = this.parsePolylineOptions(nextProps);
+    const nextPolylineOptions = Polyline.parsePolylineOptions(nextProps);
 
     const newPolylineOptions = cloneDeep(nextPolylineOptions, NEED_DEEP_COPY_FIELDS);
 

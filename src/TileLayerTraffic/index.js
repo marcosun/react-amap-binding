@@ -60,7 +60,7 @@ class TileLayerTraffic extends React.Component {
 
     breakIfNotChildOfAMap('TileLayerTraffic', map);
 
-    this.tileLayerTrafficOptions = this.parseTileLayerTrafficOptions(props);
+    this.tileLayerTrafficOptions = TileLayerTraffic.parseTileLayerTrafficOptions(props);
 
     this.tileLayerTraffic = this.initTileLayerTraffic(this.tileLayerTrafficOptions);
 
@@ -76,7 +76,7 @@ class TileLayerTraffic extends React.Component {
    * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps, nextState) {
-    const nextTileLayerTrafficOptions = this.parseTileLayerTrafficOptions(nextProps);
+    const nextTileLayerTrafficOptions = TileLayerTraffic.parseTileLayerTrafficOptions(nextProps);
 
     this.updateTileLayerTrafficWithApi('setOpacity', this.tileLayerTrafficOptions.opacity, nextTileLayerTrafficOptions.opacity);
 
