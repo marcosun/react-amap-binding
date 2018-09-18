@@ -13,30 +13,27 @@ const NEED_DEEP_COPY_FIELDS = ['path'];
 
 /**
  * BezierCurve binding
- * @param {BezierCurveOptions} props - Properties defined in AMap.BezierCurve.
  * BezierCurve has the same config options as AMap.BezierCurve unless highlighted below.
  * {@link https://lbs.amap.com/api/javascript-api/reference/overlay#BezierCurve}
- * Shows BezierCurve by default, you can toggle show or hide by setting visible.
- * @param {Object} props.map - AMap map instance
- * @param {Boolean} props.visible - Toggle visibility
- * @param {Function} props.onComplete - Complete callBack
- * @param {Function} props.onClick - Click callback
- * @param {Function} props.onDblClick - Double click callback
- * @param {Function} props.onRightClick - Right click callback
- * @param {Function} props.onHide - Hide bezierCurve callback
- * @param {Function} props.onShow - Show bezierCurve callback
- * @param {Function} props.onMouseDown - Mouse down callback
- * @param {Function} props.onMouseUp - Mouse up callback
- * @param {Function} props.onMouseOver - Mouse over callback
- * @param {Function} props.onMouseOut - Mouse out callback
- * @param {Function} props.onChange - Change callback
- * @param {Function} props.onTouchStart - Touch start callback
- * @param {Function} props.onTouchEnd - Touch end callback
  */
 class BezierCurve extends React.Component {
   static propTypes = {
+    /**
+     * AMap map instance.
+     */
     map: object,
+    /**
+     * Show BezierCurve by default, you can toggle show or hide by setting visible.
+     */
+    visible: bool,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    /**
+     * Event callback.
+     *
+     * @param {AMap.Map} map                  - AMap.Map instance
+     * @param {AMap.BezierCurve} bezierCurve  - AMap.BezierCurve
+     * @param {Object} event                  - BezierCurve event parameters
+     */
     onComplete: func,
     onClick: func,
     onDblClick: func,
@@ -51,7 +48,6 @@ class BezierCurve extends React.Component {
     onTouchStart: func,
     onTouchEnd: func,
     /* eslint-enable */
-    visible: bool,
   };
 
   /**
@@ -99,10 +95,9 @@ class BezierCurve extends React.Component {
   /**
    * Update this.bezierCurve by calling AMap.BezierCurve methods
    * @param  {Object} nextProps
-   * @param  {Object} nextState
    * @return {Boolean} - Prevent calling render function
    */
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const nextBezierCurveOptions = BezierCurve.parseBezierCurveOptions(nextProps);
 
     const newBezierCurveOptions = cloneDeep(nextBezierCurveOptions, NEED_DEEP_COPY_FIELDS);
