@@ -111,12 +111,12 @@ class PathSimplifier extends React.Component {
    * Initialise AMapUI.PathSimplifier and bind events.
    */
   componentDidMount() {
-    window.AMapUI.loadUI(['misc/PathSimplifier'], (PathSimplifier) => {
-      this.PathSimplifierClass = PathSimplifier;
+    window.AMapUI.loadUI(['misc/PathSimplifier'], (PathSimplifierClass) => {
+      this.PathSimplifierClass = PathSimplifierClass;
 
       this.pathSimplifierOptions = PathSimplifier.parsePathSimplifierOptions(this.props);
 
-      this.pathSimplifier = new PathSimplifier(this.pathSimplifierOptions);
+      this.pathSimplifier = new PathSimplifierClass(this.pathSimplifierOptions);
 
       this.eventCallbacks = this.parseEvents();
 
