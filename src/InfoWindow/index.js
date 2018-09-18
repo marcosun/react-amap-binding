@@ -119,10 +119,9 @@ class InfoWindow extends React.Component {
   /**
    * Update this.infoWindow by calling AMap.InfoWindow methods
    * @param  {Object} nextProps
-   * @param  {Object} nextState
    * @return {Boolean} - Prevent calling render function
    */
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const nextInfoWindowOptions = InfoWindow.parseInfoWindowOptions(nextProps);
 
     const newInfoWindowOptions = cloneDeep(nextInfoWindowOptions, NEED_DEEP_COPY_FIELDS);
