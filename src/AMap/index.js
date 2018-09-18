@@ -1,9 +1,12 @@
 import React from 'react';
 import {
+  array,
   func,
-  string,
   node,
+  object,
   oneOf,
+  oneOfType,
+  string,
 } from 'prop-types';
 import createEventCallback from '../Util/createEventCallback';
 import isShallowEqual from '../Util/isShallowEqual';
@@ -12,51 +15,49 @@ import isShallowEqual from '../Util/isShallowEqual';
  * AMap wrapper component to initialise AMap.
  * All map components should be childrens of this wrapper component.
  * AMap component accepts the following config properties to initialise AMap.
- * @param  {MapOptions} props - Properties defined in AMap.Map
+ * AMap has the same config options as AMap.Map unless highlighted below.
  * {@link http://lbs.amap.com/api/javascript-api/reference/map}
- * @param  {Array|Bounds} props.bounds - A 2D array of two numbers or AMap.Bounds
- * @param  {string} props.locaVersion - Loca library version
- * @param  {string} props.protocol - Protocol, whether it is http or https
- * @param  {string} props.version - AMap javascript library version
- * @param  {string} props.appKey - AMap JS App key
- * @param  {string} props.uiVersion - AMap UI version
- * @param  {string} props.children - Child components
- * @param  {Function} props.onComplete - Complete callback
- * @param  {Function} props.onClick - Click callback
- * @param  {Function} props.onDbClick - DbClick callback
- * @param  {Function} props.onMapMove - MapMove callback
- * @param  {Function} props.onHotSpotClick - HotSpotClick callback
- * @param  {Function} props.onHotSpotOver - HotSpotOver callback
- * @param  {Function} props.onHotSpotOut - HotSpotOut callback
- * @param  {Function} props.MoveStart - MoveStart callback
- * @param  {Function} props.MoveEnd - MoveEnd callback
- * @param  {Function} props.onZoomChange - ZoomChange callback
- * @param  {Function} props.onZoomStart - ZoomStart callback
- * @param  {Function} props.onZoomEnd - ZoomEnd callback
- * @param  {Function} props.onMouseMove - MouseMove callback
- * @param  {Function} props.onMouseWheel - MouseWheel callback
- * @param  {Function} props.onMouseOver - MouseOver callback
- * @param  {Function} props.onMouseOut - MouseOut callback
- * @param  {Function} props.onMouseUp - MouseUp callback
- * @param  {Function} props.onMouseDown - MouseDown callback
- * @param  {Function} props.onRightClick - RightClick callback
- * @param  {Function} props.onDragStart - DragStart callback
- * @param  {Function} props.onDragging - Dragging callback
- * @param  {Function} props.onDragEnd - DragEnd callback
- * @param  {Function} props.onResize - Resize callback
- * @param  {Function} props.onTouchStart - TouchStart callback
- * @param  {Function} props.onTouchMove - TouchMove callback
- * @param  {Function} props.onTouchEnd - TouchEnd callback
  */
 class AMap extends React.PureComponent {
   static propTypes = {
+    /**
+     * AMap JS App key.
+     */
     appKey: string.isRequired,
+    /**
+     * A 2D array of two numbers or AMap.Bounds.
+     */
+    bounds: oneOfType([array, object]),
+    /**
+     * Child components.
+     */
     children: node,
+    /**
+     * Loca library version.
+     */
     locaVersion: string,
+    /**
+     * Whether it is http or https.
+     */
+    protocol: oneOf(['http', 'https']),
+    /**
+     * AMap UI version.
+     */
+    uiVersion: string,
+    /**
+     * AMap javascript library version.
+     */
+    version: string,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    /**
+     * Event callback.
+     *
+     * @param {AMap.Map} map - AMap.Map instance
+     * @param {Object} event - AMap event parameters
+     */
     onComplete: func,
     onClick: func,
-    onDbClick: func,
+    onDblClick: func,
     onMapMove: func,
     onHotSpotClick: func,
     onHotSpotOver: func,
@@ -81,9 +82,6 @@ class AMap extends React.PureComponent {
     onTouchMove: func,
     onTouchEnd: func,
     /* eslint-enable */
-    protocol: oneOf(['http', 'https']),
-    uiVersion: string,
-    version: string,
   };
 
   static defaultProps = {
@@ -168,7 +166,7 @@ class AMap extends React.PureComponent {
       uiVersion,
       onComplete,
       onClick,
-      onDbClick,
+      onDblClick,
       onMapMove,
       onHotSpotClick,
       onHotSpotOver,
@@ -232,7 +230,7 @@ class AMap extends React.PureComponent {
       uiVersion,
       onComplete,
       onClick,
-      onDbClick,
+      onDblClick,
       onMapMove,
       onHotSpotClick,
       onHotSpotOver,
@@ -352,7 +350,7 @@ class AMap extends React.PureComponent {
     return {
       onComplete: createEventCallback('onComplete', this.map).bind(this),
       onClick: createEventCallback('onClick', this.map).bind(this),
-      onDbClick: createEventCallback('onDbClick', this.map).bind(this),
+      onDblClick: createEventCallback('onDblClick', this.map).bind(this),
       onMapMove: createEventCallback('onMapMove', this.map).bind(this),
       onHotSpotClick: createEventCallback('onHotSpotClick', this.map).bind(this),
       onHotSpotOver: createEventCallback('onHotSpotOver', this.map).bind(this),
