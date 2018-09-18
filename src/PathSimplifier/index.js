@@ -128,7 +128,6 @@ class PathSimplifier extends React.Component {
       this.props.onComplete && this.props.onComplete(this.props.map, this.pathSimplifier);
 
       this.setState({
-        ...this.state,
         data: this.pathSimplifierOptions.data,
         pathSimplifier: this.pathSimplifier,
       });
