@@ -57,6 +57,35 @@ class Polyline extends React.Component {
   };
 
   /**
+   * Parse AMap.Polyline options
+   * @param  {Object} props
+   * @return {Object}
+   */
+  static parsePolylineOptions(props) {
+    const {
+      onComplete,
+      onClick,
+      onDblClick,
+      onRightClick,
+      onHide,
+      onShow,
+      onMouseDown,
+      onMouseUp,
+      onMouseOver,
+      onMouseOut,
+      onChange,
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd,
+      ...polylineOptions
+    } = props;
+
+    return {
+      ...polylineOptions,
+    };
+  }
+
+  /**
    * Define event name mapping relations of react binding Polyline
    * and AMap.Polyline.
    * Initialise AMap.Polyline and bind events.
@@ -148,35 +177,6 @@ class Polyline extends React.Component {
       onTouchStart: createEventCallback('onTouchStart', this.polyline).bind(this),
       onTouchMove: createEventCallback('onTouchMove', this.polyline).bind(this),
       onTouchEnd: createEventCallback('onTouchEnd', this.polyline).bind(this),
-    };
-  }
-
-  /**
-   * Parse AMap.Polyline options
-   * @param  {Object} props
-   * @return {Object}
-   */
-  parsePolylineOptions(props) {
-    const {
-      onComplete,
-      onClick,
-      onDblClick,
-      onRightClick,
-      onHide,
-      onShow,
-      onMouseDown,
-      onMouseUp,
-      onMouseOver,
-      onMouseOut,
-      onChange,
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-      ...polylineOptions
-    } = props;
-
-    return {
-      ...polylineOptions,
     };
   }
 

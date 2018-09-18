@@ -92,6 +92,134 @@ class AMap extends React.PureComponent {
   };
 
   /**
+   * Parse AMap.Map options
+   * Named properties are event callbacks, other properties are map options.
+   * @param  {Object} props
+   * @return {Object}
+   */
+  static parseMapOptions(props) {
+    const {
+      children,
+      locaVersion,
+      protocol,
+      version,
+      appKey,
+      uiVersion,
+      onComplete,
+      onClick,
+      onDblClick,
+      onMapMove,
+      onHotSpotClick,
+      onHotSpotOver,
+      onHotSpotOut,
+      onMoveStart,
+      onMoveEnd,
+      onZoomChange,
+      onZoomStart,
+      onZoomEnd,
+      onMouseMove,
+      onMouseWheel,
+      onMouseOver,
+      onMouseOut,
+      onMouseUp,
+      onMouseDown,
+      onRightClick,
+      onDragStart,
+      onDragging,
+      onDragEnd,
+      onResize,
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd,
+      ...mapOptions
+    } = props;
+
+    const {
+      bounds,
+    } = mapOptions;
+
+    return {
+      ...mapOptions,
+      bounds: (() => {
+        // Transform bounds until map has been created.
+        if (window.AMap === void 0 || bounds instanceof window.AMap.Bounds) {
+          return bounds;
+        }
+
+        if (bounds instanceof Array) {
+          return new window.AMap.Bounds(...bounds);
+        }
+
+        return bounds;
+      })(),
+    };
+  }
+
+  /**
+   * Create script tag to require AMap library
+   * @param  {string} options.protocol - Protocol, whether it is http or https
+   * @param  {string} options.version  - AMap javascript library version
+   * @param  {string} options.appKey   - AMap JS App key
+   * @return {Promise}                 - Promise created by AMap script tag
+   */
+  static requireAMap({ protocol, version, appKey }) {
+    return new Promise((resolve) => {
+      window.onJsapiLoad = () => {
+        resolve();
+        window.onJsapiLoad = void 0;
+      };
+
+      const jsApi = document.createElement('script');
+      jsApi.type = 'text/javascript';
+      jsApi.src = `${protocol}://webapi.amap.com/maps?v=${version}&key=${appKey}&callback=onJsapiLoad`;
+
+      document.head.appendChild(jsApi);
+    });
+  }
+
+  /**
+   * Create script tag to require AMapUI library
+   * @param  {string} options.protocol - Protocol, whether it is http or https
+   * @param  {string} options.version  - AMap UI javascript library version
+   * @return {Promise}                 - Promise created by AMap UI script tag
+   */
+  static requireAMapUI({ protocol, version }) {
+    const amapUi = document.createElement('script');
+    amapUi.type = 'text/javascript';
+    amapUi.src = `${protocol}://webapi.amap.com/ui/${version}/main-async.js`;
+
+    document.head.appendChild(amapUi);
+
+    return new Promise((resolve) => {
+      amapUi.onload = () => {
+        window.initAMapUI();
+        return resolve();
+      };
+    });
+  }
+
+  /**
+   * Create script tag to require Loca library
+   * @param  {string} options.protocol - Protocol, whether it is http or https.
+   * @param  {string} options.appKey   - AMap JS App key.
+   * @param  {string} options.version  - Loca library version.
+   * @return {Promise}                 - Promise created by Loca script tag.
+   */
+  static requireLoca({ protocol, appKey, version }) {
+    const loca = document.createElement('script');
+    loca.type = 'text/javascript';
+    loca.src = `${protocol}://webapi.amap.com/loca?key=${appKey}&v=${version}`;
+
+    document.head.appendChild(loca);
+
+    return new Promise((resolve) => {
+      loca.onload = () => {
+        return resolve();
+      };
+    });
+  }
+
+  /**
    * Initialise map property with undefined
    * @param {Object} props
    */
@@ -164,33 +292,6 @@ class AMap extends React.PureComponent {
       version,
       appKey,
       uiVersion,
-      onComplete,
-      onClick,
-      onDblClick,
-      onMapMove,
-      onHotSpotClick,
-      onHotSpotOver,
-      onHotSpotOut,
-      onMoveStart,
-      onMoveEnd,
-      onZoomChange,
-      onZoomStart,
-      onZoomEnd,
-      onMouseMove,
-      onMouseWheel,
-      onMouseOver,
-      onMouseOut,
-      onMouseUp,
-      onMouseDown,
-      onRightClick,
-      onDragStart,
-      onDragging,
-      onDragEnd,
-      onResize,
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-      ...mapOptions
     } = this.props;
 
     if (window.AMap === void 0) {
@@ -211,134 +312,6 @@ class AMap extends React.PureComponent {
 
     this.setState({
       map: this.map,
-    });
-  }
-
-  /**
-   * Parse AMap.Map options
-   * Named properties are event callbacks, other properties are map options.
-   * @param {Object} props
-   * @return {Object}
-   */
-  parseMapOptions(props) {
-    const {
-      children,
-      locaVersion,
-      protocol,
-      version,
-      appKey,
-      uiVersion,
-      onComplete,
-      onClick,
-      onDblClick,
-      onMapMove,
-      onHotSpotClick,
-      onHotSpotOver,
-      onHotSpotOut,
-      onMoveStart,
-      onMoveEnd,
-      onZoomChange,
-      onZoomStart,
-      onZoomEnd,
-      onMouseMove,
-      onMouseWheel,
-      onMouseOver,
-      onMouseOut,
-      onMouseUp,
-      onMouseDown,
-      onRightClick,
-      onDragStart,
-      onDragging,
-      onDragEnd,
-      onResize,
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-      ...mapOptions
-    } = props;
-
-    const {
-      bounds,
-    } = mapOptions;
-
-    return {
-      ...mapOptions,
-      bounds: (() => {
-        // Transform bounds until map has been created.
-        if (window.AMap === void 0 || bounds instanceof window.AMap.Bounds) {
-          return bounds;
-        }
-
-        if (bounds instanceof Array) {
-          return new window.AMap.Bounds(...bounds);
-        }
-
-        return bounds;
-      })(),
-    };
-  }
-
-  /**
-   * Create script tag to require AMap library
-   * @param  {string} options.protocol - Protocol, whether it is http or https
-   * @param  {string} options.version  - AMap javascript library version
-   * @param  {string} options.appKey   - AMap JS App key
-   * @return {Promise}                 - Promise created by AMap script tag
-   */
-  requireAMap({ protocol, version, appKey }) {
-    return new Promise((resolve) => {
-      window.onJsapiLoad = () => {
-        resolve();
-        window.onJsapiLoad = void 0;
-      };
-
-      const jsApi = document.createElement('script');
-      jsApi.type = 'text/javascript';
-      jsApi.src = `${protocol}://webapi.amap.com/maps?v=${version}&key=${appKey}&callback=onJsapiLoad`;
-
-      document.head.appendChild(jsApi);
-    });
-  }
-
-  /**
-   * Create script tag to require AMapUI library
-   * @param  {string} options.protocol - Protocol, whether it is http or https
-   * @param  {string} options.version  - AMap UI javascript library version
-   * @return {Promise}                 - Promise created by AMap UI script tag
-   */
-  requireAMapUI({ protocol, version }) {
-    const amapUi = document.createElement('script');
-    amapUi.type = 'text/javascript';
-    amapUi.src = `${protocol}://webapi.amap.com/ui/${version}/main-async.js`;
-
-    document.head.appendChild(amapUi);
-
-    return new Promise((resolve) => {
-      amapUi.onload = () => {
-        window.initAMapUI();
-        return resolve();
-      };
-    });
-  }
-
-  /**
-   * Create script tag to require Loca library
-   * @param  {string} options.protocol - Protocol, whether it is http or https.
-   * @param  {string} options.appKey   - AMap JS App key.
-   * @param  {string} options.version  - Loca library version.
-   * @return {Promise}                 - Promise created by Loca script tag.
-   */
-  requireLoca({ protocol, appKey, version }) {
-    const loca = document.createElement('script');
-    loca.type = 'text/javascript';
-    loca.src = `${protocol}://webapi.amap.com/loca?key=${appKey}&v=${version}`;
-
-    document.head.appendChild(loca);
-
-    return new Promise((resolve) => {
-      loca.onload = () => {
-        return resolve();
-      };
     });
   }
 

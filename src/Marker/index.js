@@ -65,6 +65,71 @@ class Marker extends React.Component {
   };
 
   /**
+   * Parse AMap.Marker options
+   * Named properties are event callbacks, other properties are marker options.
+   * @param {Object} props
+   * @return {Object}
+   */
+  static parseMarkerOptions(props) {
+    const {
+      onComplete,
+      onClick,
+      onDblClick,
+      onRightClick,
+      onMouseMove,
+      onMouseOver,
+      onMouseOut,
+      onMouseDown,
+      onMouseUp,
+      onDragStart,
+      onDragging,
+      onDragEnd,
+      onMoving,
+      onMoveEnd,
+      onMoveAlong,
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd,
+      ...markerOptions
+    } = props;
+
+    const {
+      label: { offset: labelOffset } = {},
+      offset,
+    } = markerOptions;
+
+    return {
+      ...markerOptions,
+      label: {
+        ...markerOptions.label,
+        offset: (() => {
+          if (labelOffset instanceof window.AMap.Pixel) {
+            return labelOffset;
+          }
+
+          if (labelOffset instanceof Array) {
+            return new window.AMap.Pixel(...labelOffset);
+          }
+
+          return new window.AMap.Pixel(0, 0);
+        })(),
+      },
+      // Will transform an array of two numbers into a Pixel instance
+      offset: (() => {
+        if (offset instanceof window.AMap.Pixel) {
+          return offset;
+        }
+
+        if (offset instanceof Array) {
+          return new window.AMap.Pixel(...offset);
+        }
+
+        return new window.AMap.Pixel(-10, -34);
+      })(),
+    };
+  }
+
+  /**
    * Define event name mapping relations of react binding Marker
    * and AMap.Marker.
    * Initialise AMap.Marker and bind events.
@@ -175,71 +240,6 @@ class Marker extends React.Component {
       onTouchStart: createEventCallback('onTouchStart', this.marker).bind(this),
       onTouchMove: createEventCallback('onTouchMove', this.marker).bind(this),
       onTouchEnd: createEventCallback('onTouchEnd', this.marker).bind(this),
-    };
-  }
-
-  /**
-   * Parse AMap.Marker options
-   * Named properties are event callbacks, other properties are marker options.
-   * @param {Object} props
-   * @return {Object}
-   */
-  parseMarkerOptions(props) {
-    const {
-      onComplete,
-      onClick,
-      onDblClick,
-      onRightClick,
-      onMouseMove,
-      onMouseOver,
-      onMouseOut,
-      onMouseDown,
-      onMouseUp,
-      onDragStart,
-      onDragging,
-      onDragEnd,
-      onMoving,
-      onMoveEnd,
-      onMoveAlong,
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-      ...markerOptions
-    } = props;
-
-    const {
-      label: { offset: labelOffset } = {},
-      offset,
-    } = markerOptions;
-
-    return {
-      ...markerOptions,
-      label: {
-        ...markerOptions.label,
-        offset: (() => {
-          if (labelOffset instanceof window.AMap.Pixel) {
-            return labelOffset;
-          }
-
-          if (labelOffset instanceof Array) {
-            return new window.AMap.Pixel(...labelOffset);
-          }
-
-          return new window.AMap.Pixel(0, 0);
-        })(),
-      },
-      // Will transform an array of two numbers into a Pixel instance
-      offset: (() => {
-        if (offset instanceof window.AMap.Pixel) {
-          return offset;
-        }
-
-        if (offset instanceof Array) {
-          return new window.AMap.Pixel(...offset);
-        }
-
-        return new window.AMap.Pixel(-10, -34);
-      })(),
     };
   }
 

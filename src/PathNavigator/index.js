@@ -40,6 +40,61 @@ class PathNavigator extends React.Component {
   };
 
   /**
+   * Parse PathNavigator options
+   * Named properties are event callbacks, other properties are pathNavigator options.
+   * @param  {Object} props
+   * @return {Object}
+   */
+  static parsePathNavigatorOptions(props) {
+    const {
+      map,
+      pathIndex,
+      pathSimplifier,
+      PathSimplifierClass,
+      onComplete,
+      onStart,
+      onPause,
+      onMove,
+      onStop,
+      ...pathNavigatorOptions
+    } = props;
+
+    return {
+      ...pathNavigatorOptions,
+      pathNavigatorStyle: {
+        ...pathNavigatorOptions.pathNavigatorStyle,
+        content: (() => {
+          if (pathNavigatorOptions.pathNavigatorStyle === void 0) {
+            return 'defaultPathNavigator';
+          }
+
+          const {
+            content,
+          } = pathNavigatorOptions.pathNavigatorStyle;
+
+          if (typeof content === 'string'
+            && content !== 'defaultPathNavigator'
+            && content !== 'circle'
+            && content !== 'none'
+          ) {
+            return PathSimplifierClass.Render.Canvas.getImageContent(
+              content,
+              () => {
+                pathSimplifier.renderLater();
+              },
+              () => {
+                throw Error('The image could not be loaded.');
+              },
+            );
+          }
+
+          return content || 'defaultPathNavigator';
+        })(),
+      },
+    };
+  }
+
+  /**
    * Define event name mapping relations of react binding PathNavigator.
    * @param {Object} props
    */
@@ -99,7 +154,7 @@ class PathNavigator extends React.Component {
     this.pathNavigator = null;
   }
 
-   /**
+  /**
    * Return an object of all supported event callbacks
    * @return {Object}
    */
@@ -109,61 +164,6 @@ class PathNavigator extends React.Component {
       onPause: createEventCallback('onPause', this.pathNavigator).bind(this),
       onMove: createEventCallback('onMove', this.pathNavigator).bind(this),
       onStop: createEventCallback('onStop', this.pathNavigator).bind(this),
-    };
-  }
-
-  /**
-   * Parse PathNavigator options
-   * Named properties are event callbacks, other properties are pathNavigator options.
-   * @param  {Object} props
-   * @return {Object}
-   */
-  parsePathNavigatorOptions(props) {
-    const {
-      map,
-      pathIndex,
-      pathSimplifier,
-      PathSimplifierClass,
-      onComplete,
-      onStart,
-      onPause,
-      onMove,
-      onStop,
-      ...pathNavigatorOptions
-    } = props;
-
-    return {
-      ...pathNavigatorOptions,
-      pathNavigatorStyle: {
-        ...pathNavigatorOptions.pathNavigatorStyle,
-        content: (() => {
-          if (pathNavigatorOptions.pathNavigatorStyle === void 0) {
-            return 'defaultPathNavigator';
-          }
-
-          const {
-            content,
-          } = pathNavigatorOptions.pathNavigatorStyle;
-
-          if (typeof content === 'string'
-            && content !== 'defaultPathNavigator'
-            && content !== 'circle'
-            && content !== 'none'
-          ) {
-            return PathSimplifierClass.Render.Canvas.getImageContent(
-              content,
-              () => {
-                pathSimplifier.renderLater();
-              },
-              () => {
-                throw Error('The image could not be loaded.');
-              },
-            );
-          }
-
-          return content || 'defaultPathNavigator';
-        })(),
-      },
     };
   }
 

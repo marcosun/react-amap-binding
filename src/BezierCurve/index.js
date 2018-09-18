@@ -55,6 +55,20 @@ class BezierCurve extends React.Component {
   };
 
   /**
+   * @param {Object} props
+   * @return {Object}
+   */
+  static parseBezierCurveOptions(props) {
+    const {
+      ...bezierCurveOptions
+    } = props;
+
+    return {
+      ...bezierCurveOptions,
+    };
+  }
+
+  /**
    * Define event name mapping relations of react binding bezierCurve
    * and AMap.BezierCurve.
    * Initialise AMap.BezierCurve and bind events.
@@ -153,20 +167,6 @@ class BezierCurve extends React.Component {
       onChange: createEventCallback('onChange', this.bezierCurve).bind(this),
       onTouchStart: createEventCallback('onTouchStart', this.bezierCurve).bind(this),
       onTouchEnd: createEventCallback('onTouchEnd', this.bezierCurve).bind(this),
-    };
-  }
-
-  /**
-   * @param {Object} props
-   * @return {Object}
-   */
-  parseBezierCurveOptions(props) {
-    const {
-      ...bezierCurveOptions
-    } = props;
-
-    return {
-      ...bezierCurveOptions,
     };
   }
 

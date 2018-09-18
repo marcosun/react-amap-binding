@@ -28,6 +28,24 @@ class TileLayerTraffic extends React.Component {
   }
 
   /**
+   * Parse AMap.TileLayer.Traffic options
+   * Named properties are event callbacks,
+   * other properties are tileLayerTraffic options.
+   * @param  {Object} props
+   * @return {Object}
+   */
+  static parseTileLayerTrafficOptions(props) {
+    const {
+      onComplete,
+      ...tileLayerTrafficOptions
+    } = props;
+
+    return {
+      ...tileLayerTrafficOptions,
+    };
+  }
+
+  /**
    * Define event name mapping relations of react binding TileLayerTraffic
    * and AMap.TileLayer.Traffic.
    * Initialise AMap.TileLayer.Traffic and bind events.
@@ -103,24 +121,6 @@ class TileLayerTraffic extends React.Component {
   parseEvents() {
     return {
       onComplete: createEventCallback('onComplete', this.tileLayerTraffic).bind(this),
-    };
-  }
-
-  /**
-   * Parse AMap.TileLayer.Traffic options
-   * Named properties are event callbacks,
-   * other properties are tileLayerTraffic options.
-   * @param  {Object} props
-   * @return {Object}
-   */
-  parseTileLayerTrafficOptions(props) {
-    const {
-      onComplete,
-      ...tileLayerTrafficOptions
-    } = props;
-
-    return {
-      ...tileLayerTrafficOptions,
     };
   }
 

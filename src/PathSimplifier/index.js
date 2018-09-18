@@ -61,6 +61,30 @@ class PathSimplifier extends React.Component {
     return null;
   }
 
+  /**
+   * Parse AMapUI.PathSimplifier options
+   * Named properties are event callbacks,
+   * other properties are pathSimplifier options.
+   * @param {Object} props
+   * @return {Object}
+   */
+  static parsePathSimplifierOptions(props) {
+    const {
+      onComplete,
+      onPathClick,
+      onPathMouseover,
+      onPathMouseout,
+      onPointClick,
+      onPointMouseover,
+      onPointMouseout,
+      ...pathSimplifierOptions
+    } = props;
+
+    return {
+      ...pathSimplifierOptions,
+    };
+  }
+
   state = {
     data: [],
     isShouldDestoryPathNavigator: false,
@@ -167,30 +191,6 @@ class PathSimplifier extends React.Component {
       onPointClick: createEventCallback('onPointClick', this.pathSimplifier).bind(this),
       onPointMouseover: createEventCallback('onPointMouseover', this.pathSimplifier).bind(this),
       onPointMouseout: createEventCallback('onPointMouseout', this.pathSimplifier).bind(this),
-    };
-  }
-
-  /**
-   * Parse AMapUI.PathSimplifier options
-   * Named properties are event callbacks,
-   * other properties are pathSimplifier options.
-   * @param {Object} props
-   * @return {Object}
-   */
-  parsePathSimplifierOptions(props) {
-    const {
-      onComplete,
-      onPathClick,
-      onPathMouseover,
-      onPathMouseout,
-      onPointClick,
-      onPointMouseover,
-      onPointMouseout,
-      ...pathSimplifierOptions
-    } = props;
-
-    return {
-      ...pathSimplifierOptions,
     };
   }
 

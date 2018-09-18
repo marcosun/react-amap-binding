@@ -40,6 +40,53 @@ class InfoWindow extends React.Component {
   };
 
   /**
+   * Parse AMap.InfoWindow options
+   * Named properties are event callbacks,
+   * other properties are infoWindow options.
+   * @param {Object} props
+   * @return {Object}
+   */
+  static parseInfoWindowOptions(props) {
+    const {
+      onComplete,
+      onChange,
+      onOpen,
+      onClose,
+      ...infoWindowOptions
+    } = props;
+
+    const {
+      offset,
+      size,
+    } = infoWindowOptions;
+
+    return {
+      ...infoWindowOptions,
+      // Will transform an array of two numbers into a Pixel instance
+      offset: (() => {
+        if (offset instanceof window.AMap.Pixel) {
+          return offset;
+        }
+
+        if (offset instanceof Array) {
+          return new window.AMap.Pixel(...offset);
+        }
+
+        return new window.AMap.Pixel();
+      })(),
+      size: (() => {
+        if (size instanceof window.AMap.Size) {
+          return size;
+        }
+
+        if (size instanceof Array) {
+          return new window.AMap.Size(...size);
+        }
+      })(),
+    };
+  }
+
+  /**
    * Define event name mapping relations of react binding InfoWindow
    * and AMap.InfoWindow.
    * Initialise AMap.InfoWindow and bind events.
@@ -132,53 +179,6 @@ class InfoWindow extends React.Component {
       onChange: createEventCallback('onChange', this.infoWindow).bind(this),
       onOpen: createEventCallback('onOpen', this.infoWindow).bind(this),
       onClose: createEventCallback('onClose', this.infoWindow).bind(this),
-    };
-  }
-
-  /**
-   * Parse AMap.InfoWindow options
-   * Named properties are event callbacks,
-   * other properties are infoWindow options.
-   * @param {Object} props
-   * @return {Object}
-   */
-  parseInfoWindowOptions(props) {
-    const {
-      onComplete,
-      onChange,
-      onOpen,
-      onClose,
-      ...infoWindowOptions
-    } = props;
-
-    const {
-      offset,
-      size,
-    } = infoWindowOptions;
-
-    return {
-      ...infoWindowOptions,
-      // Will transform an array of two numbers into a Pixel instance
-      offset: (() => {
-        if (offset instanceof window.AMap.Pixel) {
-          return offset;
-        }
-
-        if (offset instanceof Array) {
-          return new window.AMap.Pixel(...offset);
-        }
-
-        return new window.AMap.Pixel();
-      })(),
-      size: (() => {
-        if (size instanceof window.AMap.Size) {
-          return size;
-        }
-
-        if (size instanceof Array) {
-          return new window.AMap.Size(...size);
-        }
-      })(),
     };
   }
 

@@ -57,6 +57,35 @@ class Polygon extends React.Component {
   };
 
   /**
+   * Parse AMap.Polygon options
+   * @param  {Object} props
+   * @return {Object}
+   */
+  static parsePolygonOptions(props) {
+    const {
+      onComplete,
+      onClick,
+      onDblClick,
+      onRightClick,
+      onHide,
+      onShow,
+      onMouseDown,
+      onMouseUp,
+      onMouseOver,
+      onMouseOut,
+      onChange,
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd,
+      ...polygonOptions
+    } = props;
+
+    return {
+      ...polygonOptions,
+    };
+  }
+
+  /**
    * Define event name mapping relations of react binding Polygon
    * and AMap.Polygon.
    * Initialise AMap.Polygon and bind events.
@@ -148,35 +177,6 @@ class Polygon extends React.Component {
       onTouchStart: createEventCallback('onTouchStart', this.polygon).bind(this),
       onTouchMove: createEventCallback('onTouchMove', this.polygon).bind(this),
       onTouchEnd: createEventCallback('onTouchEnd', this.polygon).bind(this),
-    };
-  }
-
-  /**
-   * Parse AMap.Polygon options
-   * @param  {Object} props
-   * @return {Object}
-   */
-  parsePolygonOptions(props) {
-    const {
-      onComplete,
-      onClick,
-      onDblClick,
-      onRightClick,
-      onHide,
-      onShow,
-      onMouseDown,
-      onMouseUp,
-      onMouseOver,
-      onMouseOut,
-      onChange,
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-      ...polygonOptions
-    } = props;
-
-    return {
-      ...polygonOptions,
     };
   }
 

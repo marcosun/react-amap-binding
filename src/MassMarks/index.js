@@ -71,6 +71,56 @@ class MassMarks extends React.Component {
   };
 
   /**
+   * Parse AMap.MassMarks options
+   * Named properties are event callbacks, other properties are massMarks options.
+   * @param  {Object} props
+   * @return {Object}
+   */
+  static parseMassMarksOptions(props) {
+    const {
+      onComplete,
+      onClick,
+      onDblClick,
+      onMouseOut,
+      onMouseOver,
+      onMouseUp,
+      onMouseDown,
+      onTouchStart,
+      onTouchEnd,
+      ...massMarksOptions
+    } = props;
+
+    const {
+      style,
+    } = massMarksOptions;
+
+    return {
+      ...massMarksOptions,
+      style: (() => {
+        if (style instanceof Array) {
+          return style.map((styleObject) => {
+            return {
+              ...styleObject,
+              anchor: styleObject.anchor instanceof window.AMap.Pixel
+                ? styleObject.anchor
+                : new window.AMap.Pixel(...styleObject.anchor),
+              size: styleObject.size instanceof window.AMap.Size
+                ? styleObject.size
+                : new window.AMap.Size(...styleObject.size),
+            };
+          });
+        }
+
+        return {
+          ...style,
+          anchor: new window.AMap.Pixel(...style.anchor),
+          size: new window.AMap.Size(...style.size),
+        };
+      })(),
+    };
+  }
+
+  /**
    * Define event name mapping relations of react binding MassMarks
    * and AMap.MassMarks.
    * Initialise AMap.MassMarks and bind events.
@@ -127,56 +177,6 @@ class MassMarks extends React.Component {
 
     this.massMarks.clear();
     this.massMarks = null;
-  }
-
-  /**
-   * Parse AMap.MassMarks options
-   * Named properties are event callbacks, other properties are massMarks options.
-   * @param  {Object} props
-   * @return {Object}
-   */
-  parseMassMarksOptions(props) {
-    const {
-      onComplete,
-      onClick,
-      onDblClick,
-      onMouseOut,
-      onMouseOver,
-      onMouseUp,
-      onMouseDown,
-      onTouchStart,
-      onTouchEnd,
-      ...massMarksOptions
-    } = props;
-
-    const {
-      style,
-    } = massMarksOptions;
-
-    return {
-      ...massMarksOptions,
-      style: (() => {
-        if (style instanceof Array) {
-          return style.map((styleObject) => {
-            return {
-              ...styleObject,
-              anchor: styleObject.anchor instanceof window.AMap.Pixel
-                ? styleObject.anchor
-                : new window.AMap.Pixel(...styleObject.anchor),
-              size: styleObject.size instanceof window.AMap.Size
-                ? styleObject.size
-                : new window.AMap.Size(...styleObject.size),
-            };
-          });
-        }
-
-        return {
-          ...style,
-          anchor: new window.AMap.Pixel(...style.anchor),
-          size: new window.AMap.Size(...style.size),
-        };
-      })(),
-    };
   }
 
   /**
