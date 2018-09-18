@@ -28,7 +28,7 @@ class InfoWindow extends React.Component {
     /**
      * An array of two numbers or AMap.Pixel.
      */
-    offset: oneOfType([array, object]),
+    offset: oneOfType([array, object]), // eslint-disable-line react/no-unused-prop-types
     /**
      * An array of two numbers, width and height or AMap.Size.
      */
