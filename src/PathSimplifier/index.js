@@ -271,6 +271,8 @@ class PathSimplifier extends React.Component {
           return void 0;
         });
       }
+
+      return null;
     };
 
     // Destory pathNavigator

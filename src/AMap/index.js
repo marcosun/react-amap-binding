@@ -410,6 +410,8 @@ class AMap extends React.PureComponent {
           return void 0;
         });
       }
+
+      return null;
     };
 
     return (
