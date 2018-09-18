@@ -74,6 +74,7 @@ class InfoWindow extends React.Component {
 
         return new window.AMap.Pixel();
       })(),
+      // Will transform an array of two numbers into a Size instance
       size: (() => {
         if (size instanceof window.AMap.Size) {
           return size;
@@ -82,6 +83,8 @@ class InfoWindow extends React.Component {
         if (size instanceof Array) {
           return new window.AMap.Size(...size);
         }
+
+        return null;
       })(),
     };
   }
