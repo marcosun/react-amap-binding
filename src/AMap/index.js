@@ -416,10 +416,9 @@ class AMap extends React.PureComponent {
 
     return (
       <div
-style={{ width: '100%', height: '100%' }}
-        ref={(self) => {
-          this.mapContainer = self;
-        }}>
+        ref={(self) => { this.mapContainer = self; }}
+        style={{ width: '100%', height: '100%' }}
+      >
         {
           map !== void 0 && children && childrenElement()
         }
