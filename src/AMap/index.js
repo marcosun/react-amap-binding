@@ -11,6 +11,8 @@ import {
 import createEventCallback from '../Util/createEventCallback';
 import isShallowEqual from '../Util/isShallowEqual';
 
+const mapContainerStyle = { width: '100%', height: '100%' };
+
 /**
  * AMap wrapper component to initialise AMap.
  * All map components should be childrens of this wrapper component.
@@ -417,7 +419,7 @@ class AMap extends React.PureComponent {
     return (
       <div
         ref={(self) => { this.mapContainer = self; }}
-        style={{ width: '100%', height: '100%' }}
+        style={mapContainerStyle}
       >
         {
           map !== void 0 && children && childrenElement()
