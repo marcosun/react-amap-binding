@@ -76,7 +76,7 @@ class InfoWindow extends React.Component {
 
     const newInfoWindowOptions = cloneDeep(nextInfoWindowOptions, NEED_DEEP_COPY_FIELDS);
 
-    this.toggleVisible(this.infoWindowOptions.visible, nextInfoWindowOptions.visible);
+    this.toggleVisible(nextProps);
 
     this.updateInfoWindowWithApi('setContent', this.infoWindowOptions.content, nextInfoWindowOptions.content, newInfoWindowOptions.content);
 
@@ -108,16 +108,10 @@ class InfoWindow extends React.Component {
    * @return {InfoWindow}
    */
   initInfoWindow(infoWindowOptions) {
-    const {
-      map,
-      visible,
-    } = this.props;
+    const { map, position, visible, ...newOptions } = infoWindowOptions;
+    const infoWindow = new window.AMap.InfoWindow(cloneDeep(newOptions, NEED_DEEP_COPY_FIELDS));
 
-    const infoWindow = new window.AMap.InfoWindow(cloneDeep(infoWindowOptions, NEED_DEEP_COPY_FIELDS));
-
-    infoWindow.setMap(map);
-
-    if (visible === false) infoWindow.close();
+    if (visible === true) infoWindow.open(map, position);
 
     return infoWindow;
   }
@@ -219,11 +213,10 @@ class InfoWindow extends React.Component {
    * @param  {Object} currentProp - Current value
    * @param  {Object} nextProp - Next value
    */
-  toggleVisible(currentProp, nextProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      if (nextProp === true) this.infoWindow.open();
-      if (nextProp === false) this.infoWindow.close();
-    }
+  toggleVisible(nextProps) {
+    const { visible, map, position } = nextProps;
+    if (visible === true) this.infoWindow.open(map, position);
+    if (visible === false) this.infoWindow.close();
   }
   /**
    * Render nothing
