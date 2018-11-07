@@ -27,7 +27,7 @@ class InfoWindowPage extends React.Component {
         content: '<div>InfoWindow<br>InfoWindow</div>',
         autoMove: true,
         offset: [0, 0],
-        visible: false,
+        visible: true,
         size: [500, 100],
       },
     };
