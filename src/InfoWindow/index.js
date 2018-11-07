@@ -216,8 +216,11 @@ class InfoWindow extends React.Component {
   toggleVisible(currentProp, nextProp) {
     if (!isShallowEqual(currentProp.visible, nextProp.visible)) {
       const { visible, map, position } = nextProp;
-      if (visible === true) this.infoWindow.open(map, position);
-      if (visible === false) this.infoWindow.close();
+      if (visible === false) {
+        this.infoWindow.close();
+      } else {
+        this.infoWindow.open(map, position);
+      }
     }
   }
   /**
