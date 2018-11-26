@@ -29,6 +29,12 @@ export default class extends React.Component {
     onTouchEnd: func,
   };
 
+  /**
+   * Define event name mapping relations of react binding Circle
+   * and AMap.Circle.
+   * Initialise AMap.Circle and bind events.
+   * @param {Object} props
+   */
   constructor(props) {
     super(props);
     const {
@@ -36,7 +42,7 @@ export default class extends React.Component {
       onComplete,
     } = props;
 
-    breakIfNotChildOfAMap('Marker', map);
+    breakIfNotChildOfAMap('Circle', map);
     this.circleOptions = this.parseCircleOptions(this.props);
     this.circle = new window.AMap.Circle(cloneDeep(this.circleOptions, NEED_DEEP_COPY_FIELDS));
     this.eventCallbacks = this.parseEvents();
@@ -45,7 +51,7 @@ export default class extends React.Component {
   }
 
   /**
-   * Update this.circle by calling AMap.Marker methods
+   * Update this.circle by calling AMap.Circle methods
    * @param  {Object} nextProps
    * @param  {Object} nextState
    * @return {Boolean} - Prevent calling render function
@@ -55,21 +61,21 @@ export default class extends React.Component {
     const newCircleOptions = cloneDeep(nextCircleOptions, NEED_DEEP_COPY_FIELDS);
 
     /* We will test if should use setOptions later */
-    // this.circle.setOptions(newCircleOptions);
+    /* this.circle.setOptions(newCircleOptions); */
 
     /* SetzIndex、setCursor not provided in lbs docs */
-    // this.updateMarkerWithApi('setzIndex', this.circleOptions.zIndex, nextCircleOptions.zIndex, newCircleOptions.zIndex);
-    // this.updateMarkerWithApi('setCursor', this.circleOptions.cursor, nextCircleOptions.cursor, newCircleOptions.cursor);
+    /* this.updateCircleWithApi('setzIndex', this.circleOptions.zIndex, nextCircleOptions.zIndex, newCircleOptions.zIndex); */
+    /* this.updateCircleWithApi('setCursor', this.circleOptions.cursor, nextCircleOptions.cursor, newCircleOptions.cursor); */
 
-    this.updateMarkerWithApi('setCenter', this.circleOptions.center, nextCircleOptions.center, newCircleOptions.center);
+    this.updateCircleWithApi('setCenter', this.circleOptions.center, nextCircleOptions.center, newCircleOptions.center);
 
-    this.updateMarkerWithApi('setRadius', this.circleOptions.radius, nextCircleOptions.radius, newCircleOptions.radius);
+    this.updateCircleWithApi('setRadius', this.circleOptions.radius, nextCircleOptions.radius, newCircleOptions.radius);
 
-    this.updateMarkerWithApi('setPosition', this.circleOptions.position, nextCircleOptions.position, newCircleOptions.position);
+    this.updateCircleWithApi('setPosition', this.circleOptions.position, nextCircleOptions.position, newCircleOptions.position);
 
     this.toggleVisible(this.circleOptions.visible, nextCircleOptions.visible);
 
-    this.updateMarkerWithApi('setExtData', this.circleOptions.extData, nextCircleOptions.extData, newCircleOptions.extData);
+    this.updateCircleWithApi('setExtData', this.circleOptions.extData, nextCircleOptions.extData, newCircleOptions.extData);
 
     this.circleOptions = nextCircleOptions;
 
@@ -141,7 +147,7 @@ export default class extends React.Component {
    * Bind all events on circle instance.
    * Save event listeners.
    * Later to be removed in componentWillUnmount lifecycle.
-   * @param  {AMap.Circle} circle - AMap.Marker instance
+   * @param  {AMap.Circle} circle - AMap.Circle instance
    * @param  {Object} eventCallbacks - An object of all event callbacks
    */
   bindEvents(circle, eventCallbacks) {
@@ -165,7 +171,7 @@ export default class extends React.Component {
    * @param  {*} nextProp - Next value
    * @param  {*} newProp - New value
    */
-  updateMarkerWithApi(apiName, currentProp, nextProp, newProp) {
+  updateCircleWithApi(apiName, currentProp, nextProp, newProp) {
     if (!isShallowEqual(currentProp, nextProp)) {
       this.circle[apiName](newProp);
     }
