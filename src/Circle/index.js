@@ -8,7 +8,7 @@ import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
 import isShallowEqual from '../Util/isShallowEqual';
 
-const NEED_DEEP_COPY_FIELDS = ['center']
+const NEED_DEEP_COPY_FIELDS = ['center'];
 
 export default class extends React.Component {
   static propTypes = {
