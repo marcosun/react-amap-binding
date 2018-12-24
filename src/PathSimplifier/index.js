@@ -143,6 +143,12 @@ class PathSimplifier extends React.Component {
    * Remove pathSimplifier.
    */
   componentWillUnmount() {
+    /**
+     * The eventCallbacks and pathSimplifier variables are assigned
+     * after the asynchronous PathSimplifier module has been loaded.
+     * If the resource has not been downloaded
+     * before the component will unmount, an error will be thrown.
+     */
     if (this.eventCallbacks !== void 0) {
       Object.keys(this.eventCallbacks).forEach((key) => {
         const eventName = camelCase(key.substring(2));
