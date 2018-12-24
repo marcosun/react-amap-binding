@@ -147,11 +147,14 @@ class AMap extends React.PureComponent {
    * Destroy AMap.Map instance.
    */
   componentWillUnmount() {
-    this.AMapEventListeners.forEach((listener) => {
-      window.AMap.event.removeListener(listener);
-    });
-
-    this.state.map.destroy();
+    if (this.AMapEventListeners !== void 0) {
+      this.AMapEventListeners.forEach((listener) => {
+        window.AMap.event.removeListener(listener);
+      });
+    }
+    if (this.state.map !== void 0) {
+      this.state.map.destroy();
+    }
   }
 
   /**

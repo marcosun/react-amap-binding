@@ -143,15 +143,19 @@ class PathSimplifier extends React.Component {
    * Remove pathSimplifier.
    */
   componentWillUnmount() {
-    Object.keys(this.eventCallbacks).forEach((key) => {
-      const eventName = camelCase(key.substring(2));
-      const handler = this.eventCallbacks[key];
+    if (this.eventCallbacks !== void 0) {
+      Object.keys(this.eventCallbacks).forEach((key) => {
+        const eventName = camelCase(key.substring(2));
+        const handler = this.eventCallbacks[key];
 
-      this.pathSimplifier.off(eventName, handler);
-    });
+        this.pathSimplifier.off(eventName, handler);
+      });
+    }
 
-    this.pathSimplifier.setData();
-    this.pathSimplifier = null;
+    if (this.pathSimplifier !== void 0) {
+      this.pathSimplifier.setData();
+      this.pathSimplifier = null;
+    }
   }
 
   /**
