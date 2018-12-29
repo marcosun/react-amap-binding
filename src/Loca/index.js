@@ -11,25 +11,27 @@ import {
   shape,
 } from 'prop-types';
 import cloneDeep from 'lodash/cloneDeep';
-
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 
 /**
  * Loca binding
- * @param {Object} props
- * @param {Array} props.data - Dataset.
- * @param {Object} [props.dataSetOptions] - http://lbs.amap.com/api/loca-api/api-manual#layer_data_option
- * @param {Object} props.layerOptions - http://lbs.amap.com/api/loca-api/api-manual#layer_options
- * @param {Object} props.map - AMap map instance
- * @param {Object} [props.visualOptions] - http://lbs.amap.com/api/loca-api/api-manual#layer_visual_option
  */
 class Loca extends React.Component {
   static propTypes = {
+    /**
+     * @ignore
+     */
     data: array.isRequired,
+    /**
+     * @{@link http://lbs.amap.com/api/loca-api/api-manual#layer_data_option}
+     */
     dataSetOptions: shape({
-      type: string,
       lnglat: oneOfType([func, string]).isRequired,
+      type: string,
     }),
+    /**
+     * @{@link http://lbs.amap.com/api/loca-api/api-manual#layer_options}
+     */
     layerOptions: shape({
       blendMode: string,
       eventSupport: bool,
@@ -38,7 +40,13 @@ class Loca extends React.Component {
       type: string.isRequired,
       zIndex: number,
     }).isRequired,
+    /**
+     * AMap map instance.
+     */
     map: object,
+    /**
+     * @{@link http://lbs.amap.com/api/loca-api/api-manual#layer_visual_option}
+     */
     visualOptions: shape({
       invisible: func,
       source: oneOfType([
@@ -86,10 +94,9 @@ class Loca extends React.Component {
   /**
    * Update this.loca by calling Loca methods
    * @param  {Object} nextProps
-   * @param  {Object} nextState
    * @return {Boolean} - Prevent calling render function
    */
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     const {
       data,
       dataSetOptions,

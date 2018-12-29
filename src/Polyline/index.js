@@ -4,7 +4,6 @@ import {
   bool,
   func,
 } from 'prop-types';
-
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
@@ -37,8 +36,22 @@ const NEED_DEEP_COPY_FIELDS = ['path'];
  */
 class Polyline extends React.Component {
   static propTypes = {
+    /**
+     * AMap map instance.
+     */
     map: object,
+    /**
+     * Shows Polyline by default, you can toggle show or hide by setting visible.
+     */
     visible: bool,
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    /**
+     * Event callback.
+     *
+     * @param {AMap.Map} map             - AMap.Map instance
+     * @param {AMap.Polyline} polyline   - AMap.Polyline instance
+     * @param {Object} event             - Polyline event parameters
+     */
     onComplete: func,
     onClick: func,
     onDblClick: func,
@@ -53,7 +66,37 @@ class Polyline extends React.Component {
     onTouchStart: func,
     onTouchMove: func,
     onTouchEnd: func,
+    /* eslint-enable */
   };
+
+  /**
+   * Parse AMap.Polyline options
+   * @param  {Object} props
+   * @return {Object}
+   */
+  static parsePolylineOptions(props) {
+    const {
+      onComplete,
+      onClick,
+      onDblClick,
+      onRightClick,
+      onHide,
+      onShow,
+      onMouseDown,
+      onMouseUp,
+      onMouseOver,
+      onMouseOut,
+      onChange,
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd,
+      ...polylineOptions
+    } = props;
+
+    return {
+      ...polylineOptions,
+    };
+  }
 
   /**
    * Define event name mapping relations of react binding Polyline
@@ -71,7 +114,7 @@ class Polyline extends React.Component {
 
     breakIfNotChildOfAMap('Polyline', map);
 
-    this.polylineOptions = this.parsePolylineOptions(props);
+    this.polylineOptions = Polyline.parsePolylineOptions(props);
 
     this.polyline = this.initPolyline(this.polylineOptions);
 
@@ -85,11 +128,10 @@ class Polyline extends React.Component {
   /**
    * Update this.polyline by calling AMap.Polyline methods
    * @param  {Object} nextProps
-   * @param  {Object} nextState
    * @return {Boolean} - Prevent calling render function
    */
-  shouldComponentUpdate(nextProps, nextState) {
-    const nextPolylineOptions = this.parsePolylineOptions(nextProps);
+  shouldComponentUpdate(nextProps) {
+    const nextPolylineOptions = Polyline.parsePolylineOptions(nextProps);
 
     const newPolylineOptions = cloneDeep(nextPolylineOptions, NEED_DEEP_COPY_FIELDS);
 
@@ -151,35 +193,6 @@ class Polyline extends React.Component {
   }
 
   /**
-   * Parse AMap.Polyline options
-   * @param  {Object} props
-   * @return {Object}
-   */
-  parsePolylineOptions(props) {
-    const {
-      onComplete,
-      onClick,
-      onDblClick,
-      onRightClick,
-      onHide,
-      onShow,
-      onMouseDown,
-      onMouseUp,
-      onMouseOver,
-      onMouseOut,
-      onChange,
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-      ...polylineOptions
-    } = props;
-
-    return {
-      ...polylineOptions,
-    };
-  }
-
-  /**
    * Bind all events on polyline instance.
    * Save event listeners.
    * Later to be removed in componentWillUnmount lifecycle.
@@ -194,7 +207,7 @@ class Polyline extends React.Component {
       const handler = eventCallbacks[key];
 
       this.AMapEventListeners.push(
-        window.AMap.event.addListener(polyline, eventName, handler)
+        window.AMap.event.addListener(polyline, eventName, handler),
       );
     });
   }
@@ -235,4 +248,3 @@ class Polyline extends React.Component {
 }
 
 export default Polyline;
-

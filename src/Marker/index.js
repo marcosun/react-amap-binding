@@ -1,9 +1,11 @@
 import React from 'react';
 import {
-  object,
+  array,
   func,
+  object,
+  oneOfType,
+  shape,
 } from 'prop-types';
-
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
@@ -13,36 +15,34 @@ const NEED_DEEP_COPY_FIELDS = ['position'];
 
 /**
  * Marker binding
- * @param  {MarkerOptions} props - Properties defined in AMap.Marker.
  * Marker has the same config options as AMap.Marker unless highlighted below.
  * For marker events usage please reference to AMap.Marker events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference/overlay#marker}
- * Besides, it can transform an array of two numbers into AMap.Pixel instance.
- * @param {Object} props.map - AMap map instance
- * @param {Array|Pixel} props.offset - An array of two numbers or AMap.Pixel
- * @param {Array|Pixel} props.label.offset - An array of two numbers or AMap.Pixel
- * @param {Function} props.onComplete - Complete callback
- * @param {Function} props.onClick - Click callback
- * @param {Function} props.onDblClick - Double click callback
- * @param {Function} props.onRightClick - Right click callback
- * @param {Function} props.onMouseMove - Mouse move callback
- * @param {Function} props.onMouseOver - Mouse over callback
- * @param {Function} props.onMouseOut - Mouse out callback
- * @param {Function} props.onMouseDown - Mouse down callback
- * @param {Function} props.onMouseUp - Mouse up callback
- * @param {Function} props.onDragStart - Drag start callback
- * @param {Function} props.onDragging - Dragging callback
- * @param {Function} props.onDragEnd - onDrag end callback
- * @param {Function} props.onMoving - Moving callback
- * @param {Function} props.onMoveEnd - Move end callback
- * @param {Function} props.onMoveAlong - Move along callback
- * @param {Function} props.onTouchStart - Touch start callback
- * @param {Function} props.onTouchMove - Touch move callback
- * @param {Function} props.onTouchEnd - Touch end callback
  */
 class Marker extends React.Component {
   static propTypes = {
+    /**
+     * An array of two numbers or AMap.Pixel for label.offset.
+     */
+    label: shape({
+      offset: oneOfType([array, object]),
+    }),
+    /**
+     * AMap map instance.
+     */
     map: object,
+    /**
+     * An array of two numbers or AMap.Pixel.
+     */
+    offset: oneOfType([array, object]),
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    /**
+     * Event callback.
+     *
+     * @param {AMap.Map} map           - AMap.Map instance
+     * @param {AMap.Marker} Marker     - AMap.Marker
+     * @param {Object} event           - Marker event parameters
+     */
     onComplete: func,
     onClick: func,
     onDblClick: func,
@@ -61,7 +61,74 @@ class Marker extends React.Component {
     onTouchStart: func,
     onTouchMove: func,
     onTouchEnd: func,
+    /* eslint-enable */
   };
+
+  /**
+   * Parse AMap.Marker options
+   * Named properties are event callbacks, other properties are marker options.
+   * @param {Object} props
+   * @return {Object}
+   */
+  static parseMarkerOptions(props) {
+    const {
+      onComplete,
+      onClick,
+      onDblClick,
+      onRightClick,
+      onMouseMove,
+      onMouseOver,
+      onMouseOut,
+      onMouseDown,
+      onMouseUp,
+      onDragStart,
+      onDragging,
+      onDragEnd,
+      onMoving,
+      onMoveEnd,
+      onMoveAlong,
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd,
+      ...markerOptions
+    } = props;
+
+    const {
+      label: { offset: labelOffset } = {},
+      offset,
+    } = markerOptions;
+
+    return {
+      ...markerOptions,
+      label: {
+        ...markerOptions.label,
+        // Will transform an array of two numbers into a Pixel instance
+        offset: (() => {
+          if (labelOffset instanceof window.AMap.Pixel) {
+            return labelOffset;
+          }
+
+          if (labelOffset instanceof Array) {
+            return new window.AMap.Pixel(...labelOffset);
+          }
+
+          return new window.AMap.Pixel(0, 0);
+        })(),
+      },
+      // Will transform an array of two numbers into a Pixel instance
+      offset: (() => {
+        if (offset instanceof window.AMap.Pixel) {
+          return offset;
+        }
+
+        if (offset instanceof Array) {
+          return new window.AMap.Pixel(...offset);
+        }
+
+        return new window.AMap.Pixel(-10, -34);
+      })(),
+    };
+  }
 
   /**
    * Define event name mapping relations of react binding Marker
@@ -79,7 +146,7 @@ class Marker extends React.Component {
 
     breakIfNotChildOfAMap('Marker', map);
 
-    this.markerOptions = this.parseMarkerOptions(this.props);
+    this.markerOptions = Marker.parseMarkerOptions(this.props);
 
     this.marker = new window.AMap.Marker(cloneDeep(this.markerOptions, NEED_DEEP_COPY_FIELDS));
 
@@ -93,11 +160,10 @@ class Marker extends React.Component {
   /**
    * Update this.marker by calling AMap.Marker methods
    * @param  {Object} nextProps
-   * @param  {Object} nextState
    * @return {Boolean} - Prevent calling render function
    */
-  shouldComponentUpdate(nextProps, nextState) {
-    const nextMarkerOptions = this.parseMarkerOptions(nextProps);
+  shouldComponentUpdate(nextProps) {
+    const nextMarkerOptions = Marker.parseMarkerOptions(nextProps);
 
     const newMarkerOptions = cloneDeep(nextMarkerOptions, NEED_DEEP_COPY_FIELDS);
 
@@ -178,71 +244,6 @@ class Marker extends React.Component {
   }
 
   /**
-   * Parse AMap.Marker options
-   * Named properties are event callbacks, other properties are marker options.
-   * @param {Object} props
-   * @return {Object}
-   */
-  parseMarkerOptions(props) {
-    const {
-      onComplete,
-      onClick,
-      onDblClick,
-      onRightClick,
-      onMouseMove,
-      onMouseOver,
-      onMouseOut,
-      onMouseDown,
-      onMouseUp,
-      onDragStart,
-      onDragging,
-      onDragEnd,
-      onMoving,
-      onMoveEnd,
-      onMoveAlong,
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-      ...markerOptions
-    } = props;
-
-    const {
-      label: {offset: labelOffset} = {},
-      offset,
-    } = markerOptions;
-
-    return {
-      ...markerOptions,
-      label: {
-        ...markerOptions.label,
-        offset: (() => {
-          if (labelOffset instanceof window.AMap.Pixel) {
-            return labelOffset;
-          }
-
-          if (labelOffset instanceof Array) {
-            return new window.AMap.Pixel(...labelOffset);
-          }
-
-          return new window.AMap.Pixel(0, 0);
-        })(),
-      },
-      // Will transform an array of two numbers into a Pixel instance
-      offset: (() => {
-        if (offset instanceof window.AMap.Pixel) {
-          return offset;
-        }
-
-        if (offset instanceof Array) {
-          return new window.AMap.Pixel(...offset);
-        }
-
-        return new window.AMap.Pixel(-10, -34);
-      })(),
-    };
-  }
-
-  /**
    * Bind all events on marker instance.
    * Save event listeners.
    * Later to be removed in componentWillUnmount lifecycle.
@@ -257,7 +258,7 @@ class Marker extends React.Component {
       const handler = eventCallbacks[key];
 
       this.AMapEventListeners.push(
-        window.AMap.event.addListener(marker, eventName, handler)
+        window.AMap.event.addListener(marker, eventName, handler),
       );
     });
   }

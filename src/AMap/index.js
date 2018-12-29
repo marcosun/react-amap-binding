@@ -1,65 +1,65 @@
 import React from 'react';
 import {
+  array,
   func,
-  string,
   node,
+  object,
   oneOf,
+  oneOfType,
+  string,
 } from 'prop-types';
-
 import createEventCallback from '../Util/createEventCallback';
 import isShallowEqual from '../Util/isShallowEqual';
+
+const mapContainerStyle = { width: '100%', height: '100%' };
 
 /**
  * AMap wrapper component to initialise AMap.
  * All map components should be childrens of this wrapper component.
  * AMap component accepts the following config properties to initialise AMap.
- * @param  {MapOptions} props - Properties defined in AMap.Map
+ * AMap has the same config options as AMap.Map unless highlighted below.
  * {@link http://lbs.amap.com/api/javascript-api/reference/map}
- * @param  {Array|Bounds} props.bounds - A 2D array of two numbers or AMap.Bounds
- * @param  {string} props.locaVersion - Loca library version
- * @param  {string} props.protocol - Protocol, whether it is http or https
- * @param  {string} props.version - AMap javascript library version
- * @param  {string} props.appKey - AMap JS App key
- * @param  {string} props.uiVersion - AMap UI version
- * @param  {string} props.children - Child components
- * @param  {Function} props.onComplete - Complete callback
- * @param  {Function} props.onClick - Click callback
- * @param  {Function} props.onDbClick - DbClick callback
- * @param  {Function} props.onMapMove - MapMove callback
- * @param  {Function} props.onHotSpotClick - HotSpotClick callback
- * @param  {Function} props.onHotSpotOver - HotSpotOver callback
- * @param  {Function} props.onHotSpotOut - HotSpotOut callback
- * @param  {Function} props.MoveStart - MoveStart callback
- * @param  {Function} props.MoveEnd - MoveEnd callback
- * @param  {Function} props.onZoomChange - ZoomChange callback
- * @param  {Function} props.onZoomStart - ZoomStart callback
- * @param  {Function} props.onZoomEnd - ZoomEnd callback
- * @param  {Function} props.onMouseMove - MouseMove callback
- * @param  {Function} props.onMouseWheel - MouseWheel callback
- * @param  {Function} props.onMouseOver - MouseOver callback
- * @param  {Function} props.onMouseOut - MouseOut callback
- * @param  {Function} props.onMouseUp - MouseUp callback
- * @param  {Function} props.onMouseDown - MouseDown callback
- * @param  {Function} props.onRightClick - RightClick callback
- * @param  {Function} props.onDragStart - DragStart callback
- * @param  {Function} props.onDragging - Dragging callback
- * @param  {Function} props.onDragEnd - DragEnd callback
- * @param  {Function} props.onResize - Resize callback
- * @param  {Function} props.onTouchStart - TouchStart callback
- * @param  {Function} props.onTouchMove - TouchMove callback
- * @param  {Function} props.onTouchEnd - TouchEnd callback
  */
 class AMap extends React.PureComponent {
   static propTypes = {
-    locaVersion: string,
-    protocol: oneOf(['http', 'https']),
-    version: string,
+    /**
+     * AMap JS App key.
+     */
     appKey: string.isRequired,
-    uiVersion: string,
+    /**
+     * A 2D array of two numbers or AMap.Bounds.
+     */
+    bounds: oneOfType([array, object]),
+    /**
+     * Child components.
+     */
     children: node,
+    /**
+     * Loca library version.
+     */
+    locaVersion: string,
+    /**
+     * Whether it is http or https.
+     */
+    protocol: oneOf(['http', 'https']),
+    /**
+     * AMap UI version.
+     */
+    uiVersion: string,
+    /**
+     * AMap javascript library version.
+     */
+    version: string,
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    /**
+     * Event callback.
+     *
+     * @param {AMap.Map} map - AMap.Map instance
+     * @param {Object} event - AMap event parameters
+     */
     onComplete: func,
     onClick: func,
-    onDbClick: func,
+    onDblClick: func,
     onMapMove: func,
     onHotSpotClick: func,
     onHotSpotOver: func,
@@ -83,6 +83,7 @@ class AMap extends React.PureComponent {
     onTouchStart: func,
     onTouchMove: func,
     onTouchEnd: func,
+    /* eslint-enable */
   };
 
   static defaultProps = {
@@ -93,144 +94,12 @@ class AMap extends React.PureComponent {
   };
 
   /**
-   * Initialise map property with undefined
-   * @param {Object} props
-   */
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      map: void 0,
-    };
-
-    this.mapOptions = this.parseMapOptions(this.props);
-  }
-
-  /**
-   * We get map conatiner element reference until this lifecycle method
-   * to instantiate AMap map object
-   */
-  componentDidMount() {
-    this.initAMap();
-  }
-
-  /**
-   * Update this.map by calling AMap.Map methods
-   */
-  componentDidUpdate() {
-    // Hold all updates until map has been created.
-    if (this.map === void 0) return;
-
-    const nextMapOptions = this.parseMapOptions(this.props);
-
-    this.updateMapWithApi('setBounds', this.mapOptions.bounds, nextMapOptions.bounds);
-    this.updateMapWithApi('setCenter', this.mapOptions.center, nextMapOptions.center);
-    this.updateMapWithApi('setCity', this.mapOptions.city, nextMapOptions.city);
-    this.updateMapWithApi('setDefaultCursor', this.mapOptions.defaultCursor, nextMapOptions.defaultCursor);
-    this.updateMapWithApi('setDefaultLayer', this.mapOptions.defaultLayer, nextMapOptions.defaultLayer);
-    this.updateMapWithApi('setFeatures', this.mapOptions.features, nextMapOptions.features);
-    this.updateMapWithApi('setZoom', this.mapOptions.zoom, nextMapOptions.zoom);
-    this.updateMapWithApi('setLang', this.mapOptions.lang, nextMapOptions.lang);
-    // Calling setLayers causes fatal exceptions
-    // this.updateMapWithApi('setLayers', this.mapOptions.layers, nextMapOptions.layers);
-    this.updateMapWithApi('setlabelzIndex', this.mapOptions.labelzIndex, nextMapOptions.labelzIndex);
-    this.updateMapWithApi('setMapStyle', this.mapOptions.mapStyle, nextMapOptions.mapStyle);
-    this.updateMapWithApi('setPitch', this.mapOptions.pitch, nextMapOptions.pitch);
-    this.updateMapWithApi('setRotation', this.mapOptions.rotation, nextMapOptions.rotation);
-    this.updateMapWithApi('setStatus', this.mapOptions.status, nextMapOptions.status);
-
-    this.mapOptions = nextMapOptions;
-  }
-
-  /**
-   * Remove event listeners.
-   * Destroy AMap.Map instance.
-   */
-  componentWillUnmount() {
-    /**
-     * The aMapEventListeners and map variables are assigned
-     * after the asynchronous AMap library has been loaded.
-     * If the resource has not been downloaded
-     * before the component will unmount, an error will be thrown.
-     */
-    if (this.AMapEventListeners !== void 0) {
-      this.AMapEventListeners.forEach((listener) => {
-        window.AMap.event.removeListener(listener);
-      });
-    }
-    if (this.state.map !== void 0) {
-      this.state.map.destroy();
-    }
-  }
-
-  /**
-   * Load AMap library when neccessary
-   * and instantiate map object by calling AMap.Map
-   */
-  async initAMap() {
-    const {
-      locaVersion,
-      protocol,
-      version,
-      appKey,
-      uiVersion,
-      onComplete,
-      onClick,
-      onDbClick,
-      onMapMove,
-      onHotSpotClick,
-      onHotSpotOver,
-      onHotSpotOut,
-      onMoveStart,
-      onMoveEnd,
-      onZoomChange,
-      onZoomStart,
-      onZoomEnd,
-      onMouseMove,
-      onMouseWheel,
-      onMouseOver,
-      onMouseOut,
-      onMouseUp,
-      onMouseDown,
-      onRightClick,
-      onDragStart,
-      onDragging,
-      onDragEnd,
-      onResize,
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-      ...mapOptions
-    } = this.props;
-
-    if (window.AMap === void 0) {
-      await this.requireAMap({protocol, version, appKey});
-      await this.requireAMapUI({protocol, version: uiVersion});
-      await this.requireLoca({protocol, appKey, version: locaVersion});
-    }
-
-    this.map = new window.AMap.Map(this.mapContainer, {
-      ...this.mapOptions,
-    });
-
-    // Due to the fact that createEventCallback is a closure,
-    // therefore this.map must be initialised before executing closure.
-    this.eventCallbacks = this.parseEvents();
-
-    this.bindEvents(this.map, this.eventCallbacks);
-
-    this.setState({
-      map: this.map,
-    });
-  }
-
-  /**
    * Parse AMap.Map options
    * Named properties are event callbacks, other properties are map options.
-   * @param {Object} props
+   * @param  {Object} props
    * @return {Object}
    */
-  parseMapOptions(props) {
+  static parseMapOptions(props) {
     const {
       children,
       locaVersion,
@@ -240,7 +109,7 @@ class AMap extends React.PureComponent {
       uiVersion,
       onComplete,
       onClick,
-      onDbClick,
+      onDblClick,
       onMapMove,
       onHotSpotClick,
       onHotSpotOver,
@@ -295,7 +164,7 @@ class AMap extends React.PureComponent {
    * @param  {string} options.appKey   - AMap JS App key
    * @return {Promise}                 - Promise created by AMap script tag
    */
-  requireAMap({protocol, version, appKey}) {
+  static requireAMap({ protocol, version, appKey }) {
     return new Promise((resolve) => {
       window.onJsapiLoad = () => {
         resolve();
@@ -316,7 +185,7 @@ class AMap extends React.PureComponent {
    * @param  {string} options.version  - AMap UI javascript library version
    * @return {Promise}                 - Promise created by AMap UI script tag
    */
-  requireAMapUI({protocol, version}) {
+  static requireAMapUI({ protocol, version }) {
     const amapUi = document.createElement('script');
     amapUi.type = 'text/javascript';
     amapUi.src = `${protocol}://webapi.amap.com/ui/${version}/main-async.js`;
@@ -338,7 +207,7 @@ class AMap extends React.PureComponent {
    * @param  {string} options.version  - Loca library version.
    * @return {Promise}                 - Promise created by Loca script tag.
    */
-  requireLoca({protocol, appKey, version}) {
+  static requireLoca({ protocol, appKey, version }) {
     const loca = document.createElement('script');
     loca.type = 'text/javascript';
     loca.src = `${protocol}://webapi.amap.com/loca?key=${appKey}&v=${version}`;
@@ -353,6 +222,111 @@ class AMap extends React.PureComponent {
   }
 
   /**
+   * Initialise map property with undefined
+   * @param {Object} props
+   */
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      map: void 0,
+    };
+
+    this.mapOptions = AMap.parseMapOptions(this.props);
+  }
+
+  /**
+   * We get map conatiner element reference until this lifecycle method
+   * to instantiate AMap map object
+   */
+  componentDidMount() {
+    this.initAMap();
+  }
+
+  /**
+   * Update this.map by calling AMap.Map methods
+   */
+  componentDidUpdate() {
+    // Hold all updates until map has been created.
+    if (this.map === void 0) return;
+
+    const nextMapOptions = AMap.parseMapOptions(this.props);
+
+    this.updateMapWithApi('setBounds', this.mapOptions.bounds, nextMapOptions.bounds);
+    this.updateMapWithApi('setCenter', this.mapOptions.center, nextMapOptions.center);
+    this.updateMapWithApi('setCity', this.mapOptions.city, nextMapOptions.city);
+    this.updateMapWithApi('setDefaultCursor', this.mapOptions.defaultCursor, nextMapOptions.defaultCursor);
+    this.updateMapWithApi('setDefaultLayer', this.mapOptions.defaultLayer, nextMapOptions.defaultLayer);
+    this.updateMapWithApi('setFeatures', this.mapOptions.features, nextMapOptions.features);
+    this.updateMapWithApi('setZoom', this.mapOptions.zoom, nextMapOptions.zoom);
+    this.updateMapWithApi('setLang', this.mapOptions.lang, nextMapOptions.lang);
+    // Calling setLayers causes fatal exceptions
+    // this.updateMapWithApi('setLayers', this.mapOptions.layers, nextMapOptions.layers);
+    this.updateMapWithApi('setlabelzIndex', this.mapOptions.labelzIndex, nextMapOptions.labelzIndex);
+    this.updateMapWithApi('setMapStyle', this.mapOptions.mapStyle, nextMapOptions.mapStyle);
+    this.updateMapWithApi('setPitch', this.mapOptions.pitch, nextMapOptions.pitch);
+    this.updateMapWithApi('setRotation', this.mapOptions.rotation, nextMapOptions.rotation);
+    this.updateMapWithApi('setStatus', this.mapOptions.status, nextMapOptions.status);
+
+    this.mapOptions = nextMapOptions;
+  }
+
+  /**
+   * Remove event listeners.
+   * Destroy AMap.Map instance.
+   */
+  componentWillUnmount() {
+    /**
+     * The aMapEventListeners and map variables are assigned
+     * after the asynchronous AMap library has been loaded.
+     * If the resource has not been downloaded
+     * before the component will unmount, an error will be thrown.
+     */
+    if (this.AMapEventListeners !== void 0) {
+      this.AMapEventListeners.forEach((listener) => {
+        window.AMap.event.removeListener(listener);
+      });
+    }
+    if (this.state.map !== void 0) {
+      this.state.map.destroy();
+    }
+  }
+
+  /**
+   * Load AMap library when neccessary
+   * and instantiate map object by calling AMap.Map
+   */
+  async initAMap() {
+    const {
+      locaVersion,
+      protocol,
+      version,
+      appKey,
+      uiVersion,
+    } = this.props;
+
+    if (window.AMap === void 0) {
+      await AMap.requireAMap({ protocol, version, appKey });
+      await AMap.requireAMapUI({ protocol, version: uiVersion });
+      await AMap.requireLoca({ protocol, appKey, version: locaVersion });
+    }
+
+    this.map = new window.AMap.Map(this.mapContainer, {
+      ...this.mapOptions,
+    });
+
+    // Due to the fact that createEventCallback is a closure,
+    // therefore this.map must be initialised before executing closure.
+    this.eventCallbacks = this.parseEvents();
+
+    this.bindEvents(this.map, this.eventCallbacks);
+
+    this.setState({
+      map: this.map,
+    });
+  }
+
+  /**
    * Return an object of all supported event callbacks
    * @return {Object}
   */
@@ -360,7 +334,7 @@ class AMap extends React.PureComponent {
     return {
       onComplete: createEventCallback('onComplete', this.map).bind(this),
       onClick: createEventCallback('onClick', this.map).bind(this),
-      onDbClick: createEventCallback('onDbClick', this.map).bind(this),
+      onDblClick: createEventCallback('onDblClick', this.map).bind(this),
       onMapMove: createEventCallback('onMapMove', this.map).bind(this),
       onHotSpotClick: createEventCallback('onHotSpotClick', this.map).bind(this),
       onHotSpotOver: createEventCallback('onHotSpotOver', this.map).bind(this),
@@ -402,7 +376,7 @@ class AMap extends React.PureComponent {
       const handler = eventCallbacks[key];
 
       this.AMapEventListeners.push(
-        window.AMap.event.addListener(map, eventName, handler)
+        window.AMap.event.addListener(map, eventName, handler),
       );
     });
   }
@@ -436,24 +410,26 @@ class AMap extends React.PureComponent {
 
     const childrenElement = () => {
       if (React.isValidElement(children)) { // Single element
-        return React.cloneElement(children, {map: map});
+        return React.cloneElement(children, { map });
       }
 
       if (children.length !== void 0) { // An array of elements
         return React.Children.map(children, (child) => {
           if (React.isValidElement(child)) {
-            return React.cloneElement(child, {map: map});
+            return React.cloneElement(child, { map });
           }
           return void 0;
         });
       }
+
+      return null;
     };
 
     return (
-      <div style={{width: '100%', height: '100%'}}
-        ref={(self) => {
-          this.mapContainer = self;
-        }}>
+      <div
+        ref={(self) => { this.mapContainer = self; }}
+        style={mapContainerStyle}
+      >
         {
           map !== void 0 && children && childrenElement()
         }
