@@ -95,10 +95,8 @@ class AMap extends React.PureComponent {
   };
 
   /**
-   * Parse AMap.Map options
+   * Parse AMap.Map options.
    * Named properties are event callbacks, other properties are map options.
-   * @param  {Object} props
-   * @return {Object}
    */
   static parseMapOptions(props) {
     const {
@@ -159,7 +157,7 @@ class AMap extends React.PureComponent {
   }
 
   /**
-   * Create script tag to require AMap library
+   * Create script tag to require AMap library.
    * @param  {string} options.protocol - Protocol, whether it is http or https
    * @param  {string} options.version  - AMap javascript library version
    * @param  {string} options.appKey   - AMap JS App key
@@ -181,7 +179,7 @@ class AMap extends React.PureComponent {
   }
 
   /**
-   * Create script tag to require AMapUI library
+   * Create script tag to require AMapUI library.
    * @param  {string} options.protocol - Protocol, whether it is http or https
    * @param  {string} options.version  - AMap UI javascript library version
    * @return {Promise}                 - Promise created by AMap UI script tag
@@ -202,7 +200,7 @@ class AMap extends React.PureComponent {
   }
 
   /**
-   * Create script tag to require Loca library
+   * Create script tag to require Loca library.
    * @param  {string} options.protocol - Protocol, whether it is http or https.
    * @param  {string} options.appKey   - AMap JS App key.
    * @param  {string} options.version  - Loca library version.
@@ -223,8 +221,7 @@ class AMap extends React.PureComponent {
   }
 
   /**
-   * Initialise map property with undefined
-   * @param {Object} props
+   * Initialise map property with undefined.
    */
   constructor(props) {
     super(props);
@@ -237,15 +234,14 @@ class AMap extends React.PureComponent {
   }
 
   /**
-   * We get map conatiner element reference until this lifecycle method
-   * to instantiate AMap map object
+   * We get map conatiner element reference until this lifecycle method to instantiate AMap map object.
    */
   componentDidMount() {
     this.initAMap();
   }
 
   /**
-   * Update this.map by calling AMap.Map methods
+   * Update this.map by calling AMap.Map methods.
    */
   componentDidUpdate() {
     // Hold all updates until map has been created.
@@ -278,10 +274,8 @@ class AMap extends React.PureComponent {
    */
   componentWillUnmount() {
     /**
-     * The aMapEventListeners and map variables are assigned
-     * after the asynchronous AMap library has been loaded.
-     * If the resource has not been downloaded
-     * before the component will unmount, an error will be thrown.
+     * The aMapEventListeners and map variables are assigned after the asynchronous AMap library has been loaded.
+     * If the resource has not been downloaded before the component will unmount, an error will be thrown.
      */
     if (this.AMapEventListeners !== void 0) {
       this.AMapEventListeners.forEach((listener) => {
@@ -294,8 +288,7 @@ class AMap extends React.PureComponent {
   }
 
   /**
-   * Load AMap library when neccessary
-   * and instantiate map object by calling AMap.Map
+   * Load AMap library when neccessary and instantiate map object by calling AMap.Map.
    */
   async initAMap() {
     const {
@@ -328,8 +321,7 @@ class AMap extends React.PureComponent {
   }
 
   /**
-   * Return an object of all supported event callbacks
-   * @return {Object}
+   * Return an object of all supported event callbacks.
   */
   parseEvents() {
     return {
@@ -384,7 +376,7 @@ class AMap extends React.PureComponent {
 
   /**
    * Update AMap.Map instance with named api and given value.
-   * Won't call api if the given value does not change
+   * Won't call api if the given value does not change.
    * @param  {string} apiName - AMap.Map instance update method name
    * @param  {Object} currentProp - Current value
    * @param  {Object} nextProp - Next value
@@ -396,9 +388,8 @@ class AMap extends React.PureComponent {
   }
 
   /**
-   * Render a div element as root of AMap
-   * Pass map object instantiated by AMap.Map to all direct decendents
-   * @return {Component}
+   * Render a div element as root of AMap.
+   * Pass map object instantiated by AMap.Map to all direct decendents.
    */
   render() {
     const {
