@@ -1,9 +1,6 @@
 import React from 'react';
-import {
-  bool,
-  func,
-  object,
-} from 'prop-types';
+import { bool, func } from 'prop-types';
+import AMapContext from '../context/AMapContext';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
@@ -17,11 +14,12 @@ const NEED_DEEP_COPY_FIELDS = ['path'];
  * {@link https://lbs.amap.com/api/javascript-api/reference/overlay#BezierCurve}
  */
 class BezierCurve extends React.Component {
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
+
   static propTypes = {
-    /**
-     * AMap map instance.
-     */
-    map: object,
     /**
      * Show BezierCurve by default, you can toggle show or hide by setting visible.
      */
@@ -71,19 +69,18 @@ class BezierCurve extends React.Component {
    * Binding onComplete event on bezierCurve instance
    * @param {Object} props
    */
-  constructor(props) {
+  constructor(props, context) {
     super(props);
 
-    const {
-      map,
-      onComplete,
-    } = props;
+    const { onComplete } = props;
+
+    const map = context;
 
     breakIfNotChildOfAMap('BezierCurve', map);
 
     this.bezierCurveOptions = BezierCurve.parseBezierCurveOptions(this.props);
 
-    this.bezierCurve = this.initBezierCurve(this.bezierCurveOptions);
+    this.bezierCurve = this.initBezierCurve(this.bezierCurveOptions, map);
 
     this.eventCallbacks = this.parseEvents();
 
@@ -129,11 +126,8 @@ class BezierCurve extends React.Component {
    * @param {Object} bezierCurveOptions - AMap.BezierCurve options
    * @return {BezierCurve}
    */
-  initBezierCurve(bezierCurveOptions) {
-    const {
-      map,
-      visible,
-    } = this.props;
+  initBezierCurve(bezierCurveOptions, map) {
+    const { visible } = this.props;
 
     const bezierCurve = new window.AMap.BezierCurve(cloneDeep(bezierCurveOptions, NEED_DEEP_COPY_FIELDS));
 
