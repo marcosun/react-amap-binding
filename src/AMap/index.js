@@ -8,6 +8,7 @@ import {
   oneOfType,
   string,
 } from 'prop-types';
+import AMapContext from '../context/AMapContext';
 import createEventCallback from '../Util/createEventCallback';
 import isShallowEqual from '../Util/isShallowEqual';
 
@@ -408,31 +409,11 @@ class AMap extends React.PureComponent {
       map,
     } = this.state;
 
-    const childrenElement = () => {
-      if (React.isValidElement(children)) { // Single element
-        return React.cloneElement(children, { map });
-      }
-
-      if (children.length !== void 0) { // An array of elements
-        return React.Children.map(children, (child) => {
-          if (React.isValidElement(child)) {
-            return React.cloneElement(child, { map });
-          }
-          return void 0;
-        });
-      }
-
-      return null;
-    };
-
     return (
-      <div
-        ref={(self) => { this.mapContainer = self; }}
-        style={mapContainerStyle}
-      >
-        {
-          map !== void 0 && children && childrenElement()
-        }
+      <div ref={(self) => { this.mapContainer = self; }} style={mapContainerStyle}>
+        <AMapContext.Provider value={map}>
+          {map !== void 0 && children}
+        </AMapContext.Provider>
       </div>
     );
   }
