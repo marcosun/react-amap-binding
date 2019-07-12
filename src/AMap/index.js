@@ -165,14 +165,17 @@ class AMap extends React.PureComponent {
    */
   static requireAMap({ protocol, version, appKey }) {
     return new Promise((resolve) => {
-      window.onJsapiLoad = () => {
-        resolve();
-        window.onJsapiLoad = void 0;
-      };
-
+      /**
+       * NOTE: Don't use the asynchronous loading method of the official lbs web callback function.
+       * Bacause the callback function is mounted in window variable that will cause that the previous promise cannot be resolved.
+       */
       const jsApi = document.createElement('script');
       jsApi.type = 'text/javascript';
-      jsApi.src = `${protocol}://webapi.amap.com/maps?v=${version}&key=${appKey}&callback=onJsapiLoad`;
+      jsApi.async = true;
+      jsApi.src = `${protocol}://webapi.amap.com/maps?v=${version}&key=${appKey}`;
+      jsApi.onload = () => {
+        resolve();
+      };
 
       document.head.appendChild(jsApi);
     });
