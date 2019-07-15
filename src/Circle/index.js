@@ -12,6 +12,12 @@ import isShallowEqual from '../Util/isShallowEqual';
  */
 const NEED_DEEP_COPY_FIELDS = ['center'];
 
+/**
+ * Circle binding.
+ * Circle has the same config options as AMap.Circle unless highlighted below.
+ * For circle events usage please reference to AMap.Circle events paragraph.
+ * {@link https://lbs.amap.com/api/javascript-api/reference/overlay#circle}
+ */
 class Circle extends React.Component {
   /**
    * AMap map instance.
