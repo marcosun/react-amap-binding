@@ -89,7 +89,7 @@ class BezierCurve extends React.Component {
 
   /**
    * Update this.bezierCurve by calling AMap.BezierCurve methods.
-   * @param  {Object} nextProps - New props
+   * @param  {Object} nextProps - Next props
    * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps) {
