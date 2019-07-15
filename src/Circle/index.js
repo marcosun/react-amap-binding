@@ -85,13 +85,13 @@ class Circle extends React.Component {
 
     const { onComplete } = props;
 
-    const map = context;
+    this.map = context;
 
-    breakIfNotChildOfAMap('Circle', map);
+    breakIfNotChildOfAMap('Circle', this.map);
 
     this.circleOptions = {
       ...Circle.parseCircleOptions(this.props),
-      map,
+      map: this.map,
     };
 
     this.circle = new window.AMap.Circle(cloneDeep(this.circleOptions, NEED_DEEP_COPY_FIELDS));
@@ -100,7 +100,7 @@ class Circle extends React.Component {
 
     this.bindEvents(this.circle, this.eventCallbacks);
 
-    onComplete && onComplete(map, this.circle);
+    onComplete && onComplete(this.map, this.circle);
   }
 
   /**
@@ -217,6 +217,9 @@ class Circle extends React.Component {
     }
   }
 
+  /**
+   * Render nothing.
+   */
   render() {
     return null;
   }

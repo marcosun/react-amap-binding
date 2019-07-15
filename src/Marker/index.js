@@ -143,13 +143,13 @@ class Marker extends React.Component {
 
     const { onComplete } = props;
 
-    const map = context;
+    this.map = context;
 
-    breakIfNotChildOfAMap('Marker', map);
+    breakIfNotChildOfAMap('Marker', this.map);
 
     this.markerOptions = {
       ...Marker.parseMarkerOptions(this.props),
-      map,
+      map: this.map,
     };
 
     this.marker = new window.AMap.Marker(cloneDeep(this.markerOptions, NEED_DEEP_COPY_FIELDS));
@@ -158,7 +158,7 @@ class Marker extends React.Component {
 
     this.bindEvents(this.marker, this.eventCallbacks);
 
-    onComplete && onComplete(map, this.marker);
+    onComplete && onComplete(this.map, this.marker);
   }
 
   /**

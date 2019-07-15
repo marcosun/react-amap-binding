@@ -13,7 +13,7 @@ import isShallowEqual from '../Util/isShallowEqual';
 const NEED_DEEP_COPY_FIELDS = ['path'];
 
 /**
- * BezierCurve binding
+ * BezierCurve binding.
  * BezierCurve has the same config options as AMap.BezierCurve unless highlighted below.
  * {@link https://lbs.amap.com/api/javascript-api/reference/overlay#BezierCurve}
  */
@@ -72,19 +72,19 @@ class BezierCurve extends React.Component {
 
     const { onComplete } = props;
 
-    const map = context;
+    this.map = context;
 
-    breakIfNotChildOfAMap('BezierCurve', map);
+    breakIfNotChildOfAMap('BezierCurve', this.map);
 
     this.bezierCurveOptions = BezierCurve.parseBezierCurveOptions(this.props);
 
-    this.bezierCurve = this.initBezierCurve(this.bezierCurveOptions, map);
+    this.bezierCurve = this.initBezierCurve(this.bezierCurveOptions);
 
     this.eventCallbacks = this.parseEvents();
 
     this.bindEvents(this.bezierCurve, this.eventCallbacks);
 
-    onComplete && onComplete(map, this.bezierCurve);
+    onComplete && onComplete(this.map, this.bezierCurve);
   }
 
   /**
@@ -122,17 +122,16 @@ class BezierCurve extends React.Component {
    /**
    * Initialise AMap.BezierCurve.
    * @param {Object} bezierCurveOptions - AMap.BezierCurve options
-   * @param {Object} map - Map instance
    * @return {BezierCurve} - BezierCurve instance
    */
-  initBezierCurve(bezierCurveOptions, map) {
+  initBezierCurve(bezierCurveOptions) {
     const { visible } = this.props;
 
     const newBezierCurveOptions = cloneDeep(bezierCurveOptions, NEED_DEEP_COPY_FIELDS);
 
     const bezierCurve = new window.AMap.BezierCurve(newBezierCurveOptions);
 
-    bezierCurve.setMap(map);
+    bezierCurve.setMap(this.map);
 
     if (visible === false) bezierCurve.hide();
 
@@ -207,8 +206,7 @@ class BezierCurve extends React.Component {
   }
 
   /**
-   * Render nothing
-   * @return {null}
+   * Render nothing.
    */
   render() {
     return null;

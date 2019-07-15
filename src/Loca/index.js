@@ -15,7 +15,7 @@ import AMapContext from '../context/AMapContext';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 
 /**
- * Loca binding
+ * Loca binding.
  */
 class Loca extends React.Component {
   /**
@@ -75,11 +75,11 @@ class Loca extends React.Component {
       visualOptions,
     } = props;
 
-    const map = context;
+    this.map = context;
 
-    breakIfNotChildOfAMap('Loca', map);
+    breakIfNotChildOfAMap('Loca', this.map);
 
-    const locaMap = new window.Loca(map);
+    const locaMap = new window.Loca(this.map);
 
     this.loca = new window.Loca.VisualLayer({
       container: locaMap,
@@ -122,8 +122,7 @@ class Loca extends React.Component {
   }
 
   /**
-   * Render nothing
-   * @return {null}
+   * Render nothing.
    */
   render() {
     return null;
