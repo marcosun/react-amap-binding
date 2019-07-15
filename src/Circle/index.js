@@ -1,18 +1,32 @@
 import React from 'react';
-import {
-  object,
-  func,
-} from 'prop-types';
+import { func } from 'prop-types';
+import AMapContext from '../context/AMapContext';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
 import isShallowEqual from '../Util/isShallowEqual';
 
+/**
+ * Fields that need to be deep copied.
+ * The new value is given to update api to avoid overwriting the props.
+ */
 const NEED_DEEP_COPY_FIELDS = ['center'];
 
-export default class extends React.Component {
+class Circle extends React.Component {
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
+
   static propTypes = {
-    map: object,
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    /**
+     * Event callback.
+     *
+     * @param {AMap.Map} map                  - AMap.Map instance
+     * @param {AMap.Circle} Circle            - AMap.Circle
+     * @param {Object} event                  - Circle event parameters
+     */
     onComplete: func,
     onClick: func,
     onDblClick: func,
@@ -27,37 +41,70 @@ export default class extends React.Component {
     onTouchStart: func,
     onTouchMove: func,
     onTouchEnd: func,
+    /* eslint-enable */
   };
 
   /**
-   * Define event name mapping relations of react binding Circle
-   * and AMap.Circle.
-   * Initialise AMap.Circle and bind events.
-   * @param {Object} props
+   * Parse options,
+   * remove events listeners.
    */
-  constructor(props) {
-    super(props);
+  static parseCircleOptions(props) {
     const {
-      map,
       onComplete,
+      onClick,
+      onDblClick,
+      onRightClick,
+      onHide,
+      onShow,
+      onMouseDown,
+      onMouseUp,
+      onMouseOver,
+      onMouseOut,
+      onChange,
+      onTouchStart,
+      onTouchMove,
+      onTouchEnd,
+      ...circleOptions
     } = props;
 
+    return circleOptions;
+  }
+
+  /**
+   * Define event name mapping relations of react binding Circle and AMap.Circle.
+   * Initialise AMap.Circle and bind events.
+   */
+  constructor(props, context) {
+    super(props);
+
+    const { onComplete } = props;
+
+    const map = context;
+
     breakIfNotChildOfAMap('Circle', map);
-    this.circleOptions = this.parseCircleOptions(this.props);
+
+    this.circleOptions = {
+      ...Circle.parseCircleOptions(this.props),
+      map,
+    };
+
     this.circle = new window.AMap.Circle(cloneDeep(this.circleOptions, NEED_DEEP_COPY_FIELDS));
+
     this.eventCallbacks = this.parseEvents();
+
     this.bindEvents(this.circle, this.eventCallbacks);
+
     onComplete && onComplete(map, this.circle);
   }
 
   /**
-   * Update this.circle by calling AMap.Circle methods
-   * @param  {Object} nextProps
-   * @param  {Object} nextState
+   * Update this.circle by calling AMap.Circle methods.
+   * @param  {Object} nextProps - Next props
    * @return {Boolean} - Prevent calling render function
    */
-  shouldComponentUpdate(nextProps, nextState) {
-    const nextCircleOptions = this.parseCircleOptions(nextProps);
+  shouldComponentUpdate(nextProps) {
+    const nextCircleOptions = Circle.parseCircleOptions(nextProps);
+
     const newCircleOptions = cloneDeep(nextCircleOptions, NEED_DEEP_COPY_FIELDS);
 
     /* We will test if should use setOptions later */
@@ -96,33 +143,7 @@ export default class extends React.Component {
   }
 
   /**
-   * Parse options,
-   * remove events listeners.
-   * */
-  parseCircleOptions(props) {
-    const {
-      onComplete,
-      onClick,
-      onDblClick,
-      onRightClick,
-      onHide,
-      onShow,
-      onMouseDown,
-      onMouseUp,
-      onMouseOver,
-      onMouseOut,
-      onChange,
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-      ...circleOptions
-    } = props;
-    return circleOptions;
-  }
-
-  /**
-   * Return an object of all supported event callbacks
-   * @return {Object}
+   * Return an object of all supported event callbacks.
    */
   parseEvents() {
     return {
@@ -165,7 +186,8 @@ export default class extends React.Component {
 
   /**
    * Update AMap.Circle instance with named api and given value.
-   * Won't call api if the given value does not change
+   * Won't call api if the given value does not change.
+   * The new value is given to update api to avoid overwriting the props.
    * @param  {string} apiName - AMap.Circle instance update method name
    * @param  {*} currentProp - Current value
    * @param  {*} nextProp - Next value
@@ -193,3 +215,5 @@ export default class extends React.Component {
     return null;
   }
 }
+
+export default Circle;
