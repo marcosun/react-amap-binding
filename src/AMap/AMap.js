@@ -30,7 +30,7 @@ class AMap extends React.PureComponent {
     /**
      * A 2D array of two numbers or AMap.Bounds.
      */
-    bounds: oneOfType([array, object]),
+    bounds: oneOfType([array, object]), // eslint-disable-line react/no-unused-prop-types
     /**
      * Child components.
      */

@@ -38,11 +38,11 @@ class InfoWindow extends React.Component {
     /**
      * An array of two numbers, width and height or AMap.Size.
      */
-    size: oneOfType([array, object]),
+    size: oneOfType([array, object]), // eslint-disable-line react/no-unused-prop-types
     /**
      * Show InfoWindow by default, you can toggle show or hide by setting visible.
      */
-    visible: bool,
+    visible: bool, // eslint-disable-line react/no-unused-prop-types
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
