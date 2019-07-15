@@ -14,6 +14,7 @@ import {
 // Require Pages
 import Amap from './AMapPage';
 import BezierCurve from './BezierCurve';
+import Circle from './Circle';
 import Marker from './MarkerPage';
 import PathNavigator from './PathNavigator';
 import PathSimplifier from './PathSimplifier';
@@ -33,6 +34,7 @@ export default function Router() {
       <div>
         <Route exact path="/" component={Amap} />
         <Route exact path="/bezierCurve" component={BezierCurve} />
+        <Route exact path="/circle" component={Circle} />
         <Route exact path="/marker" component={Marker} />
         <Route exact path="/pathSimplifier" component={PathSimplifier} />
         <Route exact path="/massMarks" component={MassMarks} />

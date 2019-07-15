@@ -21,8 +21,10 @@ class CirclePage extends React.Component {
     this.state = {
       circles: [{
         center: [120.162692, 30.253647],
+        radius: 100,
       }, {
         center: [120.163071, 30.254444],
+        radius: 100,
       }],
     };
   }
@@ -31,6 +33,19 @@ class CirclePage extends React.Component {
    * Test Circle component update functionalities
    */
   componentDidMount() {
+    setTimeout(() => {
+      this.setState((state) => {
+        return {
+          circles: [
+            ...state.circles.slice(0,1),
+            {
+              ...state.circles[1],
+              radius: 1000,
+            },
+          ],
+        };
+      });
+    }, 5000);
   }
 
   /**
@@ -40,6 +55,7 @@ class CirclePage extends React.Component {
    * @param {Object} e - Event
    */
   handleClick = (map, target, e) => {
+    console.log(map, target, e);
   }
 
   /**
@@ -55,11 +71,13 @@ class CirclePage extends React.Component {
       <AMap>
         {
           circles.map((circle, index) => {
-            return <Circle
-              key={index}
-              {...circle}
-              onClick={this.handleClick}
-            />;
+            return (
+              <Circle
+                key={index}
+                {...circle}
+                onClick={this.handleClick}
+              />
+            );
           })
         }
       </AMap>
