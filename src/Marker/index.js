@@ -6,35 +6,41 @@ import {
   oneOfType,
   shape,
 } from 'prop-types';
+import AMapContext from '../context/AMapContext';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
 import isShallowEqual from '../Util/isShallowEqual';
 
+/**
+ * Fields that need to be deep copied.
+ * The new value is given to update api to avoid overwriting the props.
+ */
 const NEED_DEEP_COPY_FIELDS = ['position'];
 
 /**
- * Marker binding
+ * Marker binding.
  * Marker has the same config options as AMap.Marker unless highlighted below.
  * For marker events usage please reference to AMap.Marker events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference/overlay#marker}
  */
 class Marker extends React.Component {
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
+
   static propTypes = {
     /**
      * An array of two numbers or AMap.Pixel for label.offset.
      */
-    label: shape({
+    label: shape({ // eslint-disable-line react/no-unused-prop-types
       offset: oneOfType([array, object]),
     }),
     /**
-     * AMap map instance.
-     */
-    map: object,
-    /**
      * An array of two numbers or AMap.Pixel.
      */
-    offset: oneOfType([array, object]),
+    offset: oneOfType([array, object]), // eslint-disable-line react/no-unused-prop-types
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
@@ -65,10 +71,8 @@ class Marker extends React.Component {
   };
 
   /**
-   * Parse AMap.Marker options
+   * Parse AMap.Marker options.
    * Named properties are event callbacks, other properties are marker options.
-   * @param {Object} props
-   * @return {Object}
    */
   static parseMarkerOptions(props) {
     const {
@@ -131,22 +135,22 @@ class Marker extends React.Component {
   }
 
   /**
-   * Define event name mapping relations of react binding Marker
-   * and AMap.Marker.
+   * Define event name mapping relations of react binding Marker and AMap.Marker.
    * Initialise AMap.Marker and bind events.
-   * @param {Object} props
    */
-  constructor(props) {
+  constructor(props, context) {
     super(props);
 
-    const {
-      map,
-      onComplete,
-    } = props;
+    const { onComplete } = props;
+
+    const map = context;
 
     breakIfNotChildOfAMap('Marker', map);
 
-    this.markerOptions = Marker.parseMarkerOptions(this.props);
+    this.markerOptions = {
+      ...Marker.parseMarkerOptions(this.props),
+      map,
+    };
 
     this.marker = new window.AMap.Marker(cloneDeep(this.markerOptions, NEED_DEEP_COPY_FIELDS));
 
@@ -158,7 +162,7 @@ class Marker extends React.Component {
   }
 
   /**
-   * Update this.marker by calling AMap.Marker methods
+   * Update this.marker by calling AMap.Marker methods.
    * @param  {Object} nextProps
    * @return {Boolean} - Prevent calling render function
    */
@@ -218,8 +222,7 @@ class Marker extends React.Component {
   }
 
   /**
-   * Return an object of all supported event callbacks
-   * @return {Object}
+   * Return an object of all supported event callbacks.
    */
   parseEvents() {
     return {
@@ -265,7 +268,8 @@ class Marker extends React.Component {
 
   /**
    * Update AMap.Marker instance with named api and given value.
-   * Won't call api if the given value does not change
+   * Won't call api if the given value does not change.
+   * The new value is given to update api to avoid overwriting the props.
    * @param  {string} apiName - AMap.Marker instance update method name
    * @param  {*} currentProp - Current value
    * @param  {*} nextProp - Next value
@@ -278,7 +282,7 @@ class Marker extends React.Component {
   }
 
   /**
-   * Hide or show marker
+   * Hide or show marker.
    * @param  {Object} currentProp - Current value
    * @param  {Object} nextProp - Next value
    */
@@ -290,8 +294,7 @@ class Marker extends React.Component {
   }
 
   /**
-   * Render nothing
-   * @return {null}
+   * Render nothing.
    */
   render() {
     return null;

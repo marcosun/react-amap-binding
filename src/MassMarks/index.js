@@ -9,34 +9,40 @@ import {
   shape,
   arrayOf,
 } from 'prop-types';
+import AMapContext from '../context/AMapContext';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
 import isShallowEqual from '../Util/isShallowEqual';
 
+/**
+ * Fields that need to be deep copied.
+ * The new value is given to update api to avoid overwriting the props.
+ */
 const NEED_DEEP_COPY_FIELDS = ['data', 'style'];
 
 /**
- * MassMarks binding
+ * MassMarks binding.
  * MassMarks has the same config options as AMap.MassMarks unless highlighted below.
  * For massMarks events usage please reference to AMap.MassMarks events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference/layer/#MassMarks}
  */
 class MassMarks extends React.Component {
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
+
   static propTypes = {
     /**
      * Include lnglat attributes of point object.
      */
     data: array.isRequired,
     /**
-     * AMap map instance.
-     */
-    map: object,
-    /**
      * Point style.
      * It can transform an array of two numbers into AMap.Pixel instance and AMap.Size instance.
      */
-    style: oneOfType([
+    style: oneOfType([ // eslint-disable-line react/no-unused-prop-types
       arrayOf(shape({
         anchor: oneOfType([array, object]).isRequired,
         size: oneOfType([array, object]).isRequired,
@@ -73,10 +79,8 @@ class MassMarks extends React.Component {
   };
 
   /**
-   * Parse AMap.MassMarks options
+   * Parse AMap.MassMarks options.
    * Named properties are event callbacks, other properties are massMarks options.
-   * @param  {Object} props
-   * @return {Object}
    */
   static parseMassMarksOptions(props) {
     const {
@@ -123,19 +127,15 @@ class MassMarks extends React.Component {
   }
 
   /**
-   * Define event name mapping relations of react binding MassMarks
-   * and AMap.MassMarks.
+   * Define event name mapping relations of react binding MassMarks and AMap.MassMarks.
    * Initialise AMap.MassMarks and bind events.
-   * @param {Object} props
    */
-  constructor(props) {
+  constructor(props, context) {
     super(props);
 
-    const {
-      map,
-    } = props;
+    this.map = context;
 
-    breakIfNotChildOfAMap('MassMarks', map);
+    breakIfNotChildOfAMap('MassMarks', this.map);
 
     this.massMarksOptions = MassMarks.parseMassMarksOptions(props);
 
@@ -181,13 +181,12 @@ class MassMarks extends React.Component {
   }
 
   /**
-   * Initialise AMap massMarks layer
+   * Initialise AMap massMarks layer.
    * @param {Object} massMarksOptions - AMap.MassMarks options
-   * @return {MassMarks}
+   * @return {MassMarks} - MassMarks instance.
    */
   initMassMarks(massMarksOptions) {
     const {
-      map,
       data,
       visible,
     } = this.props;
@@ -197,7 +196,7 @@ class MassMarks extends React.Component {
       cloneDeep(massMarksOptions, NEED_DEEP_COPY_FIELDS),
     );
 
-    massMarks.setMap(map);
+    massMarks.setMap(this.map);
 
     if (visible === false) massMarks.hide();
 
@@ -205,8 +204,7 @@ class MassMarks extends React.Component {
   }
 
   /**
-   * Return an object of all supported event callbacks
-   * @return {Object}
+   * Return an object of all supported event callbacks.
    */
   parseEvents() {
     return {
@@ -244,7 +242,8 @@ class MassMarks extends React.Component {
 
   /**
    * Update AMap.MassMarks instance with named api and given value.
-   * Won't call api if the given value does not change
+   * Won't call api if the given value does not change.
+   * The new value is given to update api to avoid overwriting the props.
    * @param  {string} apiName - AMap.MassMarks instance update method name
    * @param  {*} currentProp - Current value
    * @param  {*} nextProp - Next value
@@ -257,7 +256,7 @@ class MassMarks extends React.Component {
   }
 
   /**
-   * Hide or show massMarks
+   * Hide or show massMarks.
    * @param  {Object} currentProp - Current value
    * @param  {Object} nextProp - Next value
    */
@@ -269,8 +268,7 @@ class MassMarks extends React.Component {
   }
 
   /**
-   * Render nothing
-   * @return {null}
+   * Render nothing.
    */
   render() {
     return null;
