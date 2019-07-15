@@ -6,25 +6,31 @@ import {
   object,
   oneOfType,
 } from 'prop-types';
+import AMapContext from '../context/AMapContext';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
 import isShallowEqual from '../Util/isShallowEqual';
 
+/**
+ * Fields that need to be deep copied.
+ * The new value is given to update api to avoid overwriting the props.
+ */
 const NEED_DEEP_COPY_FIELDS = ['position'];
 
 /**
- * InfoWindow binding
+ * InfoWindow binding.
  * InfoWindow has the same config options as AMap.InfoWindow unless highlighted below.
  * For InfoWindow events usage please reference to AMap.InfoWindow events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference/infowindow}
  */
 class InfoWindow extends React.Component {
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
+
   static propTypes = {
-    /**
-     * AMap map instance.
-     */
-    map: object,
     /**
      * An array of two numbers or AMap.Pixel.
      */
@@ -53,11 +59,9 @@ class InfoWindow extends React.Component {
   };
 
   /**
-   * Parse AMap.InfoWindow options
+   * Parse AMap.InfoWindow options.
    * Named properties are event callbacks,
    * other properties are infoWindow options.
-   * @param {Object} props
-   * @return {Object}
    */
   static parseInfoWindowOptions(props) {
     const {
@@ -106,17 +110,15 @@ class InfoWindow extends React.Component {
    * Define event name mapping relations of react binding InfoWindow
    * and AMap.InfoWindow.
    * Initialise AMap.InfoWindow and bind events.
-   * @param {Object} props
    */
-  constructor(props) {
+  constructor(props, context) {
     super(props);
 
-    const {
-      map,
-      onComplete,
-    } = props;
+    const { onComplete } = props;
 
-    breakIfNotChildOfAMap('InfoWindow', map);
+    this.map = context;
+
+    breakIfNotChildOfAMap('InfoWindow', this.map);
 
     this.infoWindowOptions = InfoWindow.parseInfoWindowOptions(this.props);
 
@@ -126,11 +128,11 @@ class InfoWindow extends React.Component {
 
     this.bindEvents(this.infoWindow, this.eventCallbacks);
 
-    onComplete && onComplete(map, this.infoWindow);
+    onComplete && onComplete(this.map, this.infoWindow);
   }
 
   /**
-   * Update this.infoWindow by calling AMap.InfoWindow methods
+   * Update this.infoWindow by calling AMap.InfoWindow methods.
    * @param  {Object} nextProps
    * @return {Boolean} - Prevent calling render function
    */
@@ -168,20 +170,20 @@ class InfoWindow extends React.Component {
    /**
    * Initialise AMap.InfoWindow
    * @param {Object} infoWindowOptions - AMap.infoWindow options
-   * @return {InfoWindow}
+   * @return {InfoWindow} - InfoWindow instance
    */
   initInfoWindow(infoWindowOptions) {
-    const { map, position, visible, ...newOptions } = infoWindowOptions;
+    const { position, visible, ...newOptions } = infoWindowOptions;
+
     const infoWindow = new window.AMap.InfoWindow(cloneDeep(newOptions, NEED_DEEP_COPY_FIELDS));
 
-    if (visible === true) infoWindow.open(map, position);
+    if (visible === true) infoWindow.open(this.map, position);
 
     return infoWindow;
   }
 
   /**
-   * Return an object of all supported event callbacks
-   * @return {Object}
+   * Return an object of all supported event callbacks.
    */
   parseEvents() {
     return {
@@ -213,7 +215,8 @@ class InfoWindow extends React.Component {
 
   /**
    * Update AMap.InfoWindow instance with named api and given value.
-   * Won't call api if the given value does not change
+   * Won't call api if the given value does not change.
+   * The new value is given to update api to avoid overwriting the props.
    * @param  {string} apiName - AMap.InfoWindow instance update method name
    * @param  {*} currentProp - Current value
    * @param  {*} nextProp - Next value
@@ -226,24 +229,23 @@ class InfoWindow extends React.Component {
   }
 
   /**
-   * Hide or show infoWindow
+   * Hide or show infoWindow.
    * @param  {Object} currentProp - Current value
    * @param  {Object} nextProp - Next value
    */
   toggleVisible(currentProp, nextProp) {
     if (!isShallowEqual(currentProp.visible, nextProp.visible)) {
-      const { visible, map, position } = nextProp;
+      const { visible, position } = nextProp;
       if (visible === false) {
         this.infoWindow.close();
       } else {
-        this.infoWindow.open(map, position);
+        this.infoWindow.open(this.map, position);
       }
     }
   }
 
   /**
-   * Render nothing
-   * @return {null}
+   * Render nothing.
    */
   render() {
     return null;
