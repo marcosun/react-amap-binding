@@ -143,22 +143,27 @@ class Marker extends React.Component {
 
     const { onComplete } = props;
 
-    this.map = context;
+    const map = context;
 
-    breakIfNotChildOfAMap('Marker', this.map);
+    breakIfNotChildOfAMap('Marker', map);
 
-    this.markerOptions = {
-      ...Marker.parseMarkerOptions(this.props),
-      map: this.map,
-    };
+    this.markerOptions = Marker.parseMarkerOptions(this.props);
 
-    this.marker = new window.AMap.Marker(cloneDeep(this.markerOptions, NEED_DEEP_COPY_FIELDS));
+    this.marker = new window.AMap.Marker(
+      cloneDeep(
+        {
+          ...this.markerOptions,
+          map,
+        },
+        NEED_DEEP_COPY_FIELDS,
+      ),
+    );
 
     this.eventCallbacks = this.parseEvents();
 
     this.bindEvents(this.marker, this.eventCallbacks);
 
-    onComplete && onComplete(this.map, this.marker);
+    onComplete && onComplete(map, this.marker);
   }
 
   /**

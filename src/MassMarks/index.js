@@ -133,13 +133,13 @@ class MassMarks extends React.Component {
   constructor(props, context) {
     super(props);
 
-    this.map = context;
+    const map = context;
 
-    breakIfNotChildOfAMap('MassMarks', this.map);
+    breakIfNotChildOfAMap('MassMarks', map);
 
     this.massMarksOptions = MassMarks.parseMassMarksOptions(props);
 
-    this.massMarks = this.initMassMarks(this.massMarksOptions);
+    this.massMarks = this.initMassMarks(this.massMarksOptions, map);
 
     this.eventCallbacks = this.parseEvents();
 
@@ -183,9 +183,10 @@ class MassMarks extends React.Component {
   /**
    * Initialise AMap massMarks layer.
    * @param {Object} massMarksOptions - AMap.MassMarks options
+   * @param {Object} map - Map instance
    * @return {MassMarks} - MassMarks instance.
    */
-  initMassMarks(massMarksOptions) {
+  initMassMarks(massMarksOptions, map) {
     const {
       data,
       visible,
@@ -196,7 +197,7 @@ class MassMarks extends React.Component {
       cloneDeep(massMarksOptions, NEED_DEEP_COPY_FIELDS),
     );
 
-    massMarks.setMap(this.map);
+    massMarks.setMap(map);
 
     if (visible === false) massMarks.hide();
 

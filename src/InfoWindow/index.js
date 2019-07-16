@@ -59,6 +59,22 @@ class InfoWindow extends React.Component {
   };
 
   /**
+   * Initialise AMap.InfoWindow
+   * @param {Object} infoWindowOptions - AMap.infoWindow options
+   * @param {Object} map - Map instance
+   * @return {InfoWindow} - InfoWindow instance
+   */
+  static initInfoWindow(infoWindowOptions, map) {
+    const { position, visible, ...newOptions } = infoWindowOptions;
+
+    const infoWindow = new window.AMap.InfoWindow(cloneDeep(newOptions, NEED_DEEP_COPY_FIELDS));
+
+    if (visible === true) infoWindow.open(map, position);
+
+    return infoWindow;
+  }
+
+  /**
    * Parse AMap.InfoWindow options.
    * Named properties are event callbacks,
    * other properties are infoWindow options.
@@ -116,19 +132,19 @@ class InfoWindow extends React.Component {
 
     const { onComplete } = props;
 
-    this.map = context;
+    const map = context;
 
-    breakIfNotChildOfAMap('InfoWindow', this.map);
+    breakIfNotChildOfAMap('InfoWindow', map);
 
     this.infoWindowOptions = InfoWindow.parseInfoWindowOptions(this.props);
 
-    this.infoWindow = this.initInfoWindow(this.infoWindowOptions);
+    this.infoWindow = InfoWindow.initInfoWindow(this.infoWindowOptions, map);
 
     this.eventCallbacks = this.parseEvents();
 
     this.bindEvents(this.infoWindow, this.eventCallbacks);
 
-    onComplete && onComplete(this.map, this.infoWindow);
+    onComplete && onComplete(map, this.infoWindow);
   }
 
   /**
@@ -165,21 +181,6 @@ class InfoWindow extends React.Component {
 
     this.infoWindow.setMap(null);
     this.infoWindow = null;
-  }
-
-   /**
-   * Initialise AMap.InfoWindow
-   * @param {Object} infoWindowOptions - AMap.infoWindow options
-   * @return {InfoWindow} - InfoWindow instance
-   */
-  initInfoWindow(infoWindowOptions) {
-    const { position, visible, ...newOptions } = infoWindowOptions;
-
-    const infoWindow = new window.AMap.InfoWindow(cloneDeep(newOptions, NEED_DEEP_COPY_FIELDS));
-
-    if (visible === true) infoWindow.open(this.map, position);
-
-    return infoWindow;
   }
 
   /**
@@ -239,7 +240,8 @@ class InfoWindow extends React.Component {
       if (visible === false) {
         this.infoWindow.close();
       } else {
-        this.infoWindow.open(this.map, position);
+        const map = this.context;
+        this.infoWindow.open(map, position);
       }
     }
   }

@@ -72,19 +72,19 @@ class BezierCurve extends React.Component {
 
     const { onComplete } = props;
 
-    this.map = context;
+    const map = context;
 
-    breakIfNotChildOfAMap('BezierCurve', this.map);
+    breakIfNotChildOfAMap('BezierCurve', map);
 
     this.bezierCurveOptions = BezierCurve.parseBezierCurveOptions(this.props);
 
-    this.bezierCurve = this.initBezierCurve(this.bezierCurveOptions);
+    this.bezierCurve = this.initBezierCurve(this.bezierCurveOptions, map);
 
     this.eventCallbacks = this.parseEvents();
 
     this.bindEvents(this.bezierCurve, this.eventCallbacks);
 
-    onComplete && onComplete(this.map, this.bezierCurve);
+    onComplete && onComplete(map, this.bezierCurve);
   }
 
   /**
@@ -122,16 +122,17 @@ class BezierCurve extends React.Component {
    /**
    * Initialise AMap.BezierCurve.
    * @param {Object} bezierCurveOptions - AMap.BezierCurve options
+   * @param {Object} map - Map instance
    * @return {BezierCurve} - BezierCurve instance
    */
-  initBezierCurve(bezierCurveOptions) {
+  initBezierCurve(bezierCurveOptions, map) {
     const { visible } = this.props;
 
     const newBezierCurveOptions = cloneDeep(bezierCurveOptions, NEED_DEEP_COPY_FIELDS);
 
     const bezierCurve = new window.AMap.BezierCurve(newBezierCurveOptions);
 
-    bezierCurve.setMap(this.map);
+    bezierCurve.setMap(map);
 
     if (visible === false) bezierCurve.hide();
 

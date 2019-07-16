@@ -75,11 +75,11 @@ class Loca extends React.Component {
       visualOptions,
     } = props;
 
-    this.map = context;
+    const map = context;
 
-    breakIfNotChildOfAMap('Loca', this.map);
+    breakIfNotChildOfAMap('Loca', map);
 
-    const locaMap = new window.Loca(this.map);
+    const locaMap = new window.Loca(map);
 
     this.loca = new window.Loca.VisualLayer({
       container: locaMap,
