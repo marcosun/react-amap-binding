@@ -137,6 +137,7 @@ class Marker extends React.Component {
   /**
    * Define event name mapping relations of react binding Marker and AMap.Marker.
    * Initialise AMap.Marker and bind events.
+   * Binding onComplete event on marker instance.
    */
   constructor(props, context) {
     super(props);

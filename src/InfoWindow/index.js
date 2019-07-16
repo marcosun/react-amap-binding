@@ -76,8 +76,7 @@ class InfoWindow extends React.Component {
 
   /**
    * Parse AMap.InfoWindow options.
-   * Named properties are event callbacks,
-   * other properties are infoWindow options.
+   * Named properties are event callbacks, other properties are infoWindow options.
    */
   static parseInfoWindowOptions(props) {
     const {
@@ -123,9 +122,9 @@ class InfoWindow extends React.Component {
   }
 
   /**
-   * Define event name mapping relations of react binding InfoWindow
-   * and AMap.InfoWindow.
+   * Define event name mapping relations of react binding InfoWindow and AMap.InfoWindow.
    * Initialise AMap.InfoWindow and bind events.
+   * Binding onComplete event on infoWindow instance.
    */
   constructor(props, context) {
     super(props);

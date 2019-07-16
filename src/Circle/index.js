@@ -51,8 +51,8 @@ class Circle extends React.Component {
   };
 
   /**
-   * Parse options,
-   * remove events listeners.
+   * Parse AMap.Circle options.
+   * Named properties are event callbacks, other properties are circle options.
    */
   static parseCircleOptions(props) {
     const {
@@ -79,6 +79,7 @@ class Circle extends React.Component {
   /**
    * Define event name mapping relations of react binding Circle and AMap.Circle.
    * Initialise AMap.Circle and bind events.
+   * Binding onComplete event on circle instance.
    */
   constructor(props, context) {
     super(props);
@@ -211,7 +212,7 @@ class Circle extends React.Component {
   }
 
   /**
-   * Hide or show circle
+   * Hide or show circle.
    * @param  {Object} currentProp - Current value
    * @param  {Object} nextProp - Next value
    */

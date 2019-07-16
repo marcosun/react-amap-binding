@@ -52,7 +52,10 @@ class PathSimplifier extends React.Component {
   };
 
   /**
-   * Update state to rebuild pathNavigator once nextProps.data is changed.
+   * PathNavigator instance should be recreated once nextProps.data is changed.
+   * It will render null in the render(),
+   * then call setState() immediately in componentDidUpdate() to updated isShouldDestoryPathNavigator to false,
+   * finally rerender.
    */
   static getDerivedStateFromProps(nextProps, prevState) {
     if (!isShallowEqual(nextProps.data, prevState.data)) {
@@ -106,6 +109,7 @@ class PathSimplifier extends React.Component {
   /**
    * Asynchronously load PathSimplifier module.
    * Initialise AMapUI.PathSimplifier and bind events.
+   * Binding onComplete event on pathSimplifier instance.
    */
   componentDidMount() {
     window.AMapUI.loadUI(['misc/PathSimplifier'], (PathSimplifierClass) => {
@@ -254,7 +258,9 @@ class PathSimplifier extends React.Component {
   }
 
   /**
-   * Render nothing
+   * Destory pathNavigator once the pathSimplifier data is changed.
+   * Pass map object instantiated by AMap.Map、pathSimplifier instance
+   * and pathSimplifierClass to all direct decendents.
    */
   render() {
     const {
@@ -293,7 +299,9 @@ class PathSimplifier extends React.Component {
       return null;
     };
 
-    // Destory pathNavigator
+    /**
+     * Destory pathNavigator.
+     */
     if (isShouldDestoryPathNavigator === true) {
       return null;
     }

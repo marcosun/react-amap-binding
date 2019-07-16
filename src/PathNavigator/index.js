@@ -105,6 +105,8 @@ class PathNavigator extends React.Component {
 
   /**
    * Define event name mapping relations of react binding PathNavigator.
+   * Create pathNavigator and bind events.
+   * Binding onComplete event on pathNavigator instance.
    */
   constructor(props, context) {
     super(props);
