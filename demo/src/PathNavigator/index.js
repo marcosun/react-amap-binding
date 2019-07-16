@@ -19,7 +19,7 @@ class PathNavigatorPage extends React.Component {
     this.props = props;
 
     this.state = {
-      pathIndex: 1,
+      pathIndex: 0,
     };
   }
 
@@ -29,9 +29,9 @@ class PathNavigatorPage extends React.Component {
   componentDidMount() {
     setTimeout(() => {
       this.setState({
-        pathIndex: 0,
+        pathIndex: 1,
       });
-    }, 5000);
+    }, 10000);
   }
 
   /**
