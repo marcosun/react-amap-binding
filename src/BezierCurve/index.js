@@ -52,8 +52,25 @@ class BezierCurve extends React.Component {
     /* eslint-enable */
   };
 
+  /**
+   * Parse AMap.BezierCurve options.
+   * Named properties are event callbacks, other properties are bezierCurve options.
+   */
   static parseBezierCurveOptions(props) {
     const {
+      onComplete,
+      onClick,
+      onDblClick,
+      onRightClick,
+      onHide,
+      onShow,
+      onMouseDown,
+      onMouseUp,
+      onMouseOver,
+      onMouseOut,
+      onChange,
+      onTouchStart,
+      onTouchEnd,
       ...bezierCurveOptions
     } = props;
 
@@ -195,7 +212,7 @@ class BezierCurve extends React.Component {
   }
 
   /**
-   * Hide or show bezierCurve
+   * Hide or show bezierCurve.
    * @param  {Object} currentProp - Current value
    * @param  {Object} nextProp - Next value
    */
