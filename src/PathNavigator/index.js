@@ -4,24 +4,25 @@ import {
   number,
   object,
 } from 'prop-types';
+import AMapContext from '../context/AMapContext';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import isShallowEqual from '../Util/isShallowEqual';
 import createEventCallback from '../Util/createEventCallback';
 
 /**
- * PathNavigator binding
- * @param  {PathNavigatorOptions} props - Properties defined in PathNavigator.
+ * PathNavigator binding.
  * PathNavigator has the same config options as PathNavigator unless highlighted below.
  * For pathNavigator events usage please reference to pathNavigator events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference-amap-ui/mass-data/pathsimplifier#PathNavigator}
  * Besides, it can transform image into pathNavigatorStyle content.
  */
 class PathNavigator extends React.Component {
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
+
   static propTypes = {
-    /**
-     * AMap map instance.
-     */
-    map: object,
     /**
      * PathSimplifier path index.
      */
@@ -51,14 +52,11 @@ class PathNavigator extends React.Component {
   };
 
   /**
-   * Parse PathNavigator options
+   * Parse PathNavigator options.
    * Named properties are event callbacks, other properties are pathNavigator options.
-   * @param  {Object} props
-   * @return {Object}
    */
   static parsePathNavigatorOptions(props) {
     const {
-      map,
       pathIndex,
       pathSimplifier,
       PathSimplifierClass,
@@ -107,16 +105,16 @@ class PathNavigator extends React.Component {
 
   /**
    * Define event name mapping relations of react binding PathNavigator.
-   * @param {Object} props
    */
-  constructor(props) {
+  constructor(props, context) {
     super(props);
 
     const {
-      map,
       onComplete,
       pathSimplifier,
     } = props;
+
+    const map = context;
 
     breakIfNotChildOfAMap('PathNavigator', pathSimplifier, 'PathSimplifier');
 
@@ -132,7 +130,7 @@ class PathNavigator extends React.Component {
   }
 
   /**
-   * Update this.pathNavigator by calling pathNavigator methods
+   * Update this.pathNavigator by calling pathNavigator methods.
    * @param  {Object} nextProps
    * @return {Boolean} - Prevent calling render function
    */
@@ -165,7 +163,7 @@ class PathNavigator extends React.Component {
   }
 
   /**
-   * Update pathNavigator range
+   * Update pathNavigator range.
    * @param  {Object} currentProp - Current value
    * @param  {Object} nextProp - Next value
    */
@@ -194,7 +192,7 @@ class PathNavigator extends React.Component {
   }
 
   /**
-   * Create pathNavigator
+   * Create pathNavigator.
    * @param {Object} pathNavigatorOptions - PathNavigator options
    * @return {PathNavigator}
    */
@@ -210,8 +208,7 @@ class PathNavigator extends React.Component {
   }
 
   /**
-   * Return an object of all supported event callbacks
-   * @return {Object}
+   * Return an object of all supported event callbacks.
    */
   parseEvents() {
     return {
@@ -236,7 +233,7 @@ class PathNavigator extends React.Component {
   }
 
   /**
-   * @return {Element}
+   * Render nothing.
    */
   render() {
     return null;

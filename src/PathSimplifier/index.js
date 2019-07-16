@@ -2,16 +2,16 @@ import React from 'react';
 import {
   bool,
   node,
-  object,
   func,
 } from 'prop-types';
 import camelCase from 'lodash/camelCase';
+import AMapContext from '../context/AMapContext';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import isShallowEqual from '../Util/isShallowEqual';
 import createEventCallback from '../Util/createEventCallback';
 
 /**
- * PathSimplifier binding
+ * PathSimplifier binding.
  * PathSimplifier has the same config options as AMapUI.PathSimplifier unless highlighted below.
  * For PathSimplifier events usage please reference to AMapUI.PathSimplifier events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference-amap-ui/mass-data/pathsimplifier}
@@ -19,15 +19,16 @@ import createEventCallback from '../Util/createEventCallback';
  * therefore, only these two props are reactive.
  */
 class PathSimplifier extends React.Component {
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
+
   static propTypes = {
     /**
      * Child components.
      */
     children: node,
-    /**
-     * AMap map instance.
-     */
-    map: object,
     /**
      * Shows PathSimplifier by default, you can toggle show or hide by setting visible.
      */
@@ -50,7 +51,9 @@ class PathSimplifier extends React.Component {
     /* eslint-enable */
   };
 
-  // Update state to rebuild pathNavigator once nextProps.data is changed
+  /**
+   * Update state to rebuild pathNavigator once nextProps.data is changed.
+   */
   static getDerivedStateFromProps(nextProps, prevState) {
     if (!isShallowEqual(nextProps.data, prevState.data)) {
       return {
@@ -63,11 +66,8 @@ class PathSimplifier extends React.Component {
   }
 
   /**
-   * Parse AMapUI.PathSimplifier options
-   * Named properties are event callbacks,
-   * other properties are pathSimplifier options.
-   * @param {Object} props
-   * @return {Object}
+   * Parse AMapUI.PathSimplifier options.
+   * Named properties are event callbacks, other properties are pathSimplifier options.
    */
   static parsePathSimplifierOptions(props) {
     const {
@@ -93,29 +93,30 @@ class PathSimplifier extends React.Component {
   };
 
   /**
-   * Define event name mapping relations of react binding PathSimplifier
-   * and AMapUI.PathSimplifier.
-   * @param {Object} props
+   * Define event name mapping relations of react binding PathSimplifier and AMapUI.PathSimplifier.
    */
-  constructor(props) {
+  constructor(props, context) {
     super(props);
 
-    const {
-      map,
-    } = props;
+    const map = context;
 
     breakIfNotChildOfAMap('PathSimplifier', map);
   }
 
   /**
-   * Asynchronously load PathSimplifier module
+   * Asynchronously load PathSimplifier module.
    * Initialise AMapUI.PathSimplifier and bind events.
    */
   componentDidMount() {
     window.AMapUI.loadUI(['misc/PathSimplifier'], (PathSimplifierClass) => {
+      const map = this.context;
+
       this.PathSimplifierClass = PathSimplifierClass;
 
-      this.pathSimplifierOptions = PathSimplifier.parsePathSimplifierOptions(this.props);
+      this.pathSimplifierOptions = {
+        ...PathSimplifier.parsePathSimplifierOptions(this.props),
+        map,
+      };
 
       this.pathSimplifier = new PathSimplifierClass(this.pathSimplifierOptions);
 
@@ -125,7 +126,7 @@ class PathSimplifier extends React.Component {
 
       if (this.props.visible === false) this.pathSimplifier.hide();
 
-      this.props.onComplete && this.props.onComplete(this.props.map, this.pathSimplifier);
+      this.props.onComplete && this.props.onComplete(map, this.pathSimplifier);
 
       this.setState({
         data: this.pathSimplifierOptions.data,
@@ -135,9 +136,9 @@ class PathSimplifier extends React.Component {
   }
 
   /**
-   * Update this.pathSimplifier by calling AMapUI.PathSimplifier methods
-   * @param {Object} prevProps
-   * @param {Object} prevState
+   * Update this.pathSimplifier by calling AMapUI.PathSimplifier methods.
+   * @param {Object} prevProps - Previous props
+   * @param {Object} prevState - Previous state
    */
   componentDidUpdate(prevProps, prevState) {
     if (this.pathSimplifier === void 0) {
@@ -188,7 +189,7 @@ class PathSimplifier extends React.Component {
 
   /**
    * Allow to create pathNavigator after previous PathNavigator instance is destoryed.
-   * @param  {Object} prevState
+   * @param  {Object} prevState - Previous state
    */
   allowToCreatePathNavigator(prevState) {
     this.setState({
@@ -198,8 +199,7 @@ class PathSimplifier extends React.Component {
   }
 
   /**
-   * Return an object of all supported event callbacks
-   * @return {Object}
+   * Return an object of all supported event callbacks.
    */
   parseEvents() {
     return {
@@ -230,7 +230,7 @@ class PathSimplifier extends React.Component {
 
   /**
    * Update AMapUI.PathSimplifier instance with named api and given value.
-   * Won't call api if the given value does not change
+   * Won't call api if the given value does not change.
    * @param  {string} apiName - AMapUI.PathSimplifier instance update method name
    * @param  {Object} currentProp - Current value
    * @param  {Object} nextProp - Next value
@@ -242,7 +242,7 @@ class PathSimplifier extends React.Component {
   }
 
   /**
-   * Hide or show pathSimplifier
+   * Hide or show pathSimplifier.
    * @param  {Object} currentProp - Current value
    * @param  {Object} nextProp - Next value
    */
@@ -255,18 +255,18 @@ class PathSimplifier extends React.Component {
 
   /**
    * Render nothing
-   * @return {null}
    */
   render() {
     const {
       children,
-      map,
     } = this.props;
 
     const {
       isShouldDestoryPathNavigator,
       pathSimplifier,
     } = this.state;
+
+    const map = this.context;
 
     const childrenElement = () => {
       if (React.isValidElement(children)) { // Single element
