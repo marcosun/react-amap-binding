@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep';
 
 /**
- * Deep copy
+ * Deep copy.
  * The primitive value returns original value.
  * Reference values:
  * If options is array, deep copy all.
@@ -43,4 +43,6 @@ export default function(options, needCloneKeys) {
       }, {}),
     };
   }
+
+  return options;
 }

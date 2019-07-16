@@ -1,5 +1,5 @@
 /**
- * Compare two numbers
+ * Compare two numbers.
  * @param  {Object} objA
  * @param  {Object} objB
  * @return {Boolean}
@@ -11,7 +11,7 @@ export default function(objA, objB) {
   }
 
   // Test case: NaN
-  if (objA !== objA && objB !== objB) {
+  if (Number.isNaN(objA) && Number.isNaN(objB)) {
     return true;
   }
 
@@ -29,7 +29,7 @@ export default function(objA, objB) {
   }
 
   // Test for A's keys different from B.
-  for (let i = 0; i < keysA.length; i++) {
+  for (let i = 0; i < keysA.length; i += 1) {
     if (!objB.hasOwnProperty(keysA[i]) ||
       !Object.is(objA[keysA[i]], objB[keysA[i]])) {
       return false;
