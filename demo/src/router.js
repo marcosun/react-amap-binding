@@ -15,7 +15,7 @@ import {
 import Amap from './AMapPage';
 import BezierCurve from './BezierCurve';
 import Circle from './Circle';
-import Marker from './MarkerPage';
+import Marker from './Marker';
 import PathNavigator from './PathNavigator';
 import PathSimplifier from './PathSimplifier';
 import MassMarks from './MassMarks';
@@ -25,9 +25,6 @@ import InfoWindow from './InfoWindow';
 import Polyline from './Polyline';
 import Loca from './Loca';
 
-/**
- * @return {Router}
- */
 export default function Router() {
   return (
     <BrowserRouter>
