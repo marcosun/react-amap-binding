@@ -1,7 +1,6 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
 import { PathNavigator } from 'react-amap-binding';
-import AMap from '../AMapPage';
 import PathSimplifier from '../PathSimplifier';
 
 @hot(module)
