@@ -1,20 +1,10 @@
-/**
- * @module Demo/CirclePage
- */
 import React from 'react';
-import {hot} from 'react-hot-loader';
+import { hot } from 'react-hot-loader';
 import { Circle } from 'react-amap-binding';
 import AMap from '../AMapPage';
 
-/**
- * Circle page
- */
 @hot(module)
 class CirclePage extends React.Component {
-  /**
-   * Constructor
-   * @param {Object} props
-   */
   constructor(props) {
     super(props);
 
@@ -30,7 +20,7 @@ class CirclePage extends React.Component {
   }
 
   /**
-   * Test Circle component update functionalities
+   * Test Circle component update functionalities.
    */
   componentDidMount() {
     setTimeout(() => {
@@ -58,10 +48,6 @@ class CirclePage extends React.Component {
     console.log(map, target, e);
   }
 
-  /**
-   * Show CirclePage with full screen width and height
-   * @return {Component} - Page
-   */
   render() {
     const {
       circles,

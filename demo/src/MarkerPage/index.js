@@ -1,22 +1,10 @@
-/**
- * @module Demo/MarkerPage
- */
 import React from 'react';
-import {} from 'prop-types';
-import {hot} from 'react-hot-loader';
-import {Marker} from 'react-amap-binding';
-
+import { hot } from 'react-hot-loader';
+import { Marker } from 'react-amap-binding';
 import AMap from '../AMapPage';
 
-/**
- * Marker page
- */
 @hot(module)
 class MarkerPage extends React.Component {
-  /**
-   * Constructor
-   * @param {Object} props
-   */
   constructor(props) {
     super(props);
 
@@ -30,7 +18,7 @@ class MarkerPage extends React.Component {
   }
 
   /**
-   * Test Marker component update functionalities
+   * Test Marker component update functionalities.
    */
   componentDidMount() {
     setTimeout(() => {
@@ -56,10 +44,6 @@ class MarkerPage extends React.Component {
     alert('You have clicked a marker icon');
   }
 
-  /**
-   * Show MarkerPage with full screen width and height
-   * @return {Component} - Page
-   */
   render() {
     const {
       markers,

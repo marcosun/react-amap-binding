@@ -1,26 +1,15 @@
-/**
- * @module Demo/PathSimplifierPage
- */
 import React from 'react';
-import {node} from 'prop-types';
-import {hot} from 'react-hot-loader';
-import {PathSimplifier} from 'react-amap-binding';
-
+import { node } from 'prop-types';
+import { hot } from 'react-hot-loader';
+import { PathSimplifier } from 'react-amap-binding';
 import AMap from '../AMapPage';
 
-/**
- * PathSimplifier page
- */
 @hot(module)
 class PathSimplifierPage extends React.Component {
   static propTypes = {
     children: node,
   };
 
-  /**
-   * Constructor
-   * @param {Object} props
-   */
   constructor(props) {
     super(props);
 
@@ -37,7 +26,7 @@ class PathSimplifierPage extends React.Component {
   }
 
   /**
-   * Test Marker component update functionalities
+   * Test Marker component update functionalities.
    */
   componentDidMount() {
     setTimeout((state) => {
@@ -61,10 +50,6 @@ class PathSimplifierPage extends React.Component {
     }, 5000);
   }
 
-  /**
-   * Show AMap with full screen width and height
-   * @return {Component} - Page
-   */
   render() {
     const {
       children,

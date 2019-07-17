@@ -1,19 +1,10 @@
 import React from 'react';
-import {} from 'prop-types';
-import {hot} from 'react-hot-loader';
-import {Loca} from 'react-amap-binding';
-
+import { hot } from 'react-hot-loader';
+import { Loca } from 'react-amap-binding';
 import AMap from '../AMapPage';
 
-/**
- * Loca page
- */
 @hot(module)
 class LocaPage extends React.Component {
-  /**
-   * Constructor
-   * @param {Object} props
-   */
   constructor(props) {
     super(props);
 
@@ -36,9 +27,6 @@ class LocaPage extends React.Component {
     };
   }
 
-  /**
-   * componentDidMount
-   */
   componentDidMount() {
     setTimeout(() => {
       this.setState({
@@ -82,10 +70,6 @@ class LocaPage extends React.Component {
     }, 5000);
   }
 
-  /**
-   * Show PolylinePage with full screen width and height
-   * @return {Component} - Page
-   */
   render() {
     const {
       data,

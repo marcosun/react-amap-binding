@@ -1,22 +1,10 @@
-/**
- * @module Demo/PolygonPage
- */
 import React from 'react';
-import {} from 'prop-types';
-import {hot} from 'react-hot-loader';
-import {Polygon} from 'react-amap-binding';
-
+import { hot } from 'react-hot-loader';
+import { Polygon } from 'react-amap-binding';
 import AMap from '../AMapPage';
 
-/**
- * Polygon page
- */
 @hot(module)
 class PolygonPage extends React.Component {
-  /**
-   * Constructor
-   * @param {Object} props
-   */
   constructor(props) {
     super(props);
 
@@ -47,10 +35,10 @@ class PolygonPage extends React.Component {
   }
 
   /**
-   * Test polygon component update functionalities
+   * Test polygon component update functionalities.
    */
   componentDidMount() {
-    // Delay 5s to hide a polygon and beautify style
+    // Delay 5s to hide a polygon and beautify style.
     setTimeout(() => {
       this.setState({
         ...this.state,
@@ -75,7 +63,7 @@ class PolygonPage extends React.Component {
       });
     }, 5000);
 
-    // Delay 10s to show that polygon
+    // Delay 10s to hide the first polygon.
     setTimeout(() => {
       this.setState({
         ...this.state,
@@ -90,17 +78,17 @@ class PolygonPage extends React.Component {
   }
 
   /**
-   * Click handler
+   * The callback is fired once the polygon is clicked.
    * @param {Object} map - AMap.Map instance
    * @param {Object} target - Polygon component instance
-   * @param {Object} e - Event
+   * @param {Object} e - Event object
    */
   handleClick = (map, target, e) => {
     alert('You have click a polygon');
   }
 
   /**
-   * Hide polygon callback
+   * Hide polygon callback.
    * @param {Object} map - AMap.Map instance
    * @param {Object} target - Polygon component instance
    * @param {Object} e - Event
@@ -109,15 +97,7 @@ class PolygonPage extends React.Component {
     alert('You have hide a polygon');
   }
 
-  /**
-   * Show PolygonPage with full screen width and height
-   * @return {Component} - Page
-   */
   render() {
-    const {
-      classes,
-    } = this.props;
-
     return (
       <AMap>
         {
