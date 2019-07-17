@@ -1,7 +1,7 @@
 {
   "name": "react-amap-binding",
   "version": "0.0.26",
-  "description": "A React binding for AMap",
+  "description": "A React binding for lbs AMap",
   "main": "src/index.js",
   "scripts": {
     "prebuild": "rimraf build demo/node_modules/react-amap-binding",
