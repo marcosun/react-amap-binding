@@ -64,6 +64,12 @@
       "<rootDir>/src/"
     ]
   },
+  "keywords": [
+    "react",
+    "amap",
+    "react-amap",
+    "react-amap-binding"
+  ],
   "peerDependencies": {
     "react": "^16.6.0"
   }
