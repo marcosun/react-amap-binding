@@ -1,18 +1,19 @@
 import React from 'react';
-import {
-  object,
-  bool,
-  func,
-} from 'prop-types';
+import { bool, func } from 'prop-types';
+import AMapContext from '../context/AMapContext';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
 import isShallowEqual from '../Util/isShallowEqual';
 
+/**
+ * Fields that need to be deep copied.
+ * The new value is given to update api to avoid overwriting the props.
+ */
 const NEED_DEEP_COPY_FIELDS = ['path'];
 
 /**
- * Polyline binding
+ * Polyline binding.
  * Polyline has the same config options as AMap.Polyline unless highlighted below.
  * For Polyline events usage please reference to AMap.Polyline events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference/overlay#polyline}
@@ -20,15 +21,16 @@ const NEED_DEEP_COPY_FIELDS = ['path'];
  * The zIndex configuration of lbs is invalid.
  */
 class Polyline extends React.Component {
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
+
   static propTypes = {
-    /**
-     * AMap map instance.
-     */
-    map: object,
     /**
      * Shows Polyline by default, you can toggle show or hide by setting visible.
      */
-    visible: bool,
+    visible: bool, // eslint-disable-line react/no-unused-prop-types
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
@@ -55,9 +57,7 @@ class Polyline extends React.Component {
   };
 
   /**
-   * Parse AMap.Polyline options
-   * @param  {Object} props
-   * @return {Object}
+   * Parse AMap.Polyline options.
    */
   static parsePolylineOptions(props) {
     const {
@@ -84,24 +84,22 @@ class Polyline extends React.Component {
   }
 
   /**
-   * Define event name mapping relations of react binding Polyline
-   * and AMap.Polyline.
+   * Define event name mapping relations of react binding Polyline and AMap.Polyline.
    * Initialise AMap.Polyline and bind events.
-   * @param {Object} props
+   * Binding onComplete event on polyline instance.
    */
-  constructor(props) {
+  constructor(props, context) {
     super(props);
 
-    const {
-      map,
-      onComplete,
-    } = props;
+    const { onComplete } = props;
+
+    const map = context;
 
     breakIfNotChildOfAMap('Polyline', map);
 
     this.polylineOptions = Polyline.parsePolylineOptions(props);
 
-    this.polyline = this.initPolyline(this.polylineOptions);
+    this.polyline = this.initPolyline(this.polylineOptions, map);
 
     this.eventCallbacks = this.parseEvents();
 
@@ -111,7 +109,7 @@ class Polyline extends React.Component {
   }
 
   /**
-   * Update this.polyline by calling AMap.Polyline methods
+   * Update this.polyline by calling AMap.Polyline methods.
    * @param  {Object} nextProps
    * @return {Boolean} - Prevent calling render function
    */
@@ -143,12 +141,21 @@ class Polyline extends React.Component {
   }
 
   /**
-   * Initialise AMap polyline
+   * Initialise AMap polyline.
    * @param {Object} polylineOptions - AMap.Polyline options
+   * @param {Object} map - Map instance.
    * @return {Object}
    */
-  initPolyline(polylineOptions) {
-    const polyline = new window.AMap.Polyline(cloneDeep(polylineOptions, NEED_DEEP_COPY_FIELDS));
+  initPolyline(polylineOptions, map) {
+    const polyline = new window.AMap.Polyline(
+      cloneDeep(
+        {
+          ...polylineOptions,
+          map,
+        },
+        NEED_DEEP_COPY_FIELDS,
+      ),
+    );
 
     if (this.visible === false) polyline.hide();
 
@@ -156,8 +163,7 @@ class Polyline extends React.Component {
   }
 
   /**
-   * Return an object of all supported event callbacks
-   * @return {Object}
+   * Return an object of all supported event callbacks.
    */
   parseEvents() {
     return {
@@ -199,7 +205,8 @@ class Polyline extends React.Component {
 
   /**
    * Update AMap.Polyline instance with named api and given value.
-   * Won't call api if the given value does not change
+   * Won't call api if the given value does not change.
+   * The new value is given to update api to avoid overwriting the props.
    * @param  {string} apiName - AMap.Polyline instance update method name
    * @param  {*} currentProp - Current value
    * @param  {*} nextProp - Next value
@@ -212,7 +219,7 @@ class Polyline extends React.Component {
   }
 
   /**
-   * Hide or show polyline
+   * Hide or show polyline.
    * @param  {Object} currentProp - Current value
    * @param  {Object} nextProp - Next value
    */
@@ -224,8 +231,7 @@ class Polyline extends React.Component {
   }
 
   /**
-   * Render nothing
-   * @return {null}
+   * Render nothing.
    */
   render() {
     return null;

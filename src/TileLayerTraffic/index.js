@@ -1,25 +1,23 @@
 import React from 'react';
-import {
-  object,
-  bool,
-  func,
-} from 'prop-types';
+import { bool, func } from 'prop-types';
+import AMapContext from '../context/AMapContext';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import isShallowEqual from '../Util/isShallowEqual';
 import createEventCallback from '../Util/createEventCallback';
 
 /**
- * TileLayerTraffic binding
+ * TileLayerTraffic binding.
  * TileLayerTraffic has the same config options as AMap.TileLayer.Traffic unless highlighted below.
  * For tileLayerTraffic events usage please reference to AMap.TileLayet.Traffic events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference/layer#TileLayer.Traffic}
  */
 class TileLayerTraffic extends React.Component {
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
+
   static propTypes = {
-    /**
-     * AMap map instance.
-     */
-    map: object,
     /**
      * Shows TileLayerTraffic by default, you can toggle show or hide by setting config.
      */
@@ -37,11 +35,8 @@ class TileLayerTraffic extends React.Component {
   }
 
   /**
-   * Parse AMap.TileLayer.Traffic options
-   * Named properties are event callbacks,
-   * other properties are tileLayerTraffic options.
-   * @param  {Object} props
-   * @return {Object}
+   * Parse AMap.TileLayer.Traffic options.
+   * Named properties are event callbacks, other properties are tileLayerTraffic options.
    */
   static parseTileLayerTrafficOptions(props) {
     const {
@@ -55,23 +50,19 @@ class TileLayerTraffic extends React.Component {
   }
 
   /**
-   * Define event name mapping relations of react binding TileLayerTraffic
-   * and AMap.TileLayer.Traffic.
+   * Define event name mapping relations of react binding TileLayerTraffic and AMap.TileLayer.Traffic.
    * Initialise AMap.TileLayer.Traffic and bind events.
-   * @param  {Object} props
    */
-  constructor(props) {
+  constructor(props, context) {
     super(props);
 
-    const {
-      map,
-    } = props;
+    const map = context;
 
     breakIfNotChildOfAMap('TileLayerTraffic', map);
 
     this.tileLayerTrafficOptions = TileLayerTraffic.parseTileLayerTrafficOptions(props);
 
-    this.tileLayerTraffic = this.initTileLayerTraffic(this.tileLayerTrafficOptions);
+    this.tileLayerTraffic = this.initTileLayerTraffic(this.tileLayerTrafficOptions, map);
 
     this.eventCallbacks = this.parseEvents();
 
@@ -79,7 +70,7 @@ class TileLayerTraffic extends React.Component {
   }
 
   /**
-   * Update this.tileLayerTraffic by calling AMap.TileLayer.Traffic methods
+   * Update this.tileLayerTraffic by calling AMap.TileLayer.Traffic methods.
    * @param  {Object} nextProps
    * @return {Boolean} - Prevent calling render function
    */
@@ -110,12 +101,16 @@ class TileLayerTraffic extends React.Component {
   }
 
   /**
-   * Initialise traffic tileLayer
+   * Initialise traffic tileLayer.
    * @param {Object} trafficOptions - AMap.TileLayer.Traffic options
+   * @param {Object} map - Map instance
    * @return {AMap.TileLayer.Traffic}
    */
-  initTileLayerTraffic(trafficOptions) {
-    const tileLayerTraffic = new window.AMap.TileLayer.Traffic(trafficOptions);
+  initTileLayerTraffic(trafficOptions, map) {
+    const tileLayerTraffic = new window.AMap.TileLayer.Traffic({
+      ...trafficOptions,
+      map,
+    });
 
     if (this.props.visible === false) tileLayerTraffic.hide();
 
@@ -123,8 +118,7 @@ class TileLayerTraffic extends React.Component {
   }
 
   /**
-   * Return an object of all supported event callbacks
-   * @return {Object}
+   * Return an object of all supported event callbacks.
    */
   parseEvents() {
     return {
@@ -154,7 +148,7 @@ class TileLayerTraffic extends React.Component {
 
   /**
    * Update AMap.TileLayer.Traffic instance with named api and given value.
-   * Won't call api if the given value does not change
+   * Won't call api if the given value does not change.
    * @param  {string} apiName - AMap.TileLayer.Traffic instance update method name
    * @param  {Object} currentProp - Current value
    * @param  {Object} nextProp - Next value
@@ -166,7 +160,7 @@ class TileLayerTraffic extends React.Component {
   }
 
   /**
-   * Hide or show tileLayerTraffic
+   * Hide or show tileLayerTraffic.
    * @param  {Object} currentProp - Current value
    * @param  {Object} nextProp - Next value
    */
@@ -178,8 +172,7 @@ class TileLayerTraffic extends React.Component {
   }
 
   /**
-   * Render nothing
-   * @return {null}
+   * Render nothing.
    */
   render() {
     return null;

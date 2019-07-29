@@ -1,28 +1,30 @@
 import React from 'react';
-import {
-  object,
-  bool,
-  func,
-} from 'prop-types';
+import { bool, func } from 'prop-types';
+import AMapContext from '../context/AMapContext';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';
 import isShallowEqual from '../Util/isShallowEqual';
 
+/**
+ * Fields that need to be deep copied.
+ * The new value is given to update api to avoid overwriting the props.
+ */
 const NEED_DEEP_COPY_FIELDS = ['path'];
 
 /**
- * Polygon binding
+ * Polygon binding.
  * Polygon has the same config options as AMap.Polygon unless highlighted below.
  * For polygon events usage please reference to AMap.Polygon events paragraph.
  * {@link http://lbs.amap.com/api/javascript-api/reference/overlay#polygon}
  */
 class Polygon extends React.Component {
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
+
   static propTypes = {
-    /**
-     * AMap map instance.
-     */
-    map: object,
     /**
      * Shows polygon by default, you can toggle show or hide by setting visible.
      */
@@ -53,9 +55,8 @@ class Polygon extends React.Component {
   };
 
   /**
-   * Parse AMap.Polygon options
-   * @param  {Object} props
-   * @return {Object}
+   * Parse AMap.Polygon options.
+   * Named properties are event callbacks, other properties are polygon options.
    */
   static parsePolygonOptions(props) {
     const {
@@ -82,24 +83,22 @@ class Polygon extends React.Component {
   }
 
   /**
-   * Define event name mapping relations of react binding Polygon
-   * and AMap.Polygon.
+   * Define event name mapping relations of react binding Polygon and AMap.Polygon.
    * Initialise AMap.Polygon and bind events.
-   * @param {Object} props
+   * Binding onComplete event on polygon instance.
    */
-  constructor(props) {
+  constructor(props, context) {
     super(props);
 
-    const {
-      map,
-      onComplete,
-    } = props;
+    const { onComplete } = props;
+
+    const map = context;
 
     breakIfNotChildOfAMap('Polygon', map);
 
     this.polygonOptions = Polygon.parsePolygonOptions(props);
 
-    this.polygon = this.initPolygon(this.polygonOptions);
+    this.polygon = this.initPolygon(this.polygonOptions, map);
 
     this.eventCallbacks = this.parseEvents();
 
@@ -109,7 +108,7 @@ class Polygon extends React.Component {
   }
 
   /**
-   * Update this.polygon by calling AMap.Polygon methods
+   * Update this.polygon by calling AMap.Polygon methods.
    * @param  {Object} nextProps
    * @return {Boolean} - Prevent calling render function
    */
@@ -141,12 +140,21 @@ class Polygon extends React.Component {
   }
 
   /**
-   * Initialise AMap polygon
+   * Initialise AMap polygon.
    * @param {Object} polygonOptions - AMap.Polygon options
+   * @param {Object} map - Map instance
    * @return {Polygon}
    */
-  initPolygon(polygonOptions) {
-    const polygon = new window.AMap.Polygon(cloneDeep(polygonOptions, NEED_DEEP_COPY_FIELDS));
+  initPolygon(polygonOptions, map) {
+    const polygon = new window.AMap.Polygon(
+      cloneDeep(
+        {
+          ...polygonOptions,
+          map,
+        },
+        NEED_DEEP_COPY_FIELDS,
+      ),
+    );
 
     if (this.props.visible === false) polygon.hide();
 
@@ -154,8 +162,7 @@ class Polygon extends React.Component {
   }
 
   /**
-   * Return an object of all supported event callbacks
-   * @return {Object}
+   * Return an object of all supported event callbacks.
    */
   parseEvents() {
     return {
@@ -197,7 +204,8 @@ class Polygon extends React.Component {
 
   /**
    * Update AMap.Polygon instance with named api and given value.
-   * Won't call api if the given value does not change
+   * Won't call api if the given value does not change.
+   * The new value is given to update api to avoid overwriting the props.
    * @param  {string} apiName - AMap.Polygon instance update method name
    * @param  {*} currentProp - Current value
    * @param  {*} nextProp - Next value
@@ -210,7 +218,7 @@ class Polygon extends React.Component {
   }
 
   /**
-   * Hide or show polygon
+   * Hide or show polygon.
    * @param  {Object} currentProp - Current value
    * @param  {Object} nextProp - Next value
    */
@@ -223,8 +231,7 @@ class Polygon extends React.Component {
 
 
   /**
-   * Render nothing
-   * @return {null}
+   * Render nothing.
    */
   render() {
     return null;

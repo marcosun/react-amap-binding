@@ -7,8 +7,7 @@
     "start": "webpack-dev-server --config ./config/webpack.dev.js",
     "analyse": "webpack --config ./config/webpack.analyse.js",
     "test": "jest",
-    "test:watch": "npm test -- --watch",
-    "doc": "jsdoc src -r"
+    "test:watch": "npm test -- --watch"
   },
   "keywords": [],
   "author": "Marco",
@@ -54,7 +53,6 @@
     "html-webpack-plugin": "^3.2.0",
     "html-webpack-template": "^6.1.0",
     "jest": "^22.0.4",
-    "jsdoc": "^3.5.5",
     "react-test-renderer": "^16.0.0",
     "uglifyjs-webpack-plugin": "^1.1.4",
     "url-loader": "^1.0.1",

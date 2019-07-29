@@ -1,22 +1,10 @@
-/**
- * @module Demo/PolylinePage
- */
 import React from 'react';
-import {} from 'prop-types';
-import {hot} from 'react-hot-loader';
-import {Polyline} from 'react-amap-binding';
-
+import { hot } from 'react-hot-loader';
+import { Polyline } from 'react-amap-binding';
 import AMap from '../AMapPage';
 
-/**
- * Polyline page
- */
 @hot(module)
 class PolylinePage extends React.Component {
-  /**
-   * Constructor
-   * @param {Object} props
-   */
   constructor(props) {
     super(props);
 
@@ -41,10 +29,10 @@ class PolylinePage extends React.Component {
   }
 
   /**
-   * Mouse over handler
+   * Mouse over handler.
    * @param {Object} map - AMap.Map instance
    * @param {Object} target - Polyline component instance
-   * @param {Object} e - Event
+   * @param {Object} e - Event object
    */
   handleMouseOver = (map, polyline, e) => {
     this.setState({
@@ -54,7 +42,7 @@ class PolylinePage extends React.Component {
   }
 
   /**
-   * Mouse out handler
+   * Mouse out handler.
    * @param {Object} map - AMap.Map instance
    * @param {Object} target - Polyline component instance
    * @param {Object} e - Event
@@ -66,10 +54,6 @@ class PolylinePage extends React.Component {
     });
   }
 
-  /**
-   * Show PolylinePage with full screen width and height
-   * @return {Component} - Page
-   */
   render() {
     return (
       <AMap>

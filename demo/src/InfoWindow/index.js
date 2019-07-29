@@ -1,22 +1,10 @@
-/**
- * @module Demo/InfoWindowPage
- */
 import React from 'react';
-import {} from 'prop-types';
-import {hot} from 'react-hot-loader';
-import {InfoWindow} from 'react-amap-binding';
-
+import { hot } from 'react-hot-loader';
+import { InfoWindow } from 'react-amap-binding';
 import AMap from '../AMapPage';
 
-/**
- * InfoWindowPage page
- */
 @hot(module)
 class InfoWindowPage extends React.Component {
-  /**
-   * Constructor
-   * @param {Object} props
-   */
   constructor(props) {
     super(props);
 
@@ -35,16 +23,12 @@ class InfoWindowPage extends React.Component {
 
   /**
    * Click handler.
-   * @param {Object} e - Event
+   * @param {Object} e - Event object
    */
   handleClick = (e) => {
     alert('是否要关闭视窗？');
   }
 
-  /**
-   * Show InfoWindowPage with full screen width and height
-   * @return {Component} - Page
-   */
   render() {
     const {
       infoWindow,

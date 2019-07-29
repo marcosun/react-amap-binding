@@ -1,20 +1,10 @@
 import React from 'react';
-import {} from 'prop-types';
-import {hot} from 'react-hot-loader';
-import {BezierCurve} from 'react-amap-binding';
-
+import { hot } from 'react-hot-loader';
+import { BezierCurve } from 'react-amap-binding';
 import AMap from '../AMapPage';
 
-/**
- * BezierCurve page
- */
 @hot(module)
 class BezierCurvePage extends React.Component {
-  static propTypes = {};
-
-  /**
-   * @param {Object} props
-   */
   constructor(props) {
     super(props);
     this.props = props;
@@ -31,7 +21,7 @@ class BezierCurvePage extends React.Component {
   }
 
   /**
-   * Test bezierCurve strokeColor
+   * Test bezierCurve strokeColor and strokeStyle.
    */
   componentDidMount() {
     setTimeout(() => {
@@ -44,17 +34,14 @@ class BezierCurvePage extends React.Component {
   }
 
   /**
-   * Automatically scale the map to the appropriate level of view
-   * @param  {Object} map
-   * @param  {Object} bezierCurveInstance
+   * Automatically scale the map to the appropriate level of view.
+   * @param  {Object} map - Map instance
+   * @param  {Object} bezierCurve - BezierCurve instance
    */
-  handleComplete = (map, bezierCurveInstance) => {
+  handleComplete = (map, bezierCurve) => {
     map.setFitView();
   }
 
-  /**
-   * @return {Element}
-   */
   render() {
     return (
       <AMap>

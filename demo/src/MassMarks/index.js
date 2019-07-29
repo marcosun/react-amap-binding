@@ -1,22 +1,10 @@
-/**
- * @module Demo/MassMarksPage
- */
 import React from 'react';
-import {} from 'prop-types';
-import {hot} from 'react-hot-loader';
-import {MassMarks} from 'react-amap-binding';
-
+import { hot } from 'react-hot-loader';
+import { MassMarks } from 'react-amap-binding';
 import AMap from '../AMapPage';
 
-/**
- * MassMarks page
- */
 @hot(module)
 class MassMarksPage extends React.Component {
-  /**
-   * Contstructor function
-   * @param {Object} props
-   */
   constructor(props) {
     super(props);
     this.props = props;
@@ -36,7 +24,7 @@ class MassMarksPage extends React.Component {
   }
 
   /**
-   * Updata massMarks lnglat and style
+   * Updata massMarks lnglat and style.
    */
   componentDidMount() {
     setTimeout(() => {
@@ -62,16 +50,12 @@ class MassMarksPage extends React.Component {
    * Click handler.
    * @param {Object} map - AMap.Map instance
    * @param {Object} target - MassMarks component instance
-   * @param {Object} e - Event
+   * @param {Object} e - Event object
    */
   handleClick = (map, target, e) => {
     alert('You have clicked a massMarks icon');
   }
 
-  /**
-   * Render MassMarks page
-   * @return {Component}
-   */
   render() {
     return (
       <AMap>

@@ -1,15 +1,12 @@
-/**
- * @module Demo/AMapPage
- */
 import React from 'react';
 import {
   node,
   object,
   string,
 } from 'prop-types';
-import {hot} from 'react-hot-loader';
-import {withStyles} from '@material-ui/core/styles';
-import {AMap} from 'react-amap-binding';
+import { hot } from 'react-hot-loader';
+import { withStyles } from '@material-ui/core/styles';
+import { AMap } from 'react-amap-binding';
 
 const styles = (theme) => ({
   mapContainer: {
@@ -18,9 +15,6 @@ const styles = (theme) => ({
   },
 });
 
-/**
- * AMap page
- */
 @hot(module)
 @withStyles(styles)
 class AMapPage extends React.Component {
@@ -36,8 +30,7 @@ class AMapPage extends React.Component {
   };
 
   /**
-   * Show AMap with full screen width and height
-   * @return {Component} - Page
+   * Show AMap with full screen width and height.
    */
   render() {
     const {

@@ -11,12 +11,18 @@ import {
   shape,
 } from 'prop-types';
 import cloneDeep from 'lodash/cloneDeep';
+import AMapContext from '../context/AMapContext';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 
 /**
- * Loca binding
+ * Loca binding.
  */
 class Loca extends React.Component {
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
+
   static propTypes = {
     /**
      * @ignore
@@ -41,10 +47,6 @@ class Loca extends React.Component {
       zIndex: number,
     }).isRequired,
     /**
-     * AMap map instance.
-     */
-    map: object,
-    /**
      * @{@link http://lbs.amap.com/api/loca-api/api-manual#layer_visual_option}
      */
     visualOptions: shape({
@@ -62,18 +64,18 @@ class Loca extends React.Component {
 
   /**
    * Initialise Loca.
-   * @param {Object} props
    */
-  constructor(props) {
+  constructor(props, context) {
     super(props);
 
     const {
       data,
       dataSetOptions,
       layerOptions,
-      map,
       visualOptions,
     } = props;
+
+    const map = context;
 
     breakIfNotChildOfAMap('Loca', map);
 
@@ -92,7 +94,7 @@ class Loca extends React.Component {
   }
 
   /**
-   * Update this.loca by calling Loca methods
+   * Update this.loca by calling Loca methods.
    * @param  {Object} nextProps
    * @return {Boolean} - Prevent calling render function
    */
@@ -120,8 +122,7 @@ class Loca extends React.Component {
   }
 
   /**
-   * Render nothing
-   * @return {null}
+   * Render nothing.
    */
   render() {
     return null;
