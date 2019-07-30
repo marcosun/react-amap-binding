@@ -12,7 +12,7 @@ import {
 } from 'prop-types';
 import cloneDeep from 'lodash/cloneDeep';
 import AMapContext from '../AMapContext';
-import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
+import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
 
 /**
  * Loca binding.

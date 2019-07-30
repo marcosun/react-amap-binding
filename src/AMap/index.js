@@ -9,8 +9,8 @@ import {
   string,
 } from 'prop-types';
 import AMapContext from '../AMapContext';
-import createEventCallback from '../Util/createEventCallback';
-import isShallowEqual from '../Util/isShallowEqual';
+import createEventCallback from '../utils/createEventCallback';
+import isShallowEqual from '../utils/isShallowEqual';
 
 const mapContainerStyle = { width: '100%', height: '100%' };
 

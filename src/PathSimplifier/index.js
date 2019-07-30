@@ -6,9 +6,9 @@ import {
 } from 'prop-types';
 import camelCase from 'lodash/camelCase';
 import AMapContext from '../AMapContext';
-import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
-import isShallowEqual from '../Util/isShallowEqual';
-import createEventCallback from '../Util/createEventCallback';
+import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
+import isShallowEqual from '../utils/isShallowEqual';
+import createEventCallback from '../utils/createEventCallback';
 
 /**
  * PathSimplifier binding.

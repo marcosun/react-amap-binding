@@ -1,10 +1,10 @@
 import React from 'react';
 import { bool, func } from 'prop-types';
 import AMapContext from '../AMapContext';
-import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
-import cloneDeep from '../Util/cloneDeep';
-import createEventCallback from '../Util/createEventCallback';
-import isShallowEqual from '../Util/isShallowEqual';
+import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
+import cloneDeep from '../utils/cloneDeep';
+import createEventCallback from '../utils/createEventCallback';
+import isShallowEqual from '../utils/isShallowEqual';
 
 /**
  * Fields that need to be deep copied.
