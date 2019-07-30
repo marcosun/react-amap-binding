@@ -9,7 +9,7 @@ import {
   shape,
   arrayOf,
 } from 'prop-types';
-import AMapContext from '../context/AMapContext';
+import AMapContext from '../AMapContext';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 import cloneDeep from '../Util/cloneDeep';
 import createEventCallback from '../Util/createEventCallback';

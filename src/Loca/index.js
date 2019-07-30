@@ -11,7 +11,7 @@ import {
   shape,
 } from 'prop-types';
 import cloneDeep from 'lodash/cloneDeep';
-import AMapContext from '../context/AMapContext';
+import AMapContext from '../AMapContext';
 import breakIfNotChildOfAMap from '../Util/breakIfNotChildOfAMap';
 
 /**
