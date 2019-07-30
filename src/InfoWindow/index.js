@@ -158,11 +158,14 @@ class InfoWindow extends React.Component {
 
     this.toggleVisible(this.infoWindowOptions, nextInfoWindowOptions);
 
-    this.updateInfoWindowWithApi('setContent', this.infoWindowOptions.content, nextInfoWindowOptions.content, newInfoWindowOptions.content);
+    this.updateInfoWindowWithApi('setContent', this.infoWindowOptions.content,
+      nextInfoWindowOptions.content, newInfoWindowOptions.content);
 
-    this.updateInfoWindowWithApi('setPosition', this.infoWindowOptions.position, nextInfoWindowOptions.position, newInfoWindowOptions.position);
+    this.updateInfoWindowWithApi('setPosition', this.infoWindowOptions.position,
+      nextInfoWindowOptions.position, newInfoWindowOptions.position);
 
-    this.updateInfoWindowWithApi('setSize', this.infoWindowOptions.size, nextInfoWindowOptions.size, newInfoWindowOptions.size);
+    this.updateInfoWindowWithApi('setSize', this.infoWindowOptions.size,
+      nextInfoWindowOptions.size, newInfoWindowOptions.size);
 
     this.infoWindowOptions = nextInfoWindowOptions;
 

@@ -123,18 +123,24 @@ class Circle extends React.Component {
     /* this.circle.setOptions(newCircleOptions); */
 
     /* SetzIndex、setCursor not provided in lbs docs */
-    /* this.updateCircleWithApi('setzIndex', this.circleOptions.zIndex, nextCircleOptions.zIndex, newCircleOptions.zIndex); */
-    /* this.updateCircleWithApi('setCursor', this.circleOptions.cursor, nextCircleOptions.cursor, newCircleOptions.cursor); */
+    /* this.updateCircleWithApi('setzIndex', this.circleOptions.zIndex,
+      nextCircleOptions.zIndex, newCircleOptions.zIndex); */
+    /* this.updateCircleWithApi('setCursor', this.circleOptions.cursor,
+      nextCircleOptions.cursor, newCircleOptions.cursor); */
 
-    this.updateCircleWithApi('setCenter', this.circleOptions.center, nextCircleOptions.center, newCircleOptions.center);
+    this.updateCircleWithApi('setCenter', this.circleOptions.center, nextCircleOptions.center,
+      newCircleOptions.center);
 
-    this.updateCircleWithApi('setRadius', this.circleOptions.radius, nextCircleOptions.radius, newCircleOptions.radius);
+    this.updateCircleWithApi('setRadius', this.circleOptions.radius, nextCircleOptions.radius,
+      newCircleOptions.radius);
 
-    this.updateCircleWithApi('setPosition', this.circleOptions.position, nextCircleOptions.position, newCircleOptions.position);
+    this.updateCircleWithApi('setPosition', this.circleOptions.position, nextCircleOptions.position,
+      newCircleOptions.position);
 
     this.toggleVisible(this.circleOptions.visible, nextCircleOptions.visible);
 
-    this.updateCircleWithApi('setExtData', this.circleOptions.extData, nextCircleOptions.extData, newCircleOptions.extData);
+    this.updateCircleWithApi('setExtData', this.circleOptions.extData, nextCircleOptions.extData,
+      newCircleOptions.extData);
 
     this.circleOptions = nextCircleOptions;
 

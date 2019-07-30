@@ -50,7 +50,8 @@ class TileLayerTraffic extends React.Component {
   }
 
   /**
-   * Define event name mapping relations of react binding TileLayerTraffic and AMap.TileLayer.Traffic.
+   * Define event name mapping relations of react binding TileLayerTraffic and
+   * AMap.TileLayer.Traffic.
    * Initialise AMap.TileLayer.Traffic and bind events.
    */
   constructor(props, context) {
@@ -77,11 +78,13 @@ class TileLayerTraffic extends React.Component {
   shouldComponentUpdate(nextProps) {
     const nextTileLayerTrafficOptions = TileLayerTraffic.parseTileLayerTrafficOptions(nextProps);
 
-    this.updateTileLayerTrafficWithApi('setOpacity', this.tileLayerTrafficOptions.opacity, nextTileLayerTrafficOptions.opacity);
+    this.updateTileLayerTrafficWithApi('setOpacity', this.tileLayerTrafficOptions.opacity,
+      nextTileLayerTrafficOptions.opacity);
 
     this.toggleVisible(this.tileLayerTrafficOptions.visible, nextTileLayerTrafficOptions.visible);
 
-    this.updateTileLayerTrafficWithApi('setzIndex', this.tileLayerTrafficOptions.zIndex, nextTileLayerTrafficOptions.zIndex);
+    this.updateTileLayerTrafficWithApi('setzIndex', this.tileLayerTrafficOptions.zIndex,
+      nextTileLayerTrafficOptions.zIndex);
 
     this.tileLayerTrafficOptions = nextTileLayerTrafficOptions;
 

@@ -54,8 +54,8 @@ class PathSimplifier extends React.Component {
   /**
    * PathNavigator instance should be recreated once nextProps.data is changed.
    * It will render null in the render(),
-   * then call setState() immediately in componentDidUpdate() to updated isShouldDestoryPathNavigator to false,
-   * finally rerender.
+   * then call setState() immediately in componentDidUpdate() to updated
+   * isShouldDestoryPathNavigator to false, finally rerender.
    */
   static getDerivedStateFromProps(nextProps, prevState) {
     if (!isShallowEqual(nextProps.data, prevState.data)) {
@@ -156,9 +156,11 @@ class PathSimplifier extends React.Component {
 
     const nextPathSimplifierOptions = PathSimplifier.parsePathSimplifierOptions(this.props);
 
-    this.updatePathSimplifierWithApi('setZIndexOfPath', this.pathSimplifierOptions.zIndex, nextPathSimplifierOptions.zIndex);
+    this.updatePathSimplifierWithApi('setZIndexOfPath', this.pathSimplifierOptions.zIndex,
+      nextPathSimplifierOptions.zIndex);
 
-    this.updatePathSimplifierWithApi('setData', this.pathSimplifierOptions.data, nextPathSimplifierOptions.data);
+    this.updatePathSimplifierWithApi('setData', this.pathSimplifierOptions.data,
+      nextPathSimplifierOptions.data);
 
     this.toggleVisible(this.pathSimplifierOptions.visible, nextPathSimplifierOptions.visible);
 

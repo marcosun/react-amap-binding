@@ -116,7 +116,8 @@ class BezierCurve extends React.Component {
 
     this.toggleVisible(this.bezierCurveOptions.visible, nextBezierCurveOptions.visible);
 
-    this.updateBezierCurveWithApi('setOptions', this.bezierCurveOptions, nextBezierCurveOptions, newBezierCurveOptions);
+    this.updateBezierCurveWithApi('setOptions', this.bezierCurveOptions, nextBezierCurveOptions,
+      newBezierCurveOptions);
 
     this.bezierCurveOptions = nextBezierCurveOptions;
 

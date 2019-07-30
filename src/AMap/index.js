@@ -167,7 +167,8 @@ class AMap extends React.PureComponent {
     return new Promise((resolve) => {
       /**
        * NOTE: Don't use the asynchronous loading method of the official lbs web callback function.
-       * Bacause the callback function is mounted in window variable that will cause that the previous promise cannot be resolved.
+       * Bacause the callback function is mounted in window variable that will cause that the
+       * previous promise cannot be resolved.
        */
       const jsApi = document.createElement('script');
       jsApi.type = 'text/javascript';
@@ -237,7 +238,8 @@ class AMap extends React.PureComponent {
   }
 
   /**
-   * We get map conatiner element reference until this lifecycle method to instantiate AMap map object.
+   * We get map conatiner element reference until this lifecycle method to instantiate
+   * AMap map object.
    */
   componentDidMount() {
     this.initAMap();
@@ -255,14 +257,17 @@ class AMap extends React.PureComponent {
     this.updateMapWithApi('setBounds', this.mapOptions.bounds, nextMapOptions.bounds);
     this.updateMapWithApi('setCenter', this.mapOptions.center, nextMapOptions.center);
     this.updateMapWithApi('setCity', this.mapOptions.city, nextMapOptions.city);
-    this.updateMapWithApi('setDefaultCursor', this.mapOptions.defaultCursor, nextMapOptions.defaultCursor);
-    this.updateMapWithApi('setDefaultLayer', this.mapOptions.defaultLayer, nextMapOptions.defaultLayer);
+    this.updateMapWithApi('setDefaultCursor', this.mapOptions.defaultCursor,
+      nextMapOptions.defaultCursor);
+    this.updateMapWithApi('setDefaultLayer', this.mapOptions.defaultLayer,
+      nextMapOptions.defaultLayer);
     this.updateMapWithApi('setFeatures', this.mapOptions.features, nextMapOptions.features);
     this.updateMapWithApi('setZoom', this.mapOptions.zoom, nextMapOptions.zoom);
     this.updateMapWithApi('setLang', this.mapOptions.lang, nextMapOptions.lang);
     // Calling setLayers causes fatal exceptions
     // this.updateMapWithApi('setLayers', this.mapOptions.layers, nextMapOptions.layers);
-    this.updateMapWithApi('setlabelzIndex', this.mapOptions.labelzIndex, nextMapOptions.labelzIndex);
+    this.updateMapWithApi('setlabelzIndex', this.mapOptions.labelzIndex,
+      nextMapOptions.labelzIndex);
     this.updateMapWithApi('setMapStyle', this.mapOptions.mapStyle, nextMapOptions.mapStyle);
     this.updateMapWithApi('setPitch', this.mapOptions.pitch, nextMapOptions.pitch);
     this.updateMapWithApi('setRotation', this.mapOptions.rotation, nextMapOptions.rotation);
@@ -277,8 +282,10 @@ class AMap extends React.PureComponent {
    */
   componentWillUnmount() {
     /**
-     * The aMapEventListeners and map variables are assigned after the asynchronous AMap library has been loaded.
-     * If the resource has not been downloaded before the component will unmount, an error will be thrown.
+     * The aMapEventListeners and map variables are assigned after the asynchronous AMap library
+     * has been loaded.
+     * If the resource has not been downloaded before the component will unmount, an error will
+     * be thrown.
      */
     if (this.AMapEventListeners !== void 0) {
       this.AMapEventListeners.forEach((listener) => {

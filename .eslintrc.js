@@ -36,7 +36,7 @@ module.exports = {
     'consistent-this': ['error', 'self'],
     'max-len': [
       'error',
-      150,
+      100,
       2,
       {
         ignoreUrls: true,

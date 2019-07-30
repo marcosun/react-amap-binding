@@ -156,9 +156,11 @@ class MassMarks extends React.Component {
 
     const newMassMarksOptions = cloneDeep(nextMassMarksOptions, NEED_DEEP_COPY_FIELDS);
 
-    this.updateMassMarksWithApi('setStyle', this.massMarksOptions.style, nextMassMarksOptions.style, newMassMarksOptions.style);
+    this.updateMassMarksWithApi('setStyle', this.massMarksOptions.style, nextMassMarksOptions.style,
+      newMassMarksOptions.style);
 
-    this.updateMassMarksWithApi('setData', this.massMarksOptions.data, nextMassMarksOptions.data, newMassMarksOptions.data);
+    this.updateMassMarksWithApi('setData', this.massMarksOptions.data, nextMassMarksOptions.data,
+      newMassMarksOptions.data);
 
     this.toggleVisible(this.massMarksOptions.visible, nextMassMarksOptions.visible);
 

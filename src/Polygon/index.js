@@ -117,7 +117,8 @@ class Polygon extends React.Component {
 
     const newPolygonOptions = cloneDeep(nextPolygonOptions, NEED_DEEP_COPY_FIELDS);
 
-    this.updatePolygonWithApi('setOptions', this.polygonOptions, nextPolygonOptions, newPolygonOptions);
+    this.updatePolygonWithApi('setOptions', this.polygonOptions, nextPolygonOptions,
+      newPolygonOptions);
 
     this.toggleVisible(this.polygonOptions.visible, nextPolygonOptions.visible);
 

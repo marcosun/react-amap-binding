@@ -7,6 +7,7 @@
  */
 export default function(moduleName, mapObject, parentModuleName = 'AMap') {
   if (window.AMap === void 0 || mapObject === void 0) {
-    throw Error(`${moduleName} cannot be used as a standalone. ${moduleName} must be a child component of ${parentModuleName}.`);
+    throw Error(`${moduleName} cannot be used as a standalone. ` +
+      `${moduleName} must be a child component of ${parentModuleName}.`);
   }
 }

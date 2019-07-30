@@ -177,37 +177,52 @@ class Marker extends React.Component {
 
     const newMarkerOptions = cloneDeep(nextMarkerOptions, NEED_DEEP_COPY_FIELDS);
 
-    this.updateMarkerWithApi('setOffset', this.markerOptions.offset, nextMarkerOptions.offset, newMarkerOptions.offset);
+    this.updateMarkerWithApi('setOffset', this.markerOptions.offset, nextMarkerOptions.offset,
+      newMarkerOptions.offset);
 
-    this.updateMarkerWithApi('setAnimation', this.markerOptions.animation, nextMarkerOptions.animation, newMarkerOptions.animation);
+    this.updateMarkerWithApi('setAnimation', this.markerOptions.animation,
+      nextMarkerOptions.animation, newMarkerOptions.animation);
 
-    this.updateMarkerWithApi('setClickable', this.markerOptions.clickable, nextMarkerOptions.clickable, newMarkerOptions.clickable);
+    this.updateMarkerWithApi('setClickable', this.markerOptions.clickable,
+      nextMarkerOptions.clickable, newMarkerOptions.clickable);
 
-    this.updateMarkerWithApi('setPosition', this.markerOptions.position, nextMarkerOptions.position, newMarkerOptions.position);
+    this.updateMarkerWithApi('setPosition', this.markerOptions.position, nextMarkerOptions.position,
+      newMarkerOptions.position);
 
-    this.updateMarkerWithApi('setAngle', this.markerOptions.angle, nextMarkerOptions.angle, newMarkerOptions.angle);
+    this.updateMarkerWithApi('setAngle', this.markerOptions.angle, nextMarkerOptions.angle,
+      newMarkerOptions.angle);
 
-    this.updateMarkerWithApi('setLabel', this.markerOptions.label, nextMarkerOptions.label, newMarkerOptions.label);
+    this.updateMarkerWithApi('setLabel', this.markerOptions.label, nextMarkerOptions.label,
+      newMarkerOptions.label);
 
-    this.updateMarkerWithApi('setzIndex', this.markerOptions.zIndex, nextMarkerOptions.zIndex, newMarkerOptions.zIndex);
+    this.updateMarkerWithApi('setzIndex', this.markerOptions.zIndex, nextMarkerOptions.zIndex,
+      newMarkerOptions.zIndex);
 
-    this.updateMarkerWithApi('setIcon', this.markerOptions.icon, nextMarkerOptions.icon, newMarkerOptions.icon);
+    this.updateMarkerWithApi('setIcon', this.markerOptions.icon, nextMarkerOptions.icon,
+      newMarkerOptions.icon);
 
-    this.updateMarkerWithApi('setDraggable', this.markerOptions.draggable, nextMarkerOptions.draggable, newMarkerOptions.draggable);
+    this.updateMarkerWithApi('setDraggable', this.markerOptions.draggable,
+      nextMarkerOptions.draggable, newMarkerOptions.draggable);
 
     this.toggleVisible(this.markerOptions.visible, nextMarkerOptions.visible);
 
-    this.updateMarkerWithApi('setCursor', this.markerOptions.cursor, nextMarkerOptions.cursor, newMarkerOptions.cursor);
+    this.updateMarkerWithApi('setCursor', this.markerOptions.cursor, nextMarkerOptions.cursor,
+      newMarkerOptions.cursor);
 
-    this.updateMarkerWithApi('setContent', this.markerOptions.content, nextMarkerOptions.content, newMarkerOptions.content);
+    this.updateMarkerWithApi('setContent', this.markerOptions.content, nextMarkerOptions.content,
+      newMarkerOptions.content);
 
-    this.updateMarkerWithApi('setTitle', this.markerOptions.title, nextMarkerOptions.title, newMarkerOptions.title);
+    this.updateMarkerWithApi('setTitle', this.markerOptions.title, nextMarkerOptions.title,
+      newMarkerOptions.title);
 
-    this.updateMarkerWithApi('setShadow', this.markerOptions.shadow, nextMarkerOptions.shadow, newMarkerOptions.shadow);
+    this.updateMarkerWithApi('setShadow', this.markerOptions.shadow, nextMarkerOptions.shadow,
+      newMarkerOptions.shadow);
 
-    this.updateMarkerWithApi('setShape', this.markerOptions.shape, nextMarkerOptions.shape, newMarkerOptions.shape);
+    this.updateMarkerWithApi('setShape', this.markerOptions.shape, nextMarkerOptions.shape,
+      newMarkerOptions.shape);
 
-    this.updateMarkerWithApi('setExtData', this.markerOptions.extData, nextMarkerOptions.extData, newMarkerOptions.extData);
+    this.updateMarkerWithApi('setExtData', this.markerOptions.extData, nextMarkerOptions.extData,
+      newMarkerOptions.extData);
 
     this.markerOptions = nextMarkerOptions;
 

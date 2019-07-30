@@ -139,7 +139,8 @@ class PathNavigator extends React.Component {
   shouldComponentUpdate(nextProps) {
     const nextPathNavigatorOptions = PathNavigator.parsePathNavigatorOptions(nextProps);
 
-    this.updatePathNavigatorWithApi('setSpeed', this.pathNavigatorOptions.speed, nextPathNavigatorOptions.speed);
+    this.updatePathNavigatorWithApi('setSpeed', this.pathNavigatorOptions.speed,
+      nextPathNavigatorOptions.speed);
 
     this.setRange(this.pathNavigatorOptions.range, nextPathNavigatorOptions.range);
 

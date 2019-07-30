@@ -118,7 +118,8 @@ class Polyline extends React.Component {
 
     const newPolylineOptions = cloneDeep(nextPolylineOptions, NEED_DEEP_COPY_FIELDS);
 
-    this.updatePolylineWithApi('setOptions', this.polylineOptions, nextPolylineOptions, newPolylineOptions);
+    this.updatePolylineWithApi('setOptions', this.polylineOptions, nextPolylineOptions,
+      newPolylineOptions);
 
     this.toggleVisible(this.polylineOptions.visible, nextPolylineOptions.visible);
 
