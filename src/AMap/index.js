@@ -173,35 +173,29 @@ class AMap extends React.PureComponent {
 
   /**
    * Create script tag to require AMap library.
-   * @param  {string} options.protocol - Protocol, whether it is http or https
-   * @param  {string} options.version  - AMap javascript library version
-   * @param  {string} options.appKey   - AMap JS App key
-   * @return {Promise}                 - Promise created by AMap script tag
    */
-  static requireAMap({ protocol, version, appKey }) {
+  static requireAMap({ appKey, protocol, version }) {
+    const jsApi = document.createElement('script');
+    jsApi.type = 'text/javascript';
+    jsApi.src = `${protocol}://webapi.amap.com/maps?v=${version}&key=${appKey}`;
+
+    document.head.appendChild(jsApi);
+
     return new Promise((resolve) => {
       /**
-       * NOTE: Don't use the asynchronous loading method of the official lbs web callback function.
-       * Bacause the callback function is mounted in window variable that will cause that the
-       * previous promise cannot be resolved.
+       * NOTE: Don't use callback function attached after script source.
+       * In the scenario where more than two maps are displayed on the same page, the later defined
+       * callback overrides previous callback, which results the previous load AMap promise could
+       * not resolve.
        */
-      const jsApi = document.createElement('script');
-      jsApi.type = 'text/javascript';
-      jsApi.async = true;
-      jsApi.src = `${protocol}://webapi.amap.com/maps?v=${version}&key=${appKey}`;
       jsApi.onload = () => {
         resolve();
       };
-
-      document.head.appendChild(jsApi);
     });
   }
 
   /**
    * Create script tag to require AMapUI library.
-   * @param  {string} options.protocol - Protocol, whether it is http or https
-   * @param  {string} options.version  - AMap UI javascript library version
-   * @return {Promise}                 - Promise created by AMap UI script tag
    */
   static requireAMapUI({ protocol, version }) {
     const amapUi = document.createElement('script');
@@ -220,12 +214,8 @@ class AMap extends React.PureComponent {
 
   /**
    * Create script tag to require Loca library.
-   * @param  {string} options.protocol - Protocol, whether it is http or https.
-   * @param  {string} options.appKey   - AMap JS App key.
-   * @param  {string} options.version  - Loca library version.
-   * @return {Promise}                 - Promise created by Loca script tag.
    */
-  static requireLoca({ protocol, appKey, version }) {
+  static requireLoca({ appKey, protocol, version }) {
     const loca = document.createElement('script');
     loca.type = 'text/javascript';
     loca.src = `${protocol}://webapi.amap.com/loca?key=${appKey}&v=${version}`;
@@ -325,9 +315,9 @@ class AMap extends React.PureComponent {
     } = this.props;
 
     if (window.AMap === void 0) {
-      await AMap.requireAMap({ protocol, version, appKey });
+      await AMap.requireAMap({ appKey, protocol, version });
       await AMap.requireAMapUI({ protocol, version: uiVersion });
-      await AMap.requireLoca({ protocol, appKey, version: locaVersion });
+      await AMap.requireLoca({ appKey, protocol, version: locaVersion });
     }
 
     this.map = new window.AMap.Map(this.mapContainer, {
