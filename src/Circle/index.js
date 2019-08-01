@@ -1,5 +1,5 @@
 import React from 'react';
-import { func } from 'prop-types';
+import PropTypes from 'prop-types';
 import AMapContext from '../AMapContext';
 import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
 import cloneDeep from '../utils/cloneDeep';
@@ -33,20 +33,20 @@ class Circle extends React.Component {
      * @param {AMap.Circle} Circle            - AMap.Circle
      * @param {Object} event                  - Circle event parameters
      */
-    onComplete: func,
-    onClick: func,
-    onDblClick: func,
-    onRightClick: func,
-    onHide: func,
-    onShow: func,
-    onMouseDown: func,
-    onMouseUp: func,
-    onMouseOver: func,
-    onMouseOut: func,
-    onChange: func,
-    onTouchStart: func,
-    onTouchMove: func,
-    onTouchEnd: func,
+    onComplete: PropTypes.func,
+    onClick: PropTypes.func,
+    onDblClick: PropTypes.func,
+    onRightClick: PropTypes.func,
+    onHide: PropTypes.func,
+    onShow: PropTypes.func,
+    onMouseDown: PropTypes.func,
+    onMouseUp: PropTypes.func,
+    onMouseOver: PropTypes.func,
+    onMouseOut: PropTypes.func,
+    onChange: PropTypes.func,
+    onTouchStart: PropTypes.func,
+    onTouchMove: PropTypes.func,
+    onTouchEnd: PropTypes.func,
     /* eslint-enable */
   };
 

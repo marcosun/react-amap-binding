@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  func,
-  number,
-  object,
-} from 'prop-types';
+import PropTypes from 'prop-types';
 import AMapContext from '../AMapContext';
 import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
 import isShallowEqual from '../utils/isShallowEqual';
@@ -26,15 +22,15 @@ class PathNavigator extends React.Component {
     /**
      * PathSimplifier path index.
      */
-    pathIndex: number.isRequired,
+    pathIndex: PropTypes.number.isRequired,
     /**
      * AMapUI pathSimplifier instance.
      */
-    pathSimplifier: object,
+    pathSimplifier: PropTypes.object,
     /**
      * AMapUI pathSimplifier class function.
      */
-    PathSimplifierClass: func, // eslint-disable-line react/no-unused-prop-types
+    PathSimplifierClass: PropTypes.func, // eslint-disable-line react/no-unused-prop-types
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
@@ -43,11 +39,11 @@ class PathNavigator extends React.Component {
      * @param {PathNavigator} PathNavigator   - PathNavigator instance
      * @param {Object} event                  - PathNavigator event parameters
      */
-    onComplete: func,
-    onStart: func,
-    onPause: func,
-    onMove: func,
-    onStop: func,
+    onComplete: PropTypes.func,
+    onStart: PropTypes.func,
+    onPause: PropTypes.func,
+    onMove: PropTypes.func,
+    onStop: PropTypes.func,
     /* eslint-enable */
   };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { bool, func } from 'prop-types';
+import PropTypes from 'prop-types';
 import AMapContext from '../AMapContext';
 import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
 import cloneDeep from '../utils/cloneDeep';
@@ -30,7 +30,7 @@ class Polyline extends React.Component {
     /**
      * Shows Polyline by default, you can toggle show or hide by setting visible.
      */
-    visible: bool, // eslint-disable-line react/no-unused-prop-types
+    visible: PropTypes.bool, // eslint-disable-line react/no-unused-prop-types
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
@@ -39,20 +39,20 @@ class Polyline extends React.Component {
      * @param {AMap.Polyline} polyline   - AMap.Polyline instance
      * @param {Object} event             - Polyline event parameters
      */
-    onComplete: func,
-    onClick: func,
-    onDblClick: func,
-    onRightClick: func,
-    onHide: func,
-    onShow: func,
-    onMouseDown: func,
-    onMouseUp: func,
-    onMouseOver: func,
-    onMouseOut: func,
-    onChange: func,
-    onTouchStart: func,
-    onTouchMove: func,
-    onTouchEnd: func,
+    onComplete: PropTypes.func,
+    onClick: PropTypes.func,
+    onDblClick: PropTypes.func,
+    onRightClick: PropTypes.func,
+    onHide: PropTypes.func,
+    onShow: PropTypes.func,
+    onMouseDown: PropTypes.func,
+    onMouseUp: PropTypes.func,
+    onMouseOver: PropTypes.func,
+    onMouseOut: PropTypes.func,
+    onChange: PropTypes.func,
+    onTouchStart: PropTypes.func,
+    onTouchMove: PropTypes.func,
+    onTouchEnd: PropTypes.func,
     /* eslint-enable */
   };
 

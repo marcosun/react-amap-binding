@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  bool,
-  node,
-  func,
-} from 'prop-types';
+import PropTypes from 'prop-types';
 import camelCase from 'lodash/camelCase';
 import AMapContext from '../AMapContext';
 import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
@@ -28,11 +24,11 @@ class PathSimplifier extends React.Component {
     /**
      * Child components.
      */
-    children: node,
+    children: PropTypes.node,
     /**
      * Shows PathSimplifier by default, you can toggle show or hide by setting visible.
      */
-    visible: bool,
+    visible: PropTypes.bool,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
@@ -41,13 +37,13 @@ class PathSimplifier extends React.Component {
      * @param {PathSimplifier} PathSimplifier   - PathSimplifier instance
      * @param {Object} event                    - PathSimplifier event parameters
      */
-    onComplete: func,
-    onPathClick: func,
-    onPathMouseover: func,
-    onPathMouseout: func,
-    onPointClick: func,
-    onPointMouseover: func,
-    onPointMouseout: func,
+    onComplete: PropTypes.func,
+    onPathClick: PropTypes.func,
+    onPathMouseover: PropTypes.func,
+    onPathMouseout: PropTypes.func,
+    onPointClick: PropTypes.func,
+    onPointMouseover: PropTypes.func,
+    onPointMouseout: PropTypes.func,
     /* eslint-enable */
   };
 

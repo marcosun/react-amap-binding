@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  object,
-  array,
-  bool,
-  string,
-  func,
-  oneOfType,
-  shape,
-  arrayOf,
-} from 'prop-types';
+import PropTypes from 'prop-types';
 import AMapContext from '../AMapContext';
 import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
 import cloneDeep from '../utils/cloneDeep';
@@ -37,27 +28,27 @@ class MassMarks extends React.Component {
     /**
      * Include lnglat attributes of point object.
      */
-    data: array.isRequired,
+    data: PropTypes.array.isRequired,
     /**
      * Point style.
      * It can transform an array of two numbers into AMap.Pixel instance and AMap.Size instance.
      */
-    style: oneOfType([ // eslint-disable-line react/no-unused-prop-types
-      arrayOf(shape({
-        anchor: oneOfType([array, object]).isRequired,
-        size: oneOfType([array, object]).isRequired,
-        url: string.isRequired,
+    style: PropTypes.oneOfType([ // eslint-disable-line react/no-unused-prop-types
+      PropTypes.arrayOf(PropTypes.shape({
+        anchor: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+        size: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+        url: PropTypes.string.isRequired,
       })),
-      shape({
-        anchor: oneOfType([array, object]).isRequired,
-        size: oneOfType([array, object]).isRequired,
-        url: string.isRequired,
+      PropTypes.shape({
+        anchor: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+        size: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
+        url: PropTypes.string.isRequired,
       }),
     ]).isRequired,
     /**
      * Show MassMarks by default, you can toggle show or hide by setting visible.
      */
-    visible: bool,
+    visible: PropTypes.bool,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
@@ -66,15 +57,15 @@ class MassMarks extends React.Component {
      * @param {AMap.MassMarks} MassMarks      - AMap.MassMarks
      * @param {Object} event                  - MassMarks event parameters
      */
-    onComplete: func,
-    onClick: func,
-    onDblClick: func,
-    onMouseOut: func,
-    onMouseOver: func,
-    onMouseUp: func,
-    onMouseDown: func,
-    onTouchStart: func,
-    onTouchEnd: func,
+    onComplete: PropTypes.func,
+    onClick: PropTypes.func,
+    onDblClick: PropTypes.func,
+    onMouseOut: PropTypes.func,
+    onMouseOver: PropTypes.func,
+    onMouseUp: PropTypes.func,
+    onMouseDown: PropTypes.func,
+    onTouchStart: PropTypes.func,
+    onTouchEnd: PropTypes.func,
     /* eslint-enable */
   };
 

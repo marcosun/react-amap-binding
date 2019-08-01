@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  array,
-  func,
-  object,
-  oneOfType,
-  shape,
-} from 'prop-types';
+import PropTypes from 'prop-types';
 import AMapContext from '../AMapContext';
 import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
 import cloneDeep from '../utils/cloneDeep';
@@ -34,13 +28,14 @@ class Marker extends React.Component {
     /**
      * An array of two numbers or AMap.Pixel for label.offset.
      */
-    label: shape({ // eslint-disable-line react/no-unused-prop-types
-      offset: oneOfType([array, object]),
+    label: PropTypes.shape({ // eslint-disable-line react/no-unused-prop-types
+      offset: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     }),
     /**
      * An array of two numbers or AMap.Pixel.
      */
-    offset: oneOfType([array, object]), // eslint-disable-line react/no-unused-prop-types
+    // eslint-disable-next-line react/no-unused-prop-types
+    offset: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
@@ -49,24 +44,24 @@ class Marker extends React.Component {
      * @param {AMap.Marker} Marker     - AMap.Marker
      * @param {Object} event           - Marker event parameters
      */
-    onComplete: func,
-    onClick: func,
-    onDblClick: func,
-    onRightClick: func,
-    onMouseMove: func,
-    onMouseOver: func,
-    onMouseOut: func,
-    onMouseDown: func,
-    onMouseUp: func,
-    onDragStart: func,
-    onDragging: func,
-    onDragEnd: func,
-    onMoving: func,
-    onMoveEnd: func,
-    onMoveAlong: func,
-    onTouchStart: func,
-    onTouchMove: func,
-    onTouchEnd: func,
+    onComplete: PropTypes.func,
+    onClick: PropTypes.func,
+    onDblClick: PropTypes.func,
+    onRightClick: PropTypes.func,
+    onMouseMove: PropTypes.func,
+    onMouseOver: PropTypes.func,
+    onMouseOut: PropTypes.func,
+    onMouseDown: PropTypes.func,
+    onMouseUp: PropTypes.func,
+    onDragStart: PropTypes.func,
+    onDragging: PropTypes.func,
+    onDragEnd: PropTypes.func,
+    onMoving: PropTypes.func,
+    onMoveEnd: PropTypes.func,
+    onMoveAlong: PropTypes.func,
+    onTouchStart: PropTypes.func,
+    onTouchMove: PropTypes.func,
+    onTouchEnd: PropTypes.func,
     /* eslint-enable */
   };
 

@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  array,
-  bool,
-  func,
-  object,
-  oneOfType,
-} from 'prop-types';
+import PropTypes from 'prop-types';
 import AMapContext from '../AMapContext';
 import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
 import cloneDeep from '../utils/cloneDeep';
@@ -34,15 +28,17 @@ class InfoWindow extends React.Component {
     /**
      * An array of two numbers or AMap.Pixel.
      */
-    offset: oneOfType([array, object]), // eslint-disable-line react/no-unused-prop-types
+    // eslint-disable-next-line react/no-unused-prop-types
+    offset: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     /**
      * An array of two numbers, width and height or AMap.Size.
      */
-    size: oneOfType([array, object]), // eslint-disable-line react/no-unused-prop-types
+    // eslint-disable-next-line react/no-unused-prop-types
+    size: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     /**
      * Show InfoWindow by default, you can toggle show or hide by setting visible.
      */
-    visible: bool, // eslint-disable-line react/no-unused-prop-types
+    visible: PropTypes.bool, // eslint-disable-line react/no-unused-prop-types
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
@@ -51,10 +47,10 @@ class InfoWindow extends React.Component {
      * @param {AMap.InfoWindow} InfoWindow    - AMap.InfoWindow
      * @param {Object} event                  - InfoWindow event parameters
      */
-    onComplete: func,
-    onChange: func,
-    onOpen: func,
-    onClose: func,
+    onComplete: PropTypes.func,
+    onChange: PropTypes.func,
+    onOpen: PropTypes.func,
+    onClose: PropTypes.func,
     /* eslint-enable */
   };
 

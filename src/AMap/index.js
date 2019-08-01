@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  array,
-  func,
-  node,
-  object,
-  oneOf,
-  oneOfType,
-  string,
-} from 'prop-types';
+import PropTypes from 'prop-types';
 import AMapContext from '../AMapContext';
 import createEventCallback from '../utils/createEventCallback';
 import isShallowEqual from '../utils/isShallowEqual';
@@ -26,31 +18,32 @@ class AMap extends React.PureComponent {
     /**
      * AMap JS App key.
      */
-    appKey: string.isRequired,
+    appKey: PropTypes.string.isRequired,
     /**
      * A 2D array of two numbers or AMap.Bounds.
      */
-    bounds: oneOfType([array, object]), // eslint-disable-line react/no-unused-prop-types
+    // eslint-disable-next-line react/no-unused-prop-types
+    bounds: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
     /**
      * Child components.
      */
-    children: node,
+    children: PropTypes.node,
     /**
      * Loca library version.
      */
-    locaVersion: string,
+    locaVersion: PropTypes.string,
     /**
      * Whether it is http or https.
      */
-    protocol: oneOf(['http', 'https']),
+    protocol: PropTypes.oneOf(['http', 'https']),
     /**
      * AMap UI version.
      */
-    uiVersion: string,
+    uiVersion: PropTypes.string,
     /**
      * AMap javascript library version.
      */
-    version: string,
+    version: PropTypes.string,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
@@ -58,32 +51,32 @@ class AMap extends React.PureComponent {
      * @param {AMap.Map} map - AMap.Map instance
      * @param {Object} event - AMap event parameters
      */
-    onComplete: func,
-    onClick: func,
-    onDblClick: func,
-    onMapMove: func,
-    onHotSpotClick: func,
-    onHotSpotOver: func,
-    onHotSpotOut: func,
-    onMoveStart: func,
-    onMoveEnd: func,
-    onZoomChange: func,
-    onZoomStart: func,
-    onZoomEnd: func,
-    onMouseMove: func,
-    onMouseWheel: func,
-    onMouseOver: func,
-    onMouseOut: func,
-    onMouseUp: func,
-    onMouseDown: func,
-    onRightClick: func,
-    onDragStart: func,
-    onDragging: func,
-    onDragEnd: func,
-    onResize: func,
-    onTouchStart: func,
-    onTouchMove: func,
-    onTouchEnd: func,
+    onComplete: PropTypes.func,
+    onClick: PropTypes.func,
+    onDblClick: PropTypes.func,
+    onMapMove: PropTypes.func,
+    onHotSpotClick: PropTypes.func,
+    onHotSpotOver: PropTypes.func,
+    onHotSpotOut: PropTypes.func,
+    onMoveStart: PropTypes.func,
+    onMoveEnd: PropTypes.func,
+    onZoomChange: PropTypes.func,
+    onZoomStart: PropTypes.func,
+    onZoomEnd: PropTypes.func,
+    onMouseMove: PropTypes.func,
+    onMouseWheel: PropTypes.func,
+    onMouseOver: PropTypes.func,
+    onMouseOut: PropTypes.func,
+    onMouseUp: PropTypes.func,
+    onMouseDown: PropTypes.func,
+    onRightClick: PropTypes.func,
+    onDragStart: PropTypes.func,
+    onDragging: PropTypes.func,
+    onDragEnd: PropTypes.func,
+    onResize: PropTypes.func,
+    onTouchStart: PropTypes.func,
+    onTouchMove: PropTypes.func,
+    onTouchEnd: PropTypes.func,
     /* eslint-enable */
   };
 

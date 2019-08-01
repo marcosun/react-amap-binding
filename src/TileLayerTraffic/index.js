@@ -1,5 +1,5 @@
 import React from 'react';
-import { bool, func } from 'prop-types';
+import PropTypes from 'prop-types';
 import AMapContext from '../AMapContext';
 import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
 import isShallowEqual from '../utils/isShallowEqual';
@@ -21,7 +21,7 @@ class TileLayerTraffic extends React.Component {
     /**
      * Shows TileLayerTraffic by default, you can toggle show or hide by setting config.
      */
-    visible: bool,
+    visible: PropTypes.bool,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
@@ -30,7 +30,7 @@ class TileLayerTraffic extends React.Component {
      * @param {AMap.TileLayer.Traffic} traffic      - AMap.TileLayer.Traffic instance
      * @param {Object} event                        - Traffic event parameters
      */
-    onComplete: func,
+    onComplete: PropTypes.func,
     /* eslint-enable */
   }
 

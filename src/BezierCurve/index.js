@@ -1,5 +1,5 @@
 import React from 'react';
-import { bool, func } from 'prop-types';
+import PropTypes from 'prop-types';
 import AMapContext from '../AMapContext';
 import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
 import cloneDeep from '../utils/cloneDeep';
@@ -27,7 +27,7 @@ class BezierCurve extends React.Component {
     /**
      * Show BezierCurve by default, you can toggle show or hide by setting visible.
      */
-    visible: bool,
+    visible: PropTypes.bool,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
@@ -36,19 +36,19 @@ class BezierCurve extends React.Component {
      * @param {AMap.BezierCurve} bezierCurve  - AMap.BezierCurve
      * @param {Object} event                  - BezierCurve event parameters
      */
-    onComplete: func,
-    onClick: func,
-    onDblClick: func,
-    onRightClick: func,
-    onHide: func,
-    onShow: func,
-    onMouseDown: func,
-    onMouseUp: func,
-    onMouseOver: func,
-    onMouseOut: func,
-    onChange: func,
-    onTouchStart: func,
-    onTouchEnd: func,
+    onComplete: PropTypes.func,
+    onClick: PropTypes.func,
+    onDblClick: PropTypes.func,
+    onRightClick: PropTypes.func,
+    onHide: PropTypes.func,
+    onShow: PropTypes.func,
+    onMouseDown: PropTypes.func,
+    onMouseUp: PropTypes.func,
+    onMouseOver: PropTypes.func,
+    onMouseOut: PropTypes.func,
+    onChange: PropTypes.func,
+    onTouchStart: PropTypes.func,
+    onTouchEnd: PropTypes.func,
     /* eslint-enable */
   };
 

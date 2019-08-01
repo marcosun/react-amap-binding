@@ -1,15 +1,5 @@
 import React from 'react';
-import {
-  array,
-  bool,
-  func,
-  instanceOf,
-  number,
-  object,
-  oneOfType,
-  string,
-  shape,
-} from 'prop-types';
+import PropTypes from 'prop-types';
 import cloneDeep from 'lodash/cloneDeep';
 import AMapContext from '../AMapContext';
 import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
@@ -27,38 +17,38 @@ class Loca extends React.Component {
     /**
      * @ignore
      */
-    data: array.isRequired,
+    data: PropTypes.array.isRequired,
     /**
      * @{@link http://lbs.amap.com/api/loca-api/api-manual#layer_data_option}
      */
-    dataSetOptions: shape({
-      lnglat: oneOfType([func, string]).isRequired,
-      type: string,
+    dataSetOptions: PropTypes.shape({
+      lnglat: PropTypes.oneOfType([PropTypes.func, PropTypes.string]).isRequired,
+      type: PropTypes.string,
     }),
     /**
      * @{@link http://lbs.amap.com/api/loca-api/api-manual#layer_options}
      */
-    layerOptions: shape({
-      blendMode: string,
-      eventSupport: bool,
-      fitView: bool,
-      shape: string.isRequired,
-      type: string.isRequired,
-      zIndex: number,
+    layerOptions: PropTypes.shape({
+      blendMode: PropTypes.string,
+      eventSupport: PropTypes.bool,
+      fitView: PropTypes.bool,
+      shape: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+      zIndex: PropTypes.number,
     }).isRequired,
     /**
      * @{@link http://lbs.amap.com/api/loca-api/api-manual#layer_visual_option}
      */
-    visualOptions: shape({
-      invisible: func,
-      source: oneOfType([
-        instanceOf(HTMLCanvasElement),
-        instanceOf(HTMLImageElement),
-        string,
+    visualOptions: PropTypes.shape({
+      invisible: PropTypes.func,
+      selectStyle: PropTypes.object,
+      source: PropTypes.oneOfType([
+        PropTypes.instanceOf(HTMLCanvasElement),
+        PropTypes.instanceOf(HTMLImageElement),
+        PropTypes.string,
       ]),
-      style: object,
-      selectStyle: object,
-      unit: string,
+      style: PropTypes.object,
+      unit: PropTypes.string,
     }),
   };
 
