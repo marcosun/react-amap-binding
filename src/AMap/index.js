@@ -7,13 +7,15 @@ import isShallowEqual from '../utils/isShallowEqual';
 const mapContainerStyle = { width: '100%', height: '100%' };
 
 /**
- * AMap wrapper component to initialise AMap.
- * All map components should be childrens of this wrapper component.
- * AMap component accepts the following config properties to initialise AMap.
- * AMap has the same config options as AMap.Map unless highlighted below.
- * {@link http://lbs.amap.com/api/javascript-api/reference/map}
+ * This module imports AMap libraries (JS API, JS UI API, and Loca), and creates a map scope.
+ * All other map component should be descendant of this component.
  */
 class AMap extends React.PureComponent {
+  /**
+   * AMap component accepts the following configuration properties to initialise AMap.
+   * AMap has the same configuration properties as AMap.Map unless highlighted below.
+   * {@link http://lbs.amap.com/api/javascript-api/reference/map}
+   */
   static propTypes = {
     /**
      * AMap JS App key.
@@ -44,20 +46,21 @@ class AMap extends React.PureComponent {
      * AMap javascript library version.
      */
     version: PropTypes.string,
-    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
-     *
-     * @param {AMap.Map} map - AMap.Map instance
-     * @param {Object} event - AMap event parameters
+     * Signature:
+     * (map, ...event) => void
+     * map: AMap instance.
+     * event: AMap event.
      */
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: PropTypes.func,
     onClick: PropTypes.func,
     onDblClick: PropTypes.func,
     onMapMove: PropTypes.func,
-    onHotSpotClick: PropTypes.func,
-    onHotSpotOver: PropTypes.func,
-    onHotSpotOut: PropTypes.func,
+    onHotspotClick: PropTypes.func,
+    onHotspotOver: PropTypes.func,
+    onHotspotOut: PropTypes.func,
     onMoveStart: PropTypes.func,
     onMoveEnd: PropTypes.func,
     onZoomChange: PropTypes.func,
