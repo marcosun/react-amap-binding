@@ -32,6 +32,8 @@ class AMap extends React.PureComponent {
     children: PropTypes.node,
     /**
      * Loca library version.
+     * Loca will be deprecated in the next major version. Please consider react-amap-2drender for
+     * rendering map UI components with high performance.
      */
     locaVersion: PropTypes.string,
     /**

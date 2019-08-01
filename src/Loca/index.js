@@ -1,3 +1,7 @@
+/**
+ * Loca will be deprecated in the next major version. Please consider react-amap-2drender for
+ * rendering map UI components with high performance
+ */
 import React from 'react';
 import PropTypes from 'prop-types';
 import cloneDeep from 'lodash/cloneDeep';
