@@ -172,61 +172,49 @@ class AMap extends React.PureComponent {
   }
 
   /**
-   * Create script tag to require AMap library.
+   * Create script tag to load some scripts.
    */
-  static requireAMap({ appKey, protocol, version }) {
-    const jsApi = document.createElement('script');
-    jsApi.type = 'text/javascript';
-    jsApi.src = `${protocol}://webapi.amap.com/maps?v=${version}&key=${appKey}`;
+  static loadScript(src) {
+    const scriptTag = document.createElement('script');
+    scriptTag.type = 'text/javascript';
+    scriptTag.src = src;
 
-    document.head.appendChild(jsApi);
+    document.head.appendChild(scriptTag);
 
     return new Promise((resolve) => {
-      /**
-       * NOTE: Don't use callback function attached after script source.
-       * In the scenario where more than two maps are displayed on the same page, the later defined
-       * callback overrides previous callback, which results the previous load AMap promise could
-       * not resolve.
-       */
-      jsApi.onload = () => {
-        resolve();
+      scriptTag.onload = () => {
+        return resolve();
       };
     });
   }
 
   /**
+   * Create script tag to require AMap library.
+   */
+  static requireAMap({ appKey, protocol, version }) {
+    const src = `${protocol}://webapi.amap.com/maps?v=${version}&key=${appKey}`;
+
+    return AMap.loadScript(src);
+  }
+
+  /**
    * Create script tag to require AMapUI library.
    */
-  static requireAMapUI({ protocol, version }) {
-    const amapUi = document.createElement('script');
-    amapUi.type = 'text/javascript';
-    amapUi.src = `${protocol}://webapi.amap.com/ui/${version}/main-async.js`;
+  static async requireAMapUI({ protocol, version }) {
+    const src = `${protocol}://webapi.amap.com/ui/${version}/main-async.js`;
 
-    document.head.appendChild(amapUi);
+    await AMap.loadScript(src);
 
-    return new Promise((resolve) => {
-      amapUi.onload = () => {
-        window.initAMapUI();
-        return resolve();
-      };
-    });
+    window.initAMapUI();
   }
 
   /**
    * Create script tag to require Loca library.
    */
   static requireLoca({ appKey, protocol, version }) {
-    const loca = document.createElement('script');
-    loca.type = 'text/javascript';
-    loca.src = `${protocol}://webapi.amap.com/loca?key=${appKey}&v=${version}`;
+    const src = `${protocol}://webapi.amap.com/loca?key=${appKey}&v=${version}`;
 
-    document.head.appendChild(loca);
-
-    return new Promise((resolve) => {
-      loca.onload = () => {
-        return resolve();
-      };
-    });
+    return AMap.loadScript(src);
   }
 
   /**
