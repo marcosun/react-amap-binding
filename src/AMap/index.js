@@ -12,8 +12,8 @@ const mapContainerStyle = { width: '100%', height: '100%' };
  */
 class AMap extends React.PureComponent {
   /**
-   * AMap component accepts the following configuration properties to initialise AMap.
-   * AMap has the same configuration properties as AMap.Map unless highlighted below.
+   * AMap component accepts the following options to initialise AMap.
+   * AMap has the same options as AMap.Map unless highlighted below.
    * {@link http://lbs.amap.com/api/javascript-api/reference/map}
    */
   static propTypes = {
@@ -21,11 +21,18 @@ class AMap extends React.PureComponent {
      * AMap JS App key.
      */
     appKey: PropTypes.string.isRequired,
-    /**
-     * A 2D array of two numbers or AMap.Bounds.
-     */
-    // eslint-disable-next-line react/no-unused-prop-types
-    bounds: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+    /* eslint-disable-next-line react/no-unused-prop-types */
+    bounds: PropTypes.oneOfType([
+      /**
+       * South west and north east lng lat position.
+       * i.e. [[soutWest], [northEast]]
+       */
+      PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.number)),
+      /**
+       * AMap.Bounds instance.
+       */
+      PropTypes.object,
+    ]),
     /**
      * Child components.
      */
@@ -94,16 +101,16 @@ class AMap extends React.PureComponent {
 
   /**
    * Parse AMap.Map options.
-   * Named properties are event callbacks, other properties are map options.
+   * Filter out event callbacks, the remainings are map options.
    */
   static parseMapOptions(props) {
     const {
+      appKey,
       children,
       locaVersion,
       protocol,
-      version,
-      appKey,
       uiVersion,
+      version,
       onComplete,
       onClick,
       onDblClick,
@@ -140,11 +147,21 @@ class AMap extends React.PureComponent {
     return {
       ...mapOptions,
       bounds: (() => {
-        // Transform bounds until map has been created.
-        if (window.AMap === void 0 || bounds instanceof window.AMap.Bounds) {
-          return bounds;
-        }
+        /**
+         * Bounds does not have any effect before AMap library has been loaded.
+         * Bounds takes effect through calling setBounds function as long as AMap library has been
+         * loaded.
+         */
+        if (window.AMap === void 0) return void 0;
 
+        /**
+         * The most anticipated value.
+         */
+        if (bounds instanceof window.AMap.Bounds) return bounds;
+
+        /**
+         * Transform [[soutWest], [northEast]] to AMap.Bounds instance.
+         */
         if (bounds instanceof Array) {
           return new window.AMap.Bounds(...bounds);
         }
