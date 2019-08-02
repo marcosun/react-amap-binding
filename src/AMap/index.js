@@ -291,6 +291,28 @@ class AMap extends React.PureComponent {
   }
 
   /**
+   * Bind all events on map instance, and save event listeners which will be removed in
+   * componentWillUnmount lifecycle.
+   */
+  bindEvents() {
+    this.AMapEventListeners = [];
+
+    /**
+     * Construct event callbacks.
+     */
+    this.eventCallbacks = this.parseEvents();
+
+    Object.keys(this.eventCallbacks).forEach((key) => {
+      const eventName = key.substring(2).toLowerCase();
+      const handler = this.eventCallbacks[key];
+
+      this.AMapEventListeners.push(
+        window.AMap.event.addListener(this.map, eventName, handler),
+      );
+    });
+  }
+
+  /**
    * Load AMap library and instantiate map object by calling AMap.Map.
    */
   async initAMap() {
@@ -356,28 +378,6 @@ class AMap extends React.PureComponent {
       onTouchMove: createEventCallback('onTouchMove', this.map).bind(this),
       onTouchEnd: createEventCallback('onTouchEnd', this.map).bind(this),
     };
-  }
-
-  /**
-   * Bind all events on map instance, and save event listeners which will be removed in
-   * componentWillUnmount lifecycle.
-   */
-  bindEvents() {
-    this.AMapEventListeners = [];
-
-    /**
-     * Construct event callbacks.
-     */
-    this.eventCallbacks = this.parseEvents();
-
-    Object.keys(this.eventCallbacks).forEach((key) => {
-      const eventName = key.substring(2).toLowerCase();
-      const handler = this.eventCallbacks[key];
-
-      this.AMapEventListeners.push(
-        window.AMap.event.addListener(this.map, eventName, handler),
-      );
-    });
   }
 
   /**
