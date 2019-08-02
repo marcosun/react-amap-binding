@@ -95,7 +95,7 @@ class AMap extends React.PureComponent {
   static defaultProps = {
     locaVersion: '1.0.5',
     protocol: 'https',
-    version: '1.4.7',
+    version: '1.4.15',
     uiVersion: '1.0',
   };
 
