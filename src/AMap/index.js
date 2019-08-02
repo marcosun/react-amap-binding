@@ -276,19 +276,17 @@ class AMap extends React.PureComponent {
    * Destroy AMap.Map instance.
    */
   componentWillUnmount() {
+    const { map } = this.state;
     /**
-     * The aMapEventListeners and map variables are assigned after the asynchronous AMap library
-     * has been loaded.
-     * If the resource has not been downloaded before the component will unmount, an error will
-     * be thrown.
+     * There is a scenario where AMap has not been loaded when component unmounts.
+     * AMapEventListeners and map instance are assigned only if AMap library has been loaded.
      */
-    if (this.AMapEventListeners !== void 0) {
+    if (map !== void 0) {
       this.AMapEventListeners.forEach((listener) => {
         window.AMap.event.removeListener(listener);
       });
-    }
-    if (this.state.map !== void 0) {
-      this.state.map.destroy();
+
+      map.destroy();
     }
   }
 
