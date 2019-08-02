@@ -317,11 +317,7 @@ class AMap extends React.PureComponent {
       ...this.mapOptions,
     });
 
-    // Due to the fact that createEventCallback is a closure,
-    // therefore this.map must be initialised before executing closure.
-    this.eventCallbacks = this.parseEvents();
-
-    this.bindEvents(this.map, this.eventCallbacks);
+    this.bindEvents();
 
     this.setState({
       map: this.map,
@@ -363,21 +359,23 @@ class AMap extends React.PureComponent {
   }
 
   /**
-   * Bind all events on map instance.
-   * Save event listeners.
-   * Later to be removed in componentWillUnmount lifecycle.
-   * @param  {AMap.Map} map - AMap.Map instance
-   * @param  {Object} eventCallbacks - An object of all event callbacks
+   * Bind all events on map instance, and save event listeners which will be removed in
+   * componentWillUnmount lifecycle.
    */
-  bindEvents(map, eventCallbacks) {
+  bindEvents() {
     this.AMapEventListeners = [];
 
-    Object.keys(eventCallbacks).forEach((key) => {
+    /**
+     * Construct event callbacks.
+     */
+    this.eventCallbacks = this.parseEvents();
+
+    Object.keys(this.eventCallbacks).forEach((key) => {
       const eventName = key.substring(2).toLowerCase();
-      const handler = eventCallbacks[key];
+      const handler = this.eventCallbacks[key];
 
       this.AMapEventListeners.push(
-        window.AMap.event.addListener(map, eventName, handler),
+        window.AMap.event.addListener(this.map, eventName, handler),
       );
     });
   }
@@ -397,7 +395,6 @@ class AMap extends React.PureComponent {
 
   /**
    * Render a div element as root of AMap.
-   * Pass map object instantiated by AMap.Map to all direct decendents.
    */
   render() {
     const {
