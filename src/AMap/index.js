@@ -242,29 +242,31 @@ class AMap extends React.PureComponent {
    * Update this.map by calling AMap.Map methods.
    */
   componentDidUpdate() {
-    // Hold all updates until map has been created.
+    /**
+     * Hold all updates until map has been created.
+     */
     if (this.map === void 0) return;
 
     const nextMapOptions = AMap.parseMapOptions(this.props);
 
-    this.updateMapWithApi('setBounds', this.mapOptions.bounds, nextMapOptions.bounds);
-    this.updateMapWithApi('setCenter', this.mapOptions.center, nextMapOptions.center);
-    this.updateMapWithApi('setCity', this.mapOptions.city, nextMapOptions.city);
-    this.updateMapWithApi('setDefaultCursor', this.mapOptions.defaultCursor,
-      nextMapOptions.defaultCursor);
-    this.updateMapWithApi('setDefaultLayer', this.mapOptions.defaultLayer,
-      nextMapOptions.defaultLayer);
-    this.updateMapWithApi('setFeatures', this.mapOptions.features, nextMapOptions.features);
-    this.updateMapWithApi('setZoom', this.mapOptions.zoom, nextMapOptions.zoom);
-    this.updateMapWithApi('setLang', this.mapOptions.lang, nextMapOptions.lang);
+    this.updateMapWithAPI('setZoom', this.mapOptions.zoom, nextMapOptions.zoom);
+    this.updateMapWithAPI('setLabelzIndex', this.mapOptions.labelzIndex,
+      nextMapOptions.labelzIndex);
     // Calling setLayers causes fatal exceptions
     // this.updateMapWithApi('setLayers', this.mapOptions.layers, nextMapOptions.layers);
-    this.updateMapWithApi('setlabelzIndex', this.mapOptions.labelzIndex,
-      nextMapOptions.labelzIndex);
-    this.updateMapWithApi('setMapStyle', this.mapOptions.mapStyle, nextMapOptions.mapStyle);
-    this.updateMapWithApi('setPitch', this.mapOptions.pitch, nextMapOptions.pitch);
-    this.updateMapWithApi('setRotation', this.mapOptions.rotation, nextMapOptions.rotation);
-    this.updateMapWithApi('setStatus', this.mapOptions.status, nextMapOptions.status);
+    this.updateMapWithAPI('setCenter', this.mapOptions.center, nextMapOptions.center);
+    this.updateMapWithAPI('setCity', this.mapOptions.city, nextMapOptions.city);
+    this.updateMapWithAPI('setBounds', this.mapOptions.bounds, nextMapOptions.bounds);
+    this.updateMapWithAPI('setLang', this.mapOptions.lang, nextMapOptions.lang);
+    this.updateMapWithAPI('setRotation', this.mapOptions.rotation, nextMapOptions.rotation);
+    this.updateMapWithAPI('setStatus', this.mapOptions.status, nextMapOptions.status);
+    this.updateMapWithAPI('setDefaultCursor', this.mapOptions.defaultCursor,
+      nextMapOptions.defaultCursor);
+    this.updateMapWithAPI('setMapStyle', this.mapOptions.mapStyle, nextMapOptions.mapStyle);
+    this.updateMapWithAPI('setFeatures', this.mapOptions.features, nextMapOptions.features);
+    this.updateMapWithAPI('setDefaultLayer', this.mapOptions.defaultLayer,
+      nextMapOptions.defaultLayer);
+    this.updateMapWithAPI('setPitch', this.mapOptions.pitch, nextMapOptions.pitch);
 
     this.mapOptions = nextMapOptions;
   }
@@ -381,14 +383,11 @@ class AMap extends React.PureComponent {
   }
 
   /**
-   * Update AMap.Map instance with named api and given value.
-   * Won't call api if the given value does not change.
-   * @param  {string} apiName - AMap.Map instance update method name
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
+   * Update AMap.Map instance with named API.
+   * Won't call API if prop does not change.
    */
-  updateMapWithApi(apiName, currentProp, nextProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
+  updateMapWithAPI(apiName, previousProp, nextProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
       this.map[apiName](nextProp);
     }
   }
