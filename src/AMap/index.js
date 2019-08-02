@@ -291,21 +291,26 @@ class AMap extends React.PureComponent {
   }
 
   /**
-   * Load AMap library when neccessary and instantiate map object by calling AMap.Map.
+   * Load AMap library and instantiate map object by calling AMap.Map.
    */
   async initAMap() {
     const {
+      appKey,
       locaVersion,
       protocol,
-      version,
-      appKey,
       uiVersion,
+      version,
     } = this.props;
 
     if (window.AMap === void 0) {
       await AMap.requireAMap({ appKey, protocol, version });
-      await AMap.requireAMapUI({ protocol, version: uiVersion });
-      await AMap.requireLoca({ appKey, protocol, version: locaVersion });
+      /**
+       * Load AMapUI and Loca in parallel.
+       */
+      const AMapUI = AMap.requireAMapUI({ protocol, version: uiVersion });
+      const Loca = AMap.requireLoca({ appKey, protocol, version: locaVersion });
+      await AMapUI;
+      await Loca;
     }
 
     this.map = new window.AMap.Map(this.mapContainer, {
