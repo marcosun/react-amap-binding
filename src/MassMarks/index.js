@@ -8,66 +8,84 @@ import isShallowEqual from '../utils/isShallowEqual';
 
 /**
  * Fields that need to be deep copied.
- * The new value is given to update api to avoid overwriting the props.
+ * AMap LBS library mutates options. Deep copy those options before passing to AMap so that
+ * props won't be mutated.
  */
 const NEED_DEEP_COPY_FIELDS = ['data', 'style'];
 
 /**
  * MassMarks binding.
- * MassMarks has the same config options as AMap.MassMarks unless highlighted below.
- * For massMarks events usage please reference to AMap.MassMarks events paragraph.
+ * MassMarks has the same options as AMap.MassMarks unless highlighted below.
  * {@link http://lbs.amap.com/api/javascript-api/reference/layer/#MassMarks}
  */
 class MassMarks extends React.Component {
-  /**
-   * AMap map instance.
-   */
-  static contextType = AMapContext;
-
   static propTypes = {
     /**
-     * Include lnglat attributes of point object.
+     * MassMarks dataset.
      */
-    data: PropTypes.array.isRequired,
-    /**
-     * Point style.
-     * It can transform an array of two numbers into AMap.Pixel instance and AMap.Size instance.
-     */
-    style: PropTypes.oneOfType([ // eslint-disable-line react/no-unused-prop-types
+    data: PropTypes.arrayOf(PropTypes.shape({
+      lnglat: PropTypes.arrayOf(PropTypes.number).isRequired,
+    })).isRequired,
+    /* eslint-disable react/no-unused-prop-types */
+    style: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.shape({
-        anchor: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
-        size: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
-        url: PropTypes.string.isRequired,
+        /**
+         * An array of two numbers or AMap.Pixel.
+         */
+        anchor: PropTypes.oneOfType([
+          PropTypes.arrayOf(PropTypes.number),
+          PropTypes.object,
+        ]).isRequired,
+        /**
+         * An array of two numbers or AMap.Size.
+         */
+        size: PropTypes.oneOfType([
+          PropTypes.arrayOf(PropTypes.number),
+          PropTypes.object,
+        ]).isRequired,
       })),
       PropTypes.shape({
-        anchor: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
-        size: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
-        url: PropTypes.string.isRequired,
+        anchor: PropTypes.oneOfType([
+          PropTypes.arrayOf(PropTypes.number),
+          PropTypes.object,
+        ]).isRequired,
+        size: PropTypes.oneOfType([
+          PropTypes.arrayOf(PropTypes.number),
+          PropTypes.object,
+        ]).isRequired,
       }),
     ]).isRequired,
     /**
-     * Show MassMarks by default, you can toggle show or hide by setting visible.
+     * Show MassMarks by default, you can toggle show or hide by changing visible.
      */
     visible: PropTypes.bool,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
-     *
-     * @param {AMap.Map} map                  - AMap.Map instance
-     * @param {AMap.MassMarks} MassMarks      - AMap.MassMarks
-     * @param {Object} event                  - MassMarks event parameters
+     * Signature:
+     * (massMarks, ...event) => void
+     * massMarks: AMap.MassMarks instance.
+     * event: AMap event.
      */
     onComplete: PropTypes.func,
     onClick: PropTypes.func,
     onDblClick: PropTypes.func,
     onMouseOut: PropTypes.func,
-    onMouseOver: PropTypes.func,
     onMouseUp: PropTypes.func,
     onMouseDown: PropTypes.func,
     onTouchStart: PropTypes.func,
     onTouchEnd: PropTypes.func,
     /* eslint-enable */
   };
+
+  static defaultProps = {
+    visible: true,
+  };
+
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
 
   /**
    * Parse AMap.MassMarks options.
@@ -79,7 +97,6 @@ class MassMarks extends React.Component {
       onClick,
       onDblClick,
       onMouseOut,
-      onMouseOver,
       onMouseUp,
       onMouseDown,
       onTouchStart,
@@ -110,8 +127,12 @@ class MassMarks extends React.Component {
 
         return {
           ...style,
-          anchor: new window.AMap.Pixel(...style.anchor),
-          size: new window.AMap.Size(...style.size),
+          anchor: style.anchor instanceof window.AMap.Pixel
+            ? style.anchor
+            : new window.AMap.Pixel(...style.anchor),
+          size: style.size instanceof window.AMap.Size
+           ? style.size
+            : new window.AMap.Size(...style.size),
         };
       })(),
     };
@@ -128,32 +149,28 @@ class MassMarks extends React.Component {
 
     breakIfNotChildOfAMap('MassMarks', map);
 
-    this.massMarksOptions = MassMarks.parseMassMarksOptions(props);
+    this.massMarksOptions = MassMarks.parseMassMarksOptions(this.props);
 
-    this.massMarks = this.initMassMarks(this.massMarksOptions, map);
+    this.massMarks = this.initMassMarks(map);
 
-    this.eventCallbacks = this.parseEvents();
-
-    this.bindEvents(this.massMarks, this.eventCallbacks);
+    this.bindEvents();
   }
 
   /**
    * Update this.massMarks by calling AMap.MassMarks methods
-   * @param  {Object} nextProps
-   * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps) {
     const nextMassMarksOptions = MassMarks.parseMassMarksOptions(nextProps);
 
     const newMassMarksOptions = cloneDeep(nextMassMarksOptions, NEED_DEEP_COPY_FIELDS);
 
-    this.updateMassMarksWithApi('setStyle', this.massMarksOptions.style, nextMassMarksOptions.style,
+    this.toggleVisible(this.massMarksOptions.visible, nextMassMarksOptions.visible);
+
+    this.updateMassMarksWithAPI('setStyle', this.massMarksOptions.style, nextMassMarksOptions.style,
       newMassMarksOptions.style);
 
-    this.updateMassMarksWithApi('setData', this.massMarksOptions.data, nextMassMarksOptions.data,
+    this.updateMassMarksWithAPI('setData', this.massMarksOptions.data, nextMassMarksOptions.data,
       newMassMarksOptions.data);
-
-    this.toggleVisible(this.massMarksOptions.visible, nextMassMarksOptions.visible);
 
     this.massMarksOptions = nextMassMarksOptions;
 
@@ -169,25 +186,47 @@ class MassMarks extends React.Component {
       window.AMap.event.removeListener(listener);
     });
 
-    this.massMarks.clear();
+    this.massMarks.setMap(null);
     this.massMarks = null;
   }
 
   /**
-   * Initialise AMap massMarks layer.
-   * @param {Object} massMarksOptions - AMap.MassMarks options
-   * @param {Object} map - Map instance
-   * @return {MassMarks} - MassMarks instance.
+   * Bind all events on map instance, and save event listeners which will be removed in
+   * componentWillUnmount lifecycle.
    */
-  initMassMarks(massMarksOptions, map) {
+  bindEvents() {
+    this.AMapEventListeners = [];
+
+    /**
+     * Construct event callbacks.
+     */
+    const eventCallbacks = this.parseEvents();
+
+    Object.keys(eventCallbacks).forEach((key) => {
+      const eventName = key.substring(2).toLowerCase();
+      const handler = eventCallbacks[key];
+
+      this.AMapEventListeners.push(
+        window.AMap.event.addListener(this.massMarks, eventName, handler),
+      );
+    });
+  }
+
+  /**
+   * Initialise AMap massMarks layer.
+   */
+  initMassMarks(map) {
     const {
       data,
       visible,
     } = this.props;
 
+    const newMassMarksData = cloneDeep(data);
+    const newMassMarksOptions = cloneDeep(this.massMarksOptions, NEED_DEEP_COPY_FIELDS);
+
     const massMarks = new window.AMap.MassMarks(
-      cloneDeep(data),
-      cloneDeep(massMarksOptions, NEED_DEEP_COPY_FIELDS),
+      newMassMarksData,
+      newMassMarksOptions,
     );
 
     massMarks.setMap(map);
@@ -206,7 +245,6 @@ class MassMarks extends React.Component {
       onClick: createEventCallback('onClick', this.massMarks).bind(this),
       onDblClick: createEventCallback('onDblClick', this.massMarks).bind(this),
       onMouseOut: createEventCallback('onMouseOut', this.massMarks).bind(this),
-      onMouseOver: createEventCallback('onMouseOver', this.massMarks).bind(this),
       onMouseUp: createEventCallback('onMouseUp', this.massMarks).bind(this),
       onMouseDown: createEventCallback('onMouseDown', this.massMarks).bind(this),
       onTouchStart: createEventCallback('onTouchStart', this.massMarks).bind(this),
@@ -215,49 +253,22 @@ class MassMarks extends React.Component {
   }
 
   /**
-   * Bind all events on massMarks instance.
-   * Save event listeners.
-   * Later to be removed in componentWillUnmount lifecycle.
-   * @param  {AMap.MassMarks} massMarks - AMap.MassMarks instance
-   * @param  {Object} eventCallbacks - An object of all event callbacks
+   * Hide or show massMarks.
    */
-  bindEvents(massMarks, eventCallbacks) {
-    this.AMapEventListeners = [];
-
-    Object.keys(eventCallbacks).forEach((key) => {
-      const eventName = key.substring(2).toLowerCase();
-      const handler = eventCallbacks[key];
-
-      this.AMapEventListeners.push(
-        window.AMap.event.addListener(massMarks, eventName, handler),
-      );
-    });
-  }
-
-  /**
-   * Update AMap.MassMarks instance with named api and given value.
-   * Won't call api if the given value does not change.
-   * The new value is given to update api to avoid overwriting the props.
-   * @param  {string} apiName - AMap.MassMarks instance update method name
-   * @param  {*} currentProp - Current value
-   * @param  {*} nextProp - Next value
-   * @param  {*} newProp - New value
-   */
-  updateMassMarksWithApi(apiName, currentProp, nextProp, newProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      this.massMarks[apiName](newProp);
+  toggleVisible(previousProp, nextProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
+      if (nextProp === true) this.massMarks.show();
+      if (nextProp === false) this.massMarks.hide();
     }
   }
 
   /**
-   * Hide or show massMarks.
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
+   * Update AMap.MassMarks instance with named API and given value.
+   * Won't call API if the given value does not change.
    */
-  toggleVisible(currentProp, nextProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      if (nextProp === true) this.massMarks.show();
-      if (nextProp === false) this.massMarks.hide();
+  updateMassMarksWithAPI(apiName, previousProp, nextProp, newProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
+      this.massMarks[apiName](newProp);
     }
   }
 
