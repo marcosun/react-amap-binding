@@ -8,44 +8,51 @@ import isShallowEqual from '../utils/isShallowEqual';
 
 /**
  * Fields that need to be deep copied.
- * The new value is given to update api to avoid overwriting the props.
+ * AMap LBS library mutates options. Deep copy those options before passing to AMap so that
+ * props won't be mutated.
  */
 const NEED_DEEP_COPY_FIELDS = ['position'];
 
 /**
  * InfoWindow binding.
- * InfoWindow has the same config options as AMap.InfoWindow unless highlighted below.
- * For InfoWindow events usage please reference to AMap.InfoWindow events paragraph.
+ * InfoWindow has the same options as AMap.InfoWindow unless highlighted below.
  * {@link http://lbs.amap.com/api/javascript-api/reference/infowindow}
  */
 class InfoWindow extends React.Component {
-  /**
-   * AMap map instance.
-   */
-  static contextType = AMapContext;
-
   static propTypes = {
     /**
      * An array of two numbers or AMap.Pixel.
      */
-    // eslint-disable-next-line react/no-unused-prop-types
-    offset: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+    /* eslint-disable react/no-unused-prop-types */
+    offset: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.number),
+      PropTypes.object,
+    ]),
+    /**
+     * An array of two numbers or AMap.Pixel.
+     */
+    position: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.number),
+      PropTypes.object,
+    ]).isRequired,
     /**
      * An array of two numbers, width and height or AMap.Size.
      */
-    // eslint-disable-next-line react/no-unused-prop-types
-    size: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+    size: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.number),
+      PropTypes.object,
+    ]),
     /**
-     * Show InfoWindow by default, you can toggle show or hide by setting visible.
+     * Show InfoWindow by default, you can toggle show or hide by changing visible.
      */
-    visible: PropTypes.bool, // eslint-disable-line react/no-unused-prop-types
+    visible: PropTypes.bool,
     /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
-     *
-     * @param {AMap.Map} map                  - AMap.Map instance
-     * @param {AMap.InfoWindow} InfoWindow    - AMap.InfoWindow
-     * @param {Object} event                  - InfoWindow event parameters
+     * Signature:
+     * (infoWindow, ...event) => void
+     * infoWindow: AMap.InfoWindow instance.
+     * event: AMap event.
      */
     onComplete: PropTypes.func,
     onChange: PropTypes.func,
@@ -54,21 +61,14 @@ class InfoWindow extends React.Component {
     /* eslint-enable */
   };
 
+  static defaultProps = {
+    visible: true,
+  };
+
   /**
-   * Initialise AMap.InfoWindow
-   * @param {Object} infoWindowOptions - AMap.infoWindow options
-   * @param {Object} map - Map instance
-   * @return {InfoWindow} - InfoWindow instance
+   * AMap map instance.
    */
-  static initInfoWindow(infoWindowOptions, map) {
-    const { position, visible, ...newOptions } = infoWindowOptions;
-
-    const infoWindow = new window.AMap.InfoWindow(cloneDeep(newOptions, NEED_DEEP_COPY_FIELDS));
-
-    if (visible === true) infoWindow.open(map, position);
-
-    return infoWindow;
-  }
+  static contextType = AMapContext;
 
   /**
    * Parse AMap.InfoWindow options.
@@ -125,42 +125,41 @@ class InfoWindow extends React.Component {
   constructor(props, context) {
     super(props);
 
-    const { onComplete } = props;
+    const { onComplete } = this.props;
 
-    const map = context;
+    this.map = context;
 
-    breakIfNotChildOfAMap('InfoWindow', map);
+    breakIfNotChildOfAMap('InfoWindow', this.map);
 
     this.infoWindowOptions = InfoWindow.parseInfoWindowOptions(this.props);
 
-    this.infoWindow = InfoWindow.initInfoWindow(this.infoWindowOptions, map);
+    this.infoWindow = InfoWindow.initInfoWindow(this.map);
 
-    this.eventCallbacks = this.parseEvents();
+    this.bindEvents();
 
-    this.bindEvents(this.infoWindow, this.eventCallbacks);
-
-    onComplete && onComplete(map, this.infoWindow);
+    typeof onComplete === 'function' && onComplete(this.map, this.infoWindow);
   }
 
   /**
    * Update this.infoWindow by calling AMap.InfoWindow methods.
-   * @param  {Object} nextProps
-   * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps) {
     const nextInfoWindowOptions = InfoWindow.parseInfoWindowOptions(nextProps);
 
     const newInfoWindowOptions = cloneDeep(nextInfoWindowOptions, NEED_DEEP_COPY_FIELDS);
 
-    this.toggleVisible(this.infoWindowOptions, nextInfoWindowOptions);
+    this.toggleVisible(this.infoWindowOptions.visible, nextInfoWindowOptions.visible);
 
-    this.updateInfoWindowWithApi('setContent', this.infoWindowOptions.content,
+    this.updateInfoWindowWithAPI('setContent', this.infoWindowOptions.content,
       nextInfoWindowOptions.content, newInfoWindowOptions.content);
 
-    this.updateInfoWindowWithApi('setPosition', this.infoWindowOptions.position,
+    this.updateInfoWindowWithAPI('setPosition', this.infoWindowOptions.position,
       nextInfoWindowOptions.position, newInfoWindowOptions.position);
 
-    this.updateInfoWindowWithApi('setSize', this.infoWindowOptions.size,
+    this.updateInfoWindowWithAPI('setAnchor', this.infoWindowOptions.anchor,
+      nextInfoWindowOptions.anchor, newInfoWindowOptions.anchor);
+
+    this.updateInfoWindowWithAPI('setSize', this.infoWindowOptions.size,
       nextInfoWindowOptions.size, newInfoWindowOptions.size);
 
     this.infoWindowOptions = nextInfoWindowOptions;
@@ -182,6 +181,45 @@ class InfoWindow extends React.Component {
   }
 
   /**
+   * Bind all events on map instance, and save event listeners which will be removed in
+   * componentWillUnmount lifecycle.
+   */
+  bindEvents() {
+    this.AMapEventListeners = [];
+
+    /**
+     * Construct event callbacks.
+     */
+    const eventCallbacks = this.parseEvents();
+
+    Object.keys(eventCallbacks).forEach((key) => {
+      const eventName = key.substring(2).toLowerCase();
+      const handler = eventCallbacks[key];
+
+      this.AMapEventListeners.push(
+        window.AMap.event.addListener(this.infoWindow, eventName, handler),
+      );
+    });
+  }
+
+  /**
+   * Initialise AMap.InfoWindow
+   */
+  initInfoWindow(map) {
+    const { position, visible } = this.props;
+
+    const newInfoWindowOptions = cloneDeep(this.infoWindowOptions, NEED_DEEP_COPY_FIELDS);
+
+    const infoWindow = new window.AMap.InfoWindow(newInfoWindowOptions);
+
+    infoWindow.setMap(map);
+
+    if (visible === true) infoWindow.open(map, position);
+
+    return infoWindow;
+  }
+
+  /**
    * Return an object of all supported event callbacks.
    */
   parseEvents() {
@@ -193,54 +231,26 @@ class InfoWindow extends React.Component {
   }
 
   /**
-   * Bind all events on infoWindow instance.
-   * Save event listeners.
-   * Later to be removed in componentWillUnmount lifecycle.
-   * @param  {AMap.InfoWindow} infoWindow - AMap.InfoWindow instance
-   * @param  {Object} eventCallbacks - An object of all event callbacks
+   * Hide or show infoWindow.
    */
-  bindEvents(infoWindow, eventCallbacks) {
-    this.AMapEventListeners = [];
+  toggleVisible(previousProp, nextProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
+      const { visible, position } = nextProp;
 
-    Object.keys(eventCallbacks).forEach((key) => {
-      const eventName = key.substring(2).toLowerCase();
-      const handler = eventCallbacks[key];
-
-      this.AMapEventListeners.push(
-        window.AMap.event.addListener(infoWindow, eventName, handler),
-      );
-    });
-  }
-
-  /**
-   * Update AMap.InfoWindow instance with named api and given value.
-   * Won't call api if the given value does not change.
-   * The new value is given to update api to avoid overwriting the props.
-   * @param  {string} apiName - AMap.InfoWindow instance update method name
-   * @param  {*} currentProp - Current value
-   * @param  {*} nextProp - Next value
-   * @param  {*} newProp - New value
-   */
-  updateInfoWindowWithApi(apiName, currentProp, nextProp, newProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      this.infoWindow[apiName](newProp);
+      if (visible === true) {
+        this.infoWindow.open(this.map, position);
+      }
+      if (visible === false) this.infoWindow.close();
     }
   }
 
   /**
-   * Hide or show infoWindow.
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
+   * Update AMap.Circle instance with named API.
+   * Won't call API if prop does not change.
    */
-  toggleVisible(currentProp, nextProp) {
-    if (!isShallowEqual(currentProp.visible, nextProp.visible)) {
-      const { visible, position } = nextProp;
-      if (visible === false) {
-        this.infoWindow.close();
-      } else {
-        const map = this.context;
-        this.infoWindow.open(map, position);
-      }
+  updateInfoWindowWithAPI(apiName, previousProp, nextProp, newProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
+      this.infoWindow[apiName](newProp);
     }
   }
 
