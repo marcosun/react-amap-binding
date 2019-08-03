@@ -8,31 +8,30 @@ import isShallowEqual from '../utils/isShallowEqual';
 
 /**
  * Fields that need to be deep copied.
- * The new value is given to update api to avoid overwriting the props.
+ * AMap LBS library mutates options. Deep copy those options before passing to AMap so that
+ * props won't be mutated.
  */
 const NEED_DEEP_COPY_FIELDS = ['center'];
 
 /**
  * Circle binding.
- * Circle has the same config options as AMap.Circle unless highlighted below.
- * For circle events usage please reference to AMap.Circle events paragraph.
+ * Circle has the same options as AMap.Circle unless highlighted below.
  * {@link https://lbs.amap.com/api/javascript-api/reference/overlay#circle}
  */
 class Circle extends React.Component {
-  /**
-   * AMap map instance.
-   */
-  static contextType = AMapContext;
-
   static propTypes = {
-    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    /**
+     * Show Circle by default, you can toggle show or hide by changing visible.
+     */
+    visible: PropTypes.bool,
     /**
      * Event callback.
-     *
-     * @param {AMap.Map} map                  - AMap.Map instance
-     * @param {AMap.Circle} Circle            - AMap.Circle
-     * @param {Object} event                  - Circle event parameters
+     * Signature:
+     * (circle, ...event) => void
+     * circle: AMap.Circle instance.
+     * event: AMap event.
      */
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: PropTypes.func,
     onClick: PropTypes.func,
     onDblClick: PropTypes.func,
@@ -49,6 +48,15 @@ class Circle extends React.Component {
     onTouchEnd: PropTypes.func,
     /* eslint-enable */
   };
+
+  static defaultProps = {
+    visible: true,
+  };
+
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
 
   /**
    * Parse AMap.Circle options.
@@ -79,12 +87,12 @@ class Circle extends React.Component {
   /**
    * Define event name mapping relations of react binding Circle and AMap.Circle.
    * Initialise AMap.Circle and bind events.
-   * Binding onComplete event on circle instance.
+   * Fire complete action as soon as bezier curve has been created.
    */
   constructor(props, context) {
     super(props);
 
-    const { onComplete } = props;
+    const { onComplete } = this.props;
 
     const map = context;
 
@@ -92,55 +100,28 @@ class Circle extends React.Component {
 
     this.circleOptions = Circle.parseCircleOptions(this.props);
 
-    this.circle = new window.AMap.Circle(
-      cloneDeep(
-        {
-          ...this.circleOptions,
-          map,
-        },
-        NEED_DEEP_COPY_FIELDS,
-      ),
-    );
+    this.circle = this.initCircle(map);
 
-    this.eventCallbacks = this.parseEvents();
+    this.bindEvents();
 
-    this.bindEvents(this.circle, this.eventCallbacks);
-
-    onComplete && onComplete(map, this.circle);
+    typeof onComplete === 'function' && onComplete(map, this.circle);
   }
 
   /**
    * Update this.circle by calling AMap.Circle methods.
-   * @param  {Object} nextProps - Next props
-   * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps) {
     const nextCircleOptions = Circle.parseCircleOptions(nextProps);
 
     const newCircleOptions = cloneDeep(nextCircleOptions, NEED_DEEP_COPY_FIELDS);
 
-    /* We will test if should use setOptions later */
-    /* this.circle.setOptions(newCircleOptions); */
-
-    /* SetzIndex、setCursor not provided in lbs docs */
-    /* this.updateCircleWithApi('setzIndex', this.circleOptions.zIndex,
-      nextCircleOptions.zIndex, newCircleOptions.zIndex); */
-    /* this.updateCircleWithApi('setCursor', this.circleOptions.cursor,
-      nextCircleOptions.cursor, newCircleOptions.cursor); */
-
-    this.updateCircleWithApi('setCenter', this.circleOptions.center, nextCircleOptions.center,
-      newCircleOptions.center);
-
-    this.updateCircleWithApi('setRadius', this.circleOptions.radius, nextCircleOptions.radius,
-      newCircleOptions.radius);
-
-    this.updateCircleWithApi('setPosition', this.circleOptions.position, nextCircleOptions.position,
-      newCircleOptions.position);
-
     this.toggleVisible(this.circleOptions.visible, nextCircleOptions.visible);
-
-    this.updateCircleWithApi('setExtData', this.circleOptions.extData, nextCircleOptions.extData,
-      newCircleOptions.extData);
+    /**
+     * Instead of calling one API for a specific option change, AMap.Circle exposes
+     * a master method: setOptions, which will update every options with a single function call.
+     */
+    this.updateBezierCurveWithAPI('setOptions', this.circleOptions, nextCircleOptions,
+      newCircleOptions);
 
     this.circleOptions = nextCircleOptions;
 
@@ -161,6 +142,45 @@ class Circle extends React.Component {
   }
 
   /**
+   * Bind all events on map instance, and save event listeners which will be removed in
+   * componentWillUnmount lifecycle.
+   */
+  bindEvents() {
+    this.AMapEventListeners = [];
+
+    /**
+     * Construct event callbacks.
+     */
+    const eventCallbacks = this.parseEvents();
+
+    Object.keys(eventCallbacks).forEach((key) => {
+      const eventName = key.substring(2).toLowerCase();
+      const handler = eventCallbacks[key];
+
+      this.AMapEventListeners.push(
+        window.AMap.event.addListener(this.circle, eventName, handler),
+      );
+    });
+  }
+
+  /**
+   * Initialise AMap.Circle.
+   */
+  initCircle(map) {
+    const { visible } = this.props;
+
+    const newCircleOptions = cloneDeep(this.circleOptions, NEED_DEEP_COPY_FIELDS);
+
+    const circle = new window.AMap.Circle(newCircleOptions);
+
+    circle.setMap(map);
+
+    if (visible === false) circle.hide();
+
+    return circle;
+  }
+
+  /**
    * Return an object of all supported event callbacks.
    */
   parseEvents() {
@@ -168,7 +188,6 @@ class Circle extends React.Component {
       onClick: createEventCallback('onClick', this.circle).bind(this),
       onDblClick: createEventCallback('onDblClick', this.circle).bind(this),
       onRightClick: createEventCallback('onRightClick', this.circle).bind(this),
-      onMouseMove: createEventCallback('onMouseMove', this.circle).bind(this),
       onHide: createEventCallback('onHide', this.circle).bind(this),
       onShow: createEventCallback('onShow', this.circle).bind(this),
       onMouseOver: createEventCallback('onMouseOver', this.circle).bind(this),
@@ -183,49 +202,22 @@ class Circle extends React.Component {
   }
 
   /**
-   * Bind all events on circle instance.
-   * Save event listeners.
-   * Later to be removed in componentWillUnmount lifecycle.
-   * @param  {AMap.Circle} circle - AMap.Circle instance
-   * @param  {Object} eventCallbacks - An object of all event callbacks
+   * Hide or show circle.
    */
-  bindEvents(circle, eventCallbacks) {
-    this.AMapEventListeners = [];
-
-    Object.keys(eventCallbacks).forEach((key) => {
-      const eventName = key.substring(2).toLowerCase();
-      const handler = eventCallbacks[key];
-
-      this.AMapEventListeners.push(
-        window.AMap.event.addListener(circle, eventName, handler),
-      );
-    });
-  }
-
-  /**
-   * Update AMap.Circle instance with named api and given value.
-   * Won't call api if the given value does not change.
-   * The new value is given to update api to avoid overwriting the props.
-   * @param  {string} apiName - AMap.Circle instance update method name
-   * @param  {*} currentProp - Current value
-   * @param  {*} nextProp - Next value
-   * @param  {*} newProp - New value
-   */
-  updateCircleWithApi(apiName, currentProp, nextProp, newProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      this.circle[apiName](newProp);
+  toggleVisible(previousProp, nextProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
+      if (nextProp === true) this.circle.show();
+      if (nextProp === false) this.circle.hide();
     }
   }
 
   /**
-   * Hide or show circle.
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
+   * Update AMap.Circle instance with named API.
+   * Won't call API if prop does not change.
    */
-  toggleVisible(currentProp, nextProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      if (nextProp === true) this.circle.show();
-      if (nextProp === false) this.circle.hide();
+  updateCircleWithAPI(apiName, previousProp, nextProp, newProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
+      this.circle[apiName](newProp);
     }
   }
 
