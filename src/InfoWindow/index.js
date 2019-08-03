@@ -100,7 +100,7 @@ class InfoWindow extends React.Component {
           return new window.AMap.Pixel(...offset);
         }
 
-        return new window.AMap.Pixel();
+        return new window.AMap.Pixel(0, 0);
       })(),
       // Will transform an array of two numbers into a Size instance
       size: (() => {
@@ -120,7 +120,7 @@ class InfoWindow extends React.Component {
   /**
    * Define event name mapping relations of react binding InfoWindow and AMap.InfoWindow.
    * Initialise AMap.InfoWindow and bind events.
-   * Binding onComplete event on infoWindow instance.
+   * Fire complete action as soon as bezier curve has been created.
    */
   constructor(props, context) {
     super(props);
