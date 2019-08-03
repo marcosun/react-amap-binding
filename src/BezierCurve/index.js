@@ -8,34 +8,30 @@ import isShallowEqual from '../utils/isShallowEqual';
 
 /**
  * Fields that need to be deep copied.
- * The new value is given to update api to avoid overwriting the props.
+ * AMap LBS library mutates options. Deep copy those options before passing to AMap so that
+ * props won't be mutated.
  */
 const NEED_DEEP_COPY_FIELDS = ['path'];
 
 /**
  * BezierCurve binding.
- * BezierCurve has the same config options as AMap.BezierCurve unless highlighted below.
+ * BezierCurve has the same options as AMap.BezierCurve unless highlighted below.
  * {@link https://lbs.amap.com/api/javascript-api/reference/overlay#BezierCurve}
  */
 class BezierCurve extends React.Component {
-  /**
-   * AMap map instance.
-   */
-  static contextType = AMapContext;
-
   static propTypes = {
     /**
-     * Show BezierCurve by default, you can toggle show or hide by setting visible.
+     * Show BezierCurve by default, you can toggle show or hide by changing visible.
      */
     visible: PropTypes.bool,
-    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
-     *
-     * @param {AMap.Map} map                  - AMap.Map instance
-     * @param {AMap.BezierCurve} bezierCurve  - AMap.BezierCurve
-     * @param {Object} event                  - BezierCurve event parameters
+     * Signature:
+     * (bezierCurve, ...event) => void
+     * bezierCurve: AMap.BezierCurve instance.
+     * event: AMap event.
      */
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: PropTypes.func,
     onClick: PropTypes.func,
     onDblClick: PropTypes.func,
@@ -52,9 +48,18 @@ class BezierCurve extends React.Component {
     /* eslint-enable */
   };
 
+  static defaultProps = {
+    visible: true,
+  };
+
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
+
   /**
    * Parse AMap.BezierCurve options.
-   * Named properties are event callbacks, other properties are bezierCurve options.
+   * Filter out event callbacks, the remainings are bezierCurve options.
    */
   static parseBezierCurveOptions(props) {
     const {
@@ -74,20 +79,18 @@ class BezierCurve extends React.Component {
       ...bezierCurveOptions
     } = props;
 
-    return {
-      ...bezierCurveOptions,
-    };
+    return bezierCurveOptions;
   }
 
   /**
    * Define event name mapping relations of react binding bezierCurve and AMap.BezierCurve.
    * Initialise AMap.BezierCurve and bind events.
-   * Binding onComplete event on bezierCurve instance.
+   * Fire complete action as soon as bezier curve has been created.
    */
   constructor(props, context) {
     super(props);
 
-    const { onComplete } = props;
+    const { onComplete } = this.props;
 
     const map = context;
 
@@ -95,19 +98,15 @@ class BezierCurve extends React.Component {
 
     this.bezierCurveOptions = BezierCurve.parseBezierCurveOptions(this.props);
 
-    this.bezierCurve = this.initBezierCurve(this.bezierCurveOptions, map);
+    this.bezierCurve = this.initBezierCurve(map);
 
-    this.eventCallbacks = this.parseEvents();
+    this.bindEvents();
 
-    this.bindEvents(this.bezierCurve, this.eventCallbacks);
-
-    onComplete && onComplete(map, this.bezierCurve);
+    typeof onComplete === 'function' && onComplete(this.bezierCurve);
   }
 
   /**
    * Update this.bezierCurve by calling AMap.BezierCurve methods.
-   * @param  {Object} nextProps - Next props
-   * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps) {
     const nextBezierCurveOptions = BezierCurve.parseBezierCurveOptions(nextProps);
@@ -115,8 +114,11 @@ class BezierCurve extends React.Component {
     const newBezierCurveOptions = cloneDeep(nextBezierCurveOptions, NEED_DEEP_COPY_FIELDS);
 
     this.toggleVisible(this.bezierCurveOptions.visible, nextBezierCurveOptions.visible);
-
-    this.updateBezierCurveWithApi('setOptions', this.bezierCurveOptions, nextBezierCurveOptions,
+    /**
+     * Instead of calling one API for a specific option change, AMap.BezierCurve exposes
+     * a master method: setOptions, which will update every options with a single function call.
+     */
+    this.updateBezierCurveWithAPI('setOptions', this.bezierCurveOptions, nextBezierCurveOptions,
       newBezierCurveOptions);
 
     this.bezierCurveOptions = nextBezierCurveOptions;
@@ -137,16 +139,35 @@ class BezierCurve extends React.Component {
     this.bezierCurve = null;
   }
 
-   /**
-   * Initialise AMap.BezierCurve.
-   * @param {Object} bezierCurveOptions - AMap.BezierCurve options
-   * @param {Object} map - Map instance
-   * @return {BezierCurve} - BezierCurve instance
+  /**
+   * Bind all events on map instance, and save event listeners which will be removed in
+   * componentWillUnmount lifecycle.
    */
-  initBezierCurve(bezierCurveOptions, map) {
+  bindEvents() {
+    this.AMapEventListeners = [];
+
+    /**
+     * Construct event callbacks.
+     */
+    const eventCallbacks = this.parseEvents();
+
+    Object.keys(eventCallbacks).forEach((key) => {
+      const eventName = key.substring(2).toLowerCase();
+      const handler = eventCallbacks[key];
+
+      this.AMapEventListeners.push(
+        window.AMap.event.addListener(this.bezierCurve, eventName, handler),
+      );
+    });
+  }
+
+  /**
+   * Initialise AMap.BezierCurve.
+   */
+  initBezierCurve(map) {
     const { visible } = this.props;
 
-    const newBezierCurveOptions = cloneDeep(bezierCurveOptions, NEED_DEEP_COPY_FIELDS);
+    const newBezierCurveOptions = cloneDeep(this.bezierCurveOptions, NEED_DEEP_COPY_FIELDS);
 
     const bezierCurve = new window.AMap.BezierCurve(newBezierCurveOptions);
 
@@ -178,49 +199,22 @@ class BezierCurve extends React.Component {
   }
 
   /**
-   * Bind all events on bezierCurve instance.
-   * Save event listeners.
-   * Later to be removed in componentWillUnmount lifecycle.
-   * @param  {AMap.BezierCurve} bezierCurve - AMap.BezierCurve instance
-   * @param  {Object} eventCallbacks - An object of all event callbacks
+   * Hide or show bezierCurve.
    */
-  bindEvents(bezierCurve, eventCallbacks) {
-    this.AMapEventListeners = [];
-
-    Object.keys(eventCallbacks).forEach((key) => {
-      const eventName = key.substring(2).toLowerCase();
-      const handler = eventCallbacks[key];
-
-      this.AMapEventListeners.push(
-        window.AMap.event.addListener(bezierCurve, eventName, handler),
-      );
-    });
-  }
-
-  /**
-   * Update AMap.BezierCurve instance with named api and given value.
-   * Won't call api if the given value does not change.
-   * The new value is given to update api to avoid overwriting the props.
-   * @param  {string} apiName - AMap.BezierCurve instance update method name
-   * @param  {*} currentProp - Current value
-   * @param  {*} nextProp - Next value
-   * @param  {*} newProp - New value.
-   */
-  updateBezierCurveWithApi(apiName, currentProp, nextProp, newProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      this.bezierCurve[apiName](newProp);
+  toggleVisible(previousProp, nextProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
+      if (nextProp === true) this.bezierCurve.show();
+      if (nextProp === false) this.bezierCurve.hide();
     }
   }
 
   /**
-   * Hide or show bezierCurve.
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
+   * Update AMap.BezierCurve instance with named API.
+   * Won't call API if prop does not change.
    */
-  toggleVisible(currentProp, nextProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      if (nextProp === true) this.bezierCurve.show();
-      if (nextProp === false) this.bezierCurve.hide();
+  updateBezierCurveWithAPI(apiName, previousProp, nextProp, newProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
+      this.bezierCurve[apiName](newProp);
     }
   }
 
