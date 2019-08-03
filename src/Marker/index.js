@@ -8,42 +8,47 @@ import isShallowEqual from '../utils/isShallowEqual';
 
 /**
  * Fields that need to be deep copied.
- * The new value is given to update api to avoid overwriting the props.
+ * AMap LBS library mutates options. Deep copy those options before passing to AMap so that
+ * props won't be mutated.
  */
 const NEED_DEEP_COPY_FIELDS = ['position'];
 
 /**
  * Marker binding.
- * Marker has the same config options as AMap.Marker unless highlighted below.
- * For marker events usage please reference to AMap.Marker events paragraph.
+ * Marker has the same options as AMap.Marker unless highlighted below.
  * {@link http://lbs.amap.com/api/javascript-api/reference/overlay#marker}
  */
 class Marker extends React.Component {
-  /**
-   * AMap map instance.
-   */
-  static contextType = AMapContext;
-
   static propTypes = {
-    /**
-     * An array of two numbers or AMap.Pixel for label.offset.
-     */
-    label: PropTypes.shape({ // eslint-disable-line react/no-unused-prop-types
-      offset: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
+    /* eslint-disable react/no-unused-prop-types */
+    label: PropTypes.shape({
+      /**
+       * An array of two numbers or AMap.Pixel.
+       */
+      offset: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.number),
+        PropTypes.object,
+      ]),
     }),
     /**
      * An array of two numbers or AMap.Pixel.
      */
-    // eslint-disable-next-line react/no-unused-prop-types
-    offset: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
-    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    offset: PropTypes.oneOfType([
+      PropTypes.arrayOf(PropTypes.number),
+      PropTypes.object,
+    ]),
+    /**
+     * Show Marker by default, you can toggle show or hide by changing visible.
+     */
+    visible: PropTypes.bool,
     /**
      * Event callback.
-     *
-     * @param {AMap.Map} map           - AMap.Map instance
-     * @param {AMap.Marker} Marker     - AMap.Marker
-     * @param {Object} event           - Marker event parameters
+     * Signature:
+     * (marker, ...event) => void
+     * marker: AMap.Marker instance.
+     * event: AMap event.
      */
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: PropTypes.func,
     onClick: PropTypes.func,
     onDblClick: PropTypes.func,
@@ -64,6 +69,15 @@ class Marker extends React.Component {
     onTouchEnd: PropTypes.func,
     /* eslint-enable */
   };
+
+  static defaultProps = {
+    visible: true,
+  };
+
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
 
   /**
    * Parse AMap.Marker options.
@@ -132,12 +146,12 @@ class Marker extends React.Component {
   /**
    * Define event name mapping relations of react binding Marker and AMap.Marker.
    * Initialise AMap.Marker and bind events.
-   * Binding onComplete event on marker instance.
+   * Fire complete action as soon as bezier curve has been created.
    */
   constructor(props, context) {
     super(props);
 
-    const { onComplete } = props;
+    const { onComplete } = this.props;
 
     const map = context;
 
@@ -145,78 +159,69 @@ class Marker extends React.Component {
 
     this.markerOptions = Marker.parseMarkerOptions(this.props);
 
-    this.marker = new window.AMap.Marker(
-      cloneDeep(
-        {
-          ...this.markerOptions,
-          map,
-        },
-        NEED_DEEP_COPY_FIELDS,
-      ),
-    );
+    this.marker = Marker.initMarker(map);
 
-    this.eventCallbacks = this.parseEvents();
+    this.bindEvents();
 
-    this.bindEvents(this.marker, this.eventCallbacks);
-
-    onComplete && onComplete(map, this.marker);
+    typeof onComplete === 'function' && onComplete(map, this.marker);
   }
 
   /**
    * Update this.marker by calling AMap.Marker methods.
-   * @param  {Object} nextProps
-   * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps) {
     const nextMarkerOptions = Marker.parseMarkerOptions(nextProps);
 
     const newMarkerOptions = cloneDeep(nextMarkerOptions, NEED_DEEP_COPY_FIELDS);
 
-    this.updateMarkerWithApi('setOffset', this.markerOptions.offset, nextMarkerOptions.offset,
-      newMarkerOptions.offset);
-
-    this.updateMarkerWithApi('setAnimation', this.markerOptions.animation,
-      nextMarkerOptions.animation, newMarkerOptions.animation);
-
-    this.updateMarkerWithApi('setClickable', this.markerOptions.clickable,
-      nextMarkerOptions.clickable, newMarkerOptions.clickable);
-
-    this.updateMarkerWithApi('setPosition', this.markerOptions.position, nextMarkerOptions.position,
-      newMarkerOptions.position);
-
-    this.updateMarkerWithApi('setAngle', this.markerOptions.angle, nextMarkerOptions.angle,
-      newMarkerOptions.angle);
-
-    this.updateMarkerWithApi('setLabel', this.markerOptions.label, nextMarkerOptions.label,
-      newMarkerOptions.label);
-
-    this.updateMarkerWithApi('setzIndex', this.markerOptions.zIndex, nextMarkerOptions.zIndex,
-      newMarkerOptions.zIndex);
-
-    this.updateMarkerWithApi('setIcon', this.markerOptions.icon, nextMarkerOptions.icon,
-      newMarkerOptions.icon);
-
-    this.updateMarkerWithApi('setDraggable', this.markerOptions.draggable,
-      nextMarkerOptions.draggable, newMarkerOptions.draggable);
-
     this.toggleVisible(this.markerOptions.visible, nextMarkerOptions.visible);
 
-    this.updateMarkerWithApi('setCursor', this.markerOptions.cursor, nextMarkerOptions.cursor,
+    this.updateMarkerWithAPI('setAnchor', this.markerOptions.anchor, nextMarkerOptions.anchor,
+      newMarkerOptions.anchor);
+
+    this.updateMarkerWithAPI('setOffset', this.markerOptions.offset, nextMarkerOptions.offset,
+      newMarkerOptions.offset);
+
+    this.updateMarkerWithAPI('setAnimation', this.markerOptions.animation,
+      nextMarkerOptions.animation, newMarkerOptions.animation);
+
+    this.updateMarkerWithAPI('setClickable', this.markerOptions.clickable,
+      nextMarkerOptions.clickable, newMarkerOptions.clickable);
+
+    this.updateMarkerWithAPI('setPosition', this.markerOptions.position, nextMarkerOptions.position,
+      newMarkerOptions.position);
+
+    this.updateMarkerWithAPI('setAngle', this.markerOptions.angle, nextMarkerOptions.angle,
+      newMarkerOptions.angle);
+
+    this.updateMarkerWithAPI('setLabel', this.markerOptions.label, nextMarkerOptions.label,
+      newMarkerOptions.label);
+
+    this.updateMarkerWithAPI('setzIndex', this.markerOptions.zIndex, nextMarkerOptions.zIndex,
+      newMarkerOptions.zIndex);
+
+    this.updateMarkerWithAPI('setIcon', this.markerOptions.icon, nextMarkerOptions.icon,
+      newMarkerOptions.icon);
+
+    this.updateMarkerWithAPI('setDraggable', this.markerOptions.draggable,
+      nextMarkerOptions.draggable, newMarkerOptions.draggable);
+
+    this.updateMarkerWithAPI('setCursor', this.markerOptions.cursor, nextMarkerOptions.cursor,
       newMarkerOptions.cursor);
 
-    this.updateMarkerWithApi('setContent', this.markerOptions.content, nextMarkerOptions.content,
+    this.updateMarkerWithAPI('setContent', this.markerOptions.content, nextMarkerOptions.content,
       newMarkerOptions.content);
 
-    this.updateMarkerWithApi('setTitle', this.markerOptions.title, nextMarkerOptions.title,
+    this.updateMarkerWithAPI('setTitle', this.markerOptions.title, nextMarkerOptions.title,
       newMarkerOptions.title);
 
-    this.updateMarkerWithApi('setShadow', this.markerOptions.shadow, nextMarkerOptions.shadow,
+    this.updateMarkerWithAPI('setShadow', this.markerOptions.shadow, nextMarkerOptions.shadow,
       newMarkerOptions.shadow);
 
-    this.updateMarkerWithApi('setShape', this.markerOptions.shape, nextMarkerOptions.shape,
+    this.updateMarkerWithAPI('setShape', this.markerOptions.shape, nextMarkerOptions.shape,
       newMarkerOptions.shape);
 
-    this.updateMarkerWithApi('setExtData', this.markerOptions.extData, nextMarkerOptions.extData,
+    this.updateMarkerWithAPI('setExtData', this.markerOptions.extData, nextMarkerOptions.extData,
       newMarkerOptions.extData);
 
     this.markerOptions = nextMarkerOptions;
@@ -235,6 +240,45 @@ class Marker extends React.Component {
 
     this.marker.setMap(null);
     this.marker = null;
+  }
+
+  /**
+   * Bind all events on map instance, and save event listeners which will be removed in
+   * componentWillUnmount lifecycle.
+   */
+  bindEvents() {
+    this.AMapEventListeners = [];
+
+    /**
+     * Construct event callbacks.
+     */
+    const eventCallbacks = this.parseEvents();
+
+    Object.keys(eventCallbacks).forEach((key) => {
+      const eventName = key.substring(2).toLowerCase();
+      const handler = eventCallbacks[key];
+
+      this.AMapEventListeners.push(
+        window.AMap.event.addListener(this.marker, eventName, handler),
+      );
+    });
+  }
+
+  /**
+   * Initialise AMap.Marker
+   */
+  initMarker(map) {
+    const { visible } = this.props;
+
+    const newMarkerOptions = cloneDeep(this.markerOptions, NEED_DEEP_COPY_FIELDS);
+
+    const marker = new window.AMap.Marker(newMarkerOptions);
+
+    marker.setMap(map);
+
+    if (visible === false) marker.hide();
+
+    return marker;
   }
 
   /**
@@ -263,49 +307,22 @@ class Marker extends React.Component {
   }
 
   /**
-   * Bind all events on marker instance.
-   * Save event listeners.
-   * Later to be removed in componentWillUnmount lifecycle.
-   * @param  {AMap.Marker} marker - AMap.Marker instance
-   * @param  {Object} eventCallbacks - An object of all event callbacks
+   * Hide or show marker.
    */
-  bindEvents(marker, eventCallbacks) {
-    this.AMapEventListeners = [];
-
-    Object.keys(eventCallbacks).forEach((key) => {
-      const eventName = key.substring(2).toLowerCase();
-      const handler = eventCallbacks[key];
-
-      this.AMapEventListeners.push(
-        window.AMap.event.addListener(marker, eventName, handler),
-      );
-    });
-  }
-
-  /**
-   * Update AMap.Marker instance with named api and given value.
-   * Won't call api if the given value does not change.
-   * The new value is given to update api to avoid overwriting the props.
-   * @param  {string} apiName - AMap.Marker instance update method name
-   * @param  {*} currentProp - Current value
-   * @param  {*} nextProp - Next value
-   * @param  {*} newProp - New value
-   */
-  updateMarkerWithApi(apiName, currentProp, nextProp, newProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      this.marker[apiName](newProp);
+  toggleVisible(previousProp, nextProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
+      if (nextProp === true) this.marker.show();
+      if (nextProp === false) this.marker.hide();
     }
   }
 
   /**
-   * Hide or show marker.
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
+   * Update AMap.Marker instance with named API and given value.
+   * Won't call API if the given value does not change.
    */
-  toggleVisible(currentProp, nextProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      if (nextProp === true) this.marker.show();
-      if (nextProp === false) this.marker.hide();
+  updateMarkerWithAPI(apiName, previousProp, nextProp, newProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
+      this.marker[apiName](newProp);
     }
   }
 
