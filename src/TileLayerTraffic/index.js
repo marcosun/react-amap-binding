@@ -2,37 +2,40 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import AMapContext from '../AMapContext';
 import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
-import isShallowEqual from '../utils/isShallowEqual';
 import createEventCallback from '../utils/createEventCallback';
+import isShallowEqual from '../utils/isShallowEqual';
 
 /**
  * TileLayerTraffic binding.
- * TileLayerTraffic has the same config options as AMap.TileLayer.Traffic unless highlighted below.
- * For tileLayerTraffic events usage please reference to AMap.TileLayet.Traffic events paragraph.
+ * TileLayerTraffic has the same options as AMap.TileLayer.Traffic unless highlighted below.
  * {@link http://lbs.amap.com/api/javascript-api/reference/layer#TileLayer.Traffic}
  */
 class TileLayerTraffic extends React.Component {
-  /**
-   * AMap map instance.
-   */
-  static contextType = AMapContext;
-
   static propTypes = {
     /**
      * Shows TileLayerTraffic by default, you can toggle show or hide by setting config.
      */
     visible: PropTypes.bool,
-    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     /**
      * Event callback.
-     *
-     * @param {AMap.Map} map                        - AMap.Map instance
-     * @param {AMap.TileLayer.Traffic} traffic      - AMap.TileLayer.Traffic instance
-     * @param {Object} event                        - Traffic event parameters
+     * Signature:
+     * (tileLayerTraffic, ...event) => void
+     * tileLayerTraffic: AMap.TileLayer.Traffic instance.
+     * event: AMap event.
      */
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: PropTypes.func,
     /* eslint-enable */
   }
+
+  static defaultProps = {
+    visible: true,
+  };
+
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
 
   /**
    * Parse AMap.TileLayer.Traffic options.
@@ -44,9 +47,7 @@ class TileLayerTraffic extends React.Component {
       ...tileLayerTrafficOptions
     } = props;
 
-    return {
-      ...tileLayerTrafficOptions,
-    };
+    return tileLayerTrafficOptions;
   }
 
   /**
@@ -61,29 +62,25 @@ class TileLayerTraffic extends React.Component {
 
     breakIfNotChildOfAMap('TileLayerTraffic', map);
 
-    this.tileLayerTrafficOptions = TileLayerTraffic.parseTileLayerTrafficOptions(props);
+    this.tileLayerTrafficOptions = TileLayerTraffic.parseTileLayerTrafficOptions(this.props);
 
-    this.tileLayerTraffic = this.initTileLayerTraffic(this.tileLayerTrafficOptions, map);
+    this.tileLayerTraffic = this.initTileLayerTraffic(map);
 
-    this.eventCallbacks = this.parseEvents();
-
-    this.bindEvents(this.tileLayerTraffic, this.eventCallbacks);
+    this.bindEvents();
   }
 
   /**
    * Update this.tileLayerTraffic by calling AMap.TileLayer.Traffic methods.
-   * @param  {Object} nextProps
-   * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps) {
     const nextTileLayerTrafficOptions = TileLayerTraffic.parseTileLayerTrafficOptions(nextProps);
 
-    this.updateTileLayerTrafficWithApi('setOpacity', this.tileLayerTrafficOptions.opacity,
-      nextTileLayerTrafficOptions.opacity);
-
     this.toggleVisible(this.tileLayerTrafficOptions.visible, nextTileLayerTrafficOptions.visible);
 
-    this.updateTileLayerTrafficWithApi('setzIndex', this.tileLayerTrafficOptions.zIndex,
+    this.updateTileLayerTrafficWithAPI('setOpacity', this.tileLayerTrafficOptions.opacity,
+      nextTileLayerTrafficOptions.opacity);
+
+    this.updateTileLayerTrafficWithAPI('setzIndex', this.tileLayerTrafficOptions.zIndex,
       nextTileLayerTrafficOptions.zIndex);
 
     this.tileLayerTrafficOptions = nextTileLayerTrafficOptions;
@@ -100,22 +97,43 @@ class TileLayerTraffic extends React.Component {
       window.AMap.event.removeListener(listener);
     });
 
+    this.tileLayerTraffic.setMap(null);
     this.tileLayerTraffic = null;
   }
 
   /**
-   * Initialise traffic tileLayer.
-   * @param {Object} trafficOptions - AMap.TileLayer.Traffic options
-   * @param {Object} map - Map instance
-   * @return {AMap.TileLayer.Traffic}
+   * Bind all events on map instance, and save event listeners which will be removed in
+   * componentWillUnmount lifecycle.
    */
-  initTileLayerTraffic(trafficOptions, map) {
-    const tileLayerTraffic = new window.AMap.TileLayer.Traffic({
-      ...trafficOptions,
-      map,
-    });
+  bindEvents() {
+    this.AMapEventListeners = [];
 
-    if (this.props.visible === false) tileLayerTraffic.hide();
+    /**
+     * Construct event callbacks.
+     */
+    const eventCallbacks = this.parseEvents();
+
+    Object.keys(eventCallbacks).forEach((key) => {
+      const eventName = key.substring(2).toLowerCase();
+      const handler = eventCallbacks[key];
+
+      this.AMapEventListeners.push(
+        window.AMap.event.addListener(this.tileLayerTraffic, eventName, handler),
+      );
+    });
+  }
+
+  /**
+   * Initialise traffic tileLayer.
+   */
+  initTileLayerTraffic(map) {
+    const { visible } = this.props;
+
+    const tileLayerTraffic = new window.AMap.TileLayer.Traffic(this.tileLayerTrafficOptions);
+
+    tileLayerTraffic.setMap(map);
+
+    if (visible === false) tileLayerTraffic.hide();
 
     return tileLayerTraffic;
   }
@@ -130,47 +148,22 @@ class TileLayerTraffic extends React.Component {
   }
 
   /**
-   * Bind all events on tileLayerTraffic instance.
-   * Save event listeners.
-   * Later to be removed in componentWillUnmount lifecycle.
-   * @param  {AMap.TileLayer.Traffic} tileLayerTraffic - AMap.TileLayer.Traffic instance
-   * @param  {Object} eventCallbacks - An object of all event callbacks
+   * Hide or show tileLayerTraffic.
    */
-  bindEvents(tileLayerTraffic, eventCallbacks) {
-    this.AMapEventListeners = [];
-
-    Object.keys(eventCallbacks).forEach((key) => {
-      const eventName = key.substring(2).toLowerCase();
-      const handler = eventCallbacks[key];
-
-      this.AMapEventListeners.push(
-        window.AMap.event.addListener(tileLayerTraffic, eventName, handler),
-      );
-    });
-  }
-
-  /**
-   * Update AMap.TileLayer.Traffic instance with named api and given value.
-   * Won't call api if the given value does not change.
-   * @param  {string} apiName - AMap.TileLayer.Traffic instance update method name
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
-   */
-  updateTileLayerTrafficWithApi(apiName, currentProp, nextProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      this.tileLayerTraffic[apiName](nextProp);
+  toggleVisible(previousProp, nextProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
+      if (nextProp === true) this.tileLayerTraffic.show();
+      if (nextProp === false) this.tileLayerTraffic.hide();
     }
   }
 
   /**
-   * Hide or show tileLayerTraffic.
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
+   * Update AMap.TileLayer.Traffic instance with named API and given value.
+   * Won't call API if the given value does not change.
    */
-  toggleVisible(currentProp, nextProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      if (nextProp === true) this.tileLayerTraffic.show();
-      if (nextProp === false) this.tileLayerTraffic.hide();
+  updateTileLayerTrafficWithAPI(apiName, previousProp, nextProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
+      this.tileLayerTraffic[apiName](nextProp);
     }
   }
 
