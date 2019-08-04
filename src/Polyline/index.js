@@ -8,37 +8,30 @@ import isShallowEqual from '../utils/isShallowEqual';
 
 /**
  * Fields that need to be deep copied.
- * The new value is given to update api to avoid overwriting the props.
+ * AMap LBS library mutates options. Deep copy those options before passing to AMap so that
+ * props won't be mutated.
  */
 const NEED_DEEP_COPY_FIELDS = ['path'];
 
 /**
  * Polyline binding.
- * Polyline has the same config options as AMap.Polyline unless highlighted below.
- * For Polyline events usage please reference to AMap.Polyline events paragraph.
+ * Polyline has the same options as AMap.Polyline unless highlighted below.
  * {@link http://lbs.amap.com/api/javascript-api/reference/overlay#polyline}
- * Shows Polyline by default, you can toggle show or hide by setting visible.
- * The zIndex configuration of lbs is invalid.
  */
 class Polyline extends React.Component {
-  /**
-   * AMap map instance.
-   */
-  static contextType = AMapContext;
-
   static propTypes = {
     /**
-     * Shows Polyline by default, you can toggle show or hide by setting visible.
+     * Shows Polyline by default, you can toggle show or hide by changing visible.
      */
-    visible: PropTypes.bool, // eslint-disable-line react/no-unused-prop-types
-    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
+    visible: PropTypes.bool,
     /**
      * Event callback.
-     *
-     * @param {AMap.Map} map             - AMap.Map instance
-     * @param {AMap.Polyline} polyline   - AMap.Polyline instance
-     * @param {Object} event             - Polyline event parameters
+     * Signature:
+     * (polyline, ...event) => void
+     * polyline: AMap.Polygon instance.
+     * event: AMap event.
      */
+    /* eslint-disable react/sort-prop-types,react/no-unused-prop-types */
     onComplete: PropTypes.func,
     onClick: PropTypes.func,
     onDblClick: PropTypes.func,
@@ -56,8 +49,18 @@ class Polyline extends React.Component {
     /* eslint-enable */
   };
 
+  static defaultProps = {
+    visible: true,
+  };
+
+  /**
+   * AMap map instance.
+   */
+  static contextType = AMapContext;
+
   /**
    * Parse AMap.Polyline options.
+   * Named properties are event callbacks, other properties are polygon options.
    */
   static parsePolylineOptions(props) {
     const {
@@ -78,50 +81,44 @@ class Polyline extends React.Component {
       ...polylineOptions
     } = props;
 
-    return {
-      ...polylineOptions,
-    };
+    return polylineOptions;
   }
 
   /**
    * Define event name mapping relations of react binding Polyline and AMap.Polyline.
    * Initialise AMap.Polyline and bind events.
-   * Binding onComplete event on polyline instance.
+   * Fire complete action as soon as polygon has been created.
    */
   constructor(props, context) {
     super(props);
 
-    const { onComplete } = props;
+    const { onComplete } = this.props;
 
     const map = context;
 
     breakIfNotChildOfAMap('Polyline', map);
 
-    this.polylineOptions = Polyline.parsePolylineOptions(props);
+    this.polylineOptions = Polyline.parsePolylineOptions(this.props);
 
-    this.polyline = this.initPolyline(this.polylineOptions, map);
+    this.polyline = this.initPolyline(map);
 
-    this.eventCallbacks = this.parseEvents();
+    this.bindEvents();
 
-    this.bindEvents(this.polyline, this.eventCallbacks);
-
-    onComplete && onComplete(map, this.polyline);
+    typeof onComplete === 'function' && onComplete(map, this.polyline);
   }
 
   /**
    * Update this.polyline by calling AMap.Polyline methods.
-   * @param  {Object} nextProps
-   * @return {Boolean} - Prevent calling render function
    */
   shouldComponentUpdate(nextProps) {
     const nextPolylineOptions = Polyline.parsePolylineOptions(nextProps);
 
     const newPolylineOptions = cloneDeep(nextPolylineOptions, NEED_DEEP_COPY_FIELDS);
 
-    this.updatePolylineWithApi('setOptions', this.polylineOptions, nextPolylineOptions,
-      newPolylineOptions);
-
     this.toggleVisible(this.polylineOptions.visible, nextPolylineOptions.visible);
+
+    this.updatePolylineWithAPI('setOptions', this.polylineOptions, nextPolylineOptions,
+      newPolylineOptions);
 
     this.polylineOptions = nextPolylineOptions;
 
@@ -142,23 +139,40 @@ class Polyline extends React.Component {
   }
 
   /**
-   * Initialise AMap polyline.
-   * @param {Object} polylineOptions - AMap.Polyline options
-   * @param {Object} map - Map instance.
-   * @return {Object}
+   * Bind all events on map instance, and save event listeners which will be removed in
+   * componentWillUnmount lifecycle.
    */
-  initPolyline(polylineOptions, map) {
-    const polyline = new window.AMap.Polyline(
-      cloneDeep(
-        {
-          ...polylineOptions,
-          map,
-        },
-        NEED_DEEP_COPY_FIELDS,
-      ),
-    );
+  bindEvents() {
+    this.AMapEventListeners = [];
 
-    if (this.visible === false) polyline.hide();
+    /**
+     * Construct event callbacks.
+     */
+    const eventCallbacks = this.parseEvents();
+
+    Object.keys(eventCallbacks).forEach((key) => {
+      const eventName = key.substring(2).toLowerCase();
+      const handler = eventCallbacks[key];
+
+      this.AMapEventListeners.push(
+        window.AMap.event.addListener(this.polyline, eventName, handler),
+      );
+    });
+  }
+
+  /**
+   * Initialise AMap polyline.
+   */
+  initPolyline(map) {
+    const { visible } = this.props;
+
+    const newPolylineOptions = cloneDeep(this.polylineOptions, NEED_DEEP_COPY_FIELDS);
+
+    const polyline = new window.AMap.Polyline(newPolylineOptions);
+
+    polyline.setMap(map);
+
+    if (visible === false) polyline.hide();
 
     return polyline;
   }
@@ -185,49 +199,22 @@ class Polyline extends React.Component {
   }
 
   /**
-   * Bind all events on polyline instance.
-   * Save event listeners.
-   * Later to be removed in componentWillUnmount lifecycle.
-   * @param  {AMap.Polyline} polyline - AMap.Polyline instance
-   * @param  {Object} eventCallbacks - An object of all event callbacks
+   * Hide or show polyline.
    */
-  bindEvents(polyline, eventCallbacks) {
-    this.AMapEventListeners = [];
-
-    Object.keys(eventCallbacks).forEach((key) => {
-      const eventName = key.substring(2).toLowerCase();
-      const handler = eventCallbacks[key];
-
-      this.AMapEventListeners.push(
-        window.AMap.event.addListener(polyline, eventName, handler),
-      );
-    });
-  }
-
-  /**
-   * Update AMap.Polyline instance with named api and given value.
-   * Won't call api if the given value does not change.
-   * The new value is given to update api to avoid overwriting the props.
-   * @param  {string} apiName - AMap.Polyline instance update method name
-   * @param  {*} currentProp - Current value
-   * @param  {*} nextProp - Next value
-   * @param  {*} newProp - New value
-   */
-  updatePolylineWithApi(apiName, currentProp, nextProp, newProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      this.polyline[apiName](newProp);
+  toggleVisible(previousProp, nextProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
+      if (nextProp === true) this.polyline.show();
+      if (nextProp === false) this.polyline.hide();
     }
   }
 
   /**
-   * Hide or show polyline.
-   * @param  {Object} currentProp - Current value
-   * @param  {Object} nextProp - Next value
+   * Update AMap.Polyline instance with named API and given value.
+   * Won't call API if the given value does not change.
    */
-  toggleVisible(currentProp, nextProp) {
-    if (!isShallowEqual(currentProp, nextProp)) {
-      if (nextProp === true) this.polyline.show();
-      if (nextProp === false) this.polyline.hide();
+  updatePolylineWithAPI(apiName, previousProp, nextProp, newProp) {
+    if (!isShallowEqual(previousProp, nextProp)) {
+      this.polyline[apiName](newProp);
     }
   }
 
