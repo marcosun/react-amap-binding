@@ -133,7 +133,7 @@ class InfoWindow extends React.Component {
 
     this.infoWindowOptions = InfoWindow.parseInfoWindowOptions(this.props);
 
-    this.infoWindow = InfoWindow.initInfoWindow(this.map);
+    this.infoWindow = this.initInfoWindow(this.map);
 
     this.bindEvents();
 

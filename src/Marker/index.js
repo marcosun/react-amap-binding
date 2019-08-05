@@ -159,7 +159,7 @@ class Marker extends React.Component {
 
     this.markerOptions = Marker.parseMarkerOptions(this.props);
 
-    this.marker = Marker.initMarker(map);
+    this.marker = this.initMarker(map);
 
     this.bindEvents();
 
