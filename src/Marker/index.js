@@ -4,6 +4,7 @@ import AMapContext from '../AMapContext';
 import breakIfNotChildOfAMap from '../utils/breakIfNotChildOfAMap';
 import cloneDeep from '../utils/cloneDeep';
 import createEventCallback from '../utils/createEventCallback';
+import isNullVoid from '../utils/isNullVoid';
 import isShallowEqual from '../utils/isShallowEqual';
 
 /**
@@ -107,27 +108,34 @@ class Marker extends React.Component {
     } = props;
 
     const {
-      label: { offset: labelOffset } = {},
+      label = {},
       offset,
     } = markerOptions;
 
     return {
       ...markerOptions,
-      label: {
-        ...markerOptions.label,
-        // Will transform an array of two numbers into a Pixel instance
-        offset: (() => {
-          if (labelOffset instanceof window.AMap.Pixel) {
-            return labelOffset;
-          }
+      label: (() => {
+        /**
+         * Changing label to either null or undefined clears label.
+         */
+        if (isNullVoid(label)) return null;
 
-          if (labelOffset instanceof Array) {
-            return new window.AMap.Pixel(...labelOffset);
-          }
+        return {
+          ...label,
+          // Will transform an array of two numbers into a Pixel instance
+          offset: (() => {
+            if (label.offset instanceof window.AMap.Pixel) {
+              return label.offset;
+            }
 
-          return new window.AMap.Pixel(0, 0);
-        })(),
-      },
+            if (label.offset instanceof Array) {
+              return new window.AMap.Pixel(...label.offset);
+            }
+
+            return new window.AMap.Pixel(0, 0);
+          })(),
+        };
+      })(),
       // Will transform an array of two numbers into a Pixel instance
       offset: (() => {
         if (offset instanceof window.AMap.Pixel) {
