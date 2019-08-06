@@ -22,13 +22,41 @@ const NEED_DEEP_COPY_FIELDS = ['position'];
 class Marker extends React.Component {
   static propTypes = {
     /* eslint-disable react/no-unused-prop-types */
+    icon: PropTypes.oneOfType([
+      /**
+       * AMap.Icon instance.
+       */
+      PropTypes.instanceOf(window.AMap.Icon),
+      /**
+       * AMap.Icon options.
+       */
+      PropTypes.shape({
+        image: PropTypes.string,
+        imageOffset: PropTypes.oneOfType([
+          PropTypes.arrayOf(PropTypes.number),
+          PropTypes.instanceOf(window.AMap.Pixel),
+        ]),
+        imageSize: PropTypes.oneOfType([
+          PropTypes.arrayOf(PropTypes.number),
+          PropTypes.instanceOf(window.AMap.Size),
+        ]),
+        size: PropTypes.oneOfType([
+          PropTypes.arrayOf(PropTypes.number),
+          PropTypes.instanceOf(window.AMap.Size),
+        ]),
+      }),
+      /**
+       * Image url.
+       */
+      PropTypes.string,
+    ]),
     label: PropTypes.shape({
       /**
        * An array of two numbers or AMap.Pixel.
        */
       offset: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.number),
-        PropTypes.object,
+        PropTypes.instanceOf(window.AMap.Pixel),
       ]),
     }),
     /**
@@ -36,7 +64,7 @@ class Marker extends React.Component {
      */
     offset: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.number),
-      PropTypes.object,
+      PropTypes.instanceOf(window.AMap.Pixel),
     ]),
     /**
      * Show Marker by default, you can toggle show or hide by changing visible.
@@ -108,12 +136,44 @@ class Marker extends React.Component {
     } = props;
 
     const {
+      icon,
       label = {},
       offset,
     } = markerOptions;
 
     return {
       ...markerOptions,
+      icon: (() => {
+        /**
+         * Changing label to either null or undefined clears icon.
+         */
+        if (isNullVoid(icon)) return null;
+
+        if (icon instanceof window.AMap.Icon) return icon;
+
+        /**
+         * Construct AMap.Icon instance with options.
+         */
+        return new window.AMap.Icon({
+          image: icon.image,
+          imageOffset: (() => {
+            if (icon.imageOffset instanceof window.AMap.Pixel) {
+              return icon.imageOffset;
+            }
+
+            if (icon.imageOffset instanceof Array) {
+              return new window.AMap.Pixel(...icon.imageOffset);
+            }
+
+            return new window.AMap.Pixel(0, 0);
+          })(),
+          /**
+           * AMap.Icon understands both [x, y] and instance of AMap.Size.
+           */
+          imageSize: icon.imageSize,
+          size: icon.size,
+        });
+      })(),
       label: (() => {
         /**
          * Changing label to either null or undefined clears label.
