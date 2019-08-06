@@ -262,6 +262,10 @@ class Marker extends React.Component {
     this.updateMarkerWithAPI('setAngle', this.markerOptions.angle, nextMarkerOptions.angle,
       newMarkerOptions.angle);
 
+    /**
+     * WARNING: There is a known issue: Create Marker with label, then setLabel(null) to clear
+     * label, then setIcon to change icon image, results label appears again.
+     */
     this.updateMarkerWithAPI('setLabel', this.markerOptions.label, nextMarkerOptions.label,
       newMarkerOptions.label);
 
