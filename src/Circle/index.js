@@ -120,7 +120,7 @@ class Circle extends React.Component {
      * Instead of calling one API for a specific option change, AMap.Circle exposes
      * a master method: setOptions, which will update every options with a single function call.
      */
-    this.updateBezierCurveWithAPI('setOptions', this.circleOptions, nextCircleOptions,
+    this.updateCircleWithAPI('setOptions', this.circleOptions, nextCircleOptions,
       newCircleOptions);
 
     this.circleOptions = nextCircleOptions;
