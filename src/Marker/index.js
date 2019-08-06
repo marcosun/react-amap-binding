@@ -26,7 +26,7 @@ class Marker extends React.Component {
       /**
        * AMap.Icon instance.
        */
-      PropTypes.instanceOf(window.AMap.Icon),
+      PropTypes.object,
       /**
        * AMap.Icon options.
        */
@@ -34,15 +34,24 @@ class Marker extends React.Component {
         image: PropTypes.string,
         imageOffset: PropTypes.oneOfType([
           PropTypes.arrayOf(PropTypes.number),
-          PropTypes.instanceOf(window.AMap.Pixel),
+          /**
+           * AMap.Pixel instance.
+           */
+          PropTypes.object,
         ]),
         imageSize: PropTypes.oneOfType([
           PropTypes.arrayOf(PropTypes.number),
-          PropTypes.instanceOf(window.AMap.Size),
+          /**
+           * AMap.Size instance.
+           */
+          PropTypes.object,
         ]),
         size: PropTypes.oneOfType([
           PropTypes.arrayOf(PropTypes.number),
-          PropTypes.instanceOf(window.AMap.Size),
+          /**
+           * AMap.Size instance.
+           */
+          PropTypes.object,
         ]),
       }),
       /**
@@ -56,7 +65,10 @@ class Marker extends React.Component {
        */
       offset: PropTypes.oneOfType([
         PropTypes.arrayOf(PropTypes.number),
-        PropTypes.instanceOf(window.AMap.Pixel),
+        /**
+         * AMap.Pixel instance.
+         */
+        PropTypes.object,
       ]),
     }),
     /**
@@ -64,7 +76,10 @@ class Marker extends React.Component {
      */
     offset: PropTypes.oneOfType([
       PropTypes.arrayOf(PropTypes.number),
-      PropTypes.instanceOf(window.AMap.Pixel),
+      /**
+       * AMap.Pixel instance.
+       */
+      PropTypes.object,
     ]),
     /**
      * Show Marker by default, you can toggle show or hide by changing visible.
