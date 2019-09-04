@@ -168,6 +168,23 @@ class AMap extends React.PureComponent {
 
         return bounds;
       })(),
+      /**
+       * Memorise props.bounds.
+       * We always create a new instance of AMap.Bounds if props.bounds is an array. Shallow
+       * compare bounds always results unequal even if props.bounds does not change. boundsProp
+       * memorises the original props.bounds. Comparing boundProp has a clear understanding
+       * whether bounds has changed.
+       */
+      boundsProp: (() => {
+        /**
+         * Bounds does not have any effect before AMap library has been loaded.
+         * Bounds takes effect through calling setBounds function as long as AMap library has been
+         * loaded.
+         */
+        if (window.AMap === void 0) return void 0;
+
+        return bounds;
+      })(),
     };
   }
 
@@ -256,7 +273,12 @@ class AMap extends React.PureComponent {
     // this.updateMapWithApi('setLayers', this.mapOptions.layers, nextMapOptions.layers);
     this.updateMapWithAPI('setCenter', this.mapOptions.center, nextMapOptions.center);
     this.updateMapWithAPI('setCity', this.mapOptions.city, nextMapOptions.city);
-    this.updateMapWithAPI('setBounds', this.mapOptions.bounds, nextMapOptions.bounds);
+    /**
+     * Comparing props.bounds instead of bounds because bounds are newly created everytime
+     * even though props.bounds does not change.
+     */
+    this.updateMapWithAPI('setBounds', this.mapOptions.boundsProp, nextMapOptions.boundsProp,
+      nextMapOptions.bounds);
     this.updateMapWithAPI('setLang', this.mapOptions.lang, nextMapOptions.lang);
     this.updateMapWithAPI('setRotation', this.mapOptions.rotation, nextMapOptions.rotation);
     this.updateMapWithAPI('setStatus', this.mapOptions.status, nextMapOptions.status);
@@ -382,10 +404,18 @@ class AMap extends React.PureComponent {
 
   /**
    * Update AMap.Map instance with named API.
+   * Call update API with next prop only if props to be compared are not identical.
    * Won't call API if prop does not change.
    */
-  updateMapWithAPI(apiName, previousProp, nextProp) {
-    if (!isShallowEqual(previousProp, nextProp)) {
+  updateMapWithAPI(apiName, previousCompareProp, nextCompareProp, nextProp) {
+    /**
+     * nextProp can omit if next prop is identical to prop to be compared.
+     */
+    if (arguments.length === 3) {
+      nextProp = nextCompareProp;
+    }
+
+    if (!isShallowEqual(previousCompareProp, nextCompareProp)) {
       this.map[apiName](nextProp);
     }
   }
