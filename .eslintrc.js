@@ -82,6 +82,11 @@ module.exports = {
     'react/no-direct-mutation-state': 'error', // airbnb is using off
     'react/no-find-dom-node': 'off', // airbnb use error
     'react/sort-prop-types': 'error', // airbnb use off
+    'react/static-property-placement': ['error', 'property assignment', {
+      propTypes: 'static public field',
+      defaultProps: 'static public field',
+      contextType: 'static public field'
+    }],
 
     'jsx-a11y/label-has-associated-control': 'off',
     'jsx-a11y/label-has-for': 'off',

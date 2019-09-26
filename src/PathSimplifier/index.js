@@ -25,6 +25,7 @@ class PathSimplifier extends React.Component {
      * Child components.
      */
     children: PropTypes.node,
+    data: PropTypes.array,
     /**
      * Shows PathSimplifier by default, you can toggle show or hide by setting visible.
      */
@@ -85,12 +86,6 @@ class PathSimplifier extends React.Component {
     };
   }
 
-  state = {
-    data: [],
-    isShouldDestoryPathNavigator: false,
-    pathSimplifier: void 0,
-  };
-
   /**
    * Define event name mapping relations of react binding PathSimplifier and AMapUI.PathSimplifier.
    */
@@ -100,6 +95,11 @@ class PathSimplifier extends React.Component {
     const map = context;
 
     breakIfNotChildOfAMap('PathSimplifier', map);
+    this.state = {
+      data: [],
+      isShouldDestoryPathNavigator: false,
+      pathSimplifier: void 0,
+    };
   }
 
   /**
