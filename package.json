@@ -1,0 +1,47 @@
+{
+  "name": "react-amap-binding",
+  "version": "2.0.0",
+  "description": "A React binding for AMap JS API",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "yarn build:cmd && yarn build:es && yarn build:copy-files",
+    "build:copy-files": "cross-env NODE_ENV=production ts-node ./script/copy-files.js",
+    "build:cmd": "cross-env NODE_ENV=production tsc",
+    "build:es": "cross-env NODE_ENV=production tsc --project tsconfig-es.json",
+    "dev": "yarn dev:cmd && yarn dev:es",
+    "dev:copy-files": "cross-env NODE_ENV=development ts-node ./script/copy-files.js",
+    "dev:cmd": "cross-env NODE_ENV=development tsc --outDir ./demo/node_modules/react-amap-binding/build",
+    "dev:es": "cross-env NODE_ENV=development tsc --project tsconfig-es.json --outDir ./demo/node_modules/react-amap-binding/es",
+    "prebuild": "rimraf build",
+    "preversion": "yarn test",
+    "start": "yarn prebuild && yarn dev:copy-files && nodemon --exec yarn dev",
+    "test": "jest",
+    "test:watch": "yarn test -- --watch",
+    "version": "yarn build && npm publish build"
+  },
+  "repository": "git@github.com:marcosun/react-amap-binding.git",
+  "author": "marcosun <marcoinbristol@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^25.1.4",
+    "@types/node": "^13.9.3",
+    "@types/react": "16.0.0",
+    "cross-env": "^7.0.2",
+    "fs-extra": "^9.0.0",
+    "jest": "^25.1.0",
+    "nodemon": "^2.0.2",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^25.2.1",
+    "ts-node": "^8.8.1",
+    "typescript": "^3.8.3"
+  },
+  "peerDependencies": {
+    "react": "^16.0.0"
+  },
+  "keywords": [
+    "react",
+    "amap",
+    "react-amap",
+    "react-amap-binding"
+  ]
+}
