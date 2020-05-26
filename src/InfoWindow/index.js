@@ -148,7 +148,8 @@ class InfoWindow extends React.Component {
 
     const newInfoWindowOptions = cloneDeep(nextInfoWindowOptions, NEED_DEEP_COPY_FIELDS);
 
-    this.toggleVisible(this.infoWindowOptions.visible, nextInfoWindowOptions.visible, nextInfoWindowOptions.position);
+    this.toggleVisible(this.infoWindowOptions.visible, nextInfoWindowOptions.visible,
+      nextInfoWindowOptions.position);
 
     this.updateInfoWindowWithAPI('setContent', this.infoWindowOptions.content,
       nextInfoWindowOptions.content, newInfoWindowOptions.content);
@@ -235,10 +236,10 @@ class InfoWindow extends React.Component {
    */
   toggleVisible(previousProp, nextProp, position) {
     if (!isShallowEqual(previousProp, nextProp)) {
-      if (visible === true) {
+      if (nextProp === true) {
         this.infoWindow.open(this.map, position);
       }
-      if (visible === false) this.infoWindow.close();
+      if (nextProp === false) this.infoWindow.close();
     }
   }
 
