@@ -1,6 +1,6 @@
 {
   "name": "react-amap-binding",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A React binding for lbs AMap",
   "main": "src/index.js",
   "scripts": {
